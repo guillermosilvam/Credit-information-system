@@ -1,16 +1,40 @@
 'use client';
 
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
 import Link from 'next/link';
-import { ArrowRight, Building2, CreditCard, FileText, Tractor, Users, AlertCircle } from 'lucide-react';
-import { mockAdminStats, mockCompanyProfiles, mockCreditApplications, mockCreditPlans, formatDate, statusLabels } from '@/lib/mock-data';
+import { ArrowRight, Building2, CreditCard, FileText, Tractor, Users, AlertCircle, Loader2 } from 'lucide-react';
+import { formatDate, statusLabels } from '@/lib/formatters';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export default function AdminDashboard() {
-  const pendingCompanies = mockCompanyProfiles.filter(c => c.status === 'pending');
-  const recentApplications = mockCreditApplications.slice(0, 5);
+  const { data: companies, isLoading: loadingCompanies } = useSWR('/accounts/company/', fetcher);
+  const { data: producers, isLoading: loadingProducers } = useSWR('/accounts/producer/', fetcher);
+  const { data: plans, isLoading: loadingPlans } = useSWR('/credits/plans/', fetcher);
+  const { data: applications, isLoading: loadingApps } = useSWR('/credits/applications/', fetcher);
 
+  const isLoading = loadingCompanies || loadingProducers || loadingPlans || loadingApps;
+
+  const totalProducers = producers?.length || 0;
+  const totalCompanies = companies?.length || 0;
+  const pendingCompanies = companies?.filter((c: any) => c.status === 'pending') || [];
+  const totalCreditPlans = plans?.length || 0;
+  const totalApplications = applications?.length || 0;
+  
+  // Sort applications by applied_at descending (assuming the API returns an array)
+  const sortedApps = applications ? [...applications].sort((a: any, b: any) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime()) : [];
+  const recentApplications = sortedApps.slice(0, 5);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Cargando datos del panel...</span>
+      </div>
+    );
+  }
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -56,7 +80,7 @@ export default function AdminDashboard() {
             <Tractor className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockAdminStats.totalProducers}</div>
+            <div className="text-2xl font-bold">{totalProducers}</div>
             <p className="text-xs text-muted-foreground">
               Productores registrados
             </p>
@@ -69,9 +93,9 @@ export default function AdminDashboard() {
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockAdminStats.totalCompanies}</div>
+            <div className="text-2xl font-bold">{totalCompanies}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-amber-600 font-medium">{mockAdminStats.pendingCompanies}</span> pendientes de aprobacion
+              <span className="text-amber-600 font-medium">{pendingCompanies.length}</span> pendientes de aprobacion
             </p>
           </CardContent>
         </Card>
@@ -82,7 +106,7 @@ export default function AdminDashboard() {
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockAdminStats.totalCreditPlans}</div>
+            <div className="text-2xl font-bold">{totalCreditPlans}</div>
             <p className="text-xs text-muted-foreground">
               Planes publicados
             </p>
@@ -95,7 +119,7 @@ export default function AdminDashboard() {
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockAdminStats.totalApplications}</div>
+            <div className="text-2xl font-bold">{totalApplications}</div>
             <p className="text-xs text-muted-foreground">
               Total de solicitudes
             </p>
@@ -168,9 +192,9 @@ export default function AdminDashboard() {
                   className="flex items-center justify-between p-4 rounded-lg border bg-card"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium">{company.companyName}</p>
+                    <p className="font-medium">{company.company_name}</p>
                     <p className="text-sm text-muted-foreground">
-                      RIF: {company.rif} | Tipo: {company.companyType || 'No especificado'}
+                      RIF: {company.rif} | Tipo: {company.company_type || 'No especificado'}
                     </p>
                   </div>
                   <Badge variant="secondary">Pendiente</Badge>
@@ -199,9 +223,9 @@ export default function AdminDashboard() {
                 className="flex items-center justify-between p-4 rounded-lg border bg-card"
               >
                 <div className="space-y-1">
-                  <p className="font-medium">{application.producerName}</p>
+                  <p className="font-medium">{application.producer_name || 'Productor'}</p>
                   <p className="text-sm text-muted-foreground">
-                    {application.creditPlanTitle} - {formatDate(application.appliedAt)}
+                    {application.credit_plan_title || 'Plan'} - {formatDate(application.applied_at)}
                   </p>
                 </div>
                 <Badge variant={

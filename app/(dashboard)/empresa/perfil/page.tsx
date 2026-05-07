@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Save, Building2, Globe, Phone, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
-import { companyTypeLabels } from '@/lib/mock-data';
+import { companyTypeLabels } from '@/lib/formatters';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

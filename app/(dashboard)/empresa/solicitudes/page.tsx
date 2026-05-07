@@ -2,7 +2,12 @@
 
 import { useState } from 'react';
 import { Search, Filter, CheckCircle, XCircle, Clock, AlertCircle, Eye } from 'lucide-react';
-import { mockCreditApplications, mockCreditPlans, mockProducerProfiles, formatDate, statusLabels } from '@/lib/mock-data';
+import { formatCurrency, formatDate, statusLabels } from '@/lib/formatters';
+import useSWR, { mutate } from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import { creditService } from '@/services/creditService';
+import type { CreditApplicationResponse } from '@/services/creditService';
+import { Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,25 +30,26 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import type { CreditApplication } from '@/lib/types';
+
 
 export default function SolicitudesEmpresaPage() {
-  const companyPlans = mockCreditPlans.filter(p => p.companyId === 1);
-  const initialApplications = mockCreditApplications.filter(app => 
-    companyPlans.some(plan => plan.id === app.creditPlanId)
-  );
+  const { data: initialApplications = [], isLoading } = useSWR<CreditApplicationResponse[]>('/credits/applications/', fetcher);
   
-  const [applications, setApplications] = useState(initialApplications);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [selectedApplication, setSelectedApplication] = useState<CreditApplication | null>(null);
+  const [selectedApplication, setSelectedApplication] = useState<CreditApplicationResponse | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const filteredApplications = applications.filter(app => {
+  const filteredApplications = initialApplications.filter(app => {
+    const producerName = app.producer_profile?.user?.username || 'Productor';
+    const farmName = app.producer_profile?.farm_name || 'Finca';
+    const planTitle = app.credit_plan_title || `Plan #${app.credit_plan}`;
+
     const matchesSearch = 
-      app.producerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.farmName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.creditPlanTitle.toLowerCase().includes(searchTerm.toLowerCase());
+      producerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      farmName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      planTitle.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || app.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -71,46 +77,36 @@ export default function SolicitudesEmpresaPage() {
     }
   };
 
-  const handleApprove = (appId: number) => {
-    setApplications(applications.map(app =>
-      app.id === appId ? { ...app, status: 'approved' as const, reviewedAt: new Date().toISOString() } : app
-    ));
-    toast.success('Solicitud aprobada');
-    setShowDetailDialog(false);
+  const updateStatus = async (appId: number, status: string) => {
+    setIsUpdating(true);
+    try {
+      await creditService.updateApplicationStatus(appId, status);
+      mutate('/credits/applications/');
+      toast.success('Estado actualizado');
+      setShowDetailDialog(false);
+    } catch (e: any) {
+      toast.error('Error al actualizar el estado');
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
-  const handleReject = (appId: number) => {
-    setApplications(applications.map(app =>
-      app.id === appId ? { ...app, status: 'rejected' as const, reviewedAt: new Date().toISOString() } : app
-    ));
-    toast.success('Solicitud rechazada');
-    setShowDetailDialog(false);
-  };
+  const handleApprove = (appId: number) => updateStatus(appId, 'approved');
+  const handleReject = (appId: number) => updateStatus(appId, 'rejected');
+  const handleMarkUnderReview = (appId: number) => updateStatus(appId, 'under_review');
 
-  const handleMarkUnderReview = (appId: number) => {
-    setApplications(applications.map(app =>
-      app.id === appId ? { ...app, status: 'under_review' as const } : app
-    ));
-    toast.success('Solicitud marcada en revision');
-    setShowDetailDialog(false);
-  };
-
-  const viewDetails = (app: CreditApplication) => {
+  const viewDetails = (app: CreditApplicationResponse) => {
     setSelectedApplication(app);
     setShowDetailDialog(true);
   };
 
-  const getProducerProfile = (producerId: number) => {
-    return mockProducerProfiles.find(p => p.userId === producerId);
-  };
-
   // Stats
   const stats = {
-    total: applications.length,
-    pending: applications.filter(a => a.status === 'pending').length,
-    underReview: applications.filter(a => a.status === 'under_review').length,
-    approved: applications.filter(a => a.status === 'approved').length,
-    rejected: applications.filter(a => a.status === 'rejected').length,
+    total: initialApplications.length,
+    pending: initialApplications.filter(a => a.status === 'pending').length,
+    underReview: initialApplications.filter(a => a.status === 'under_review').length,
+    approved: initialApplications.filter(a => a.status === 'approved').length,
+    rejected: initialApplications.filter(a => a.status === 'rejected').length,
   };
 
   return (
@@ -123,6 +119,12 @@ export default function SolicitudesEmpresaPage() {
         </p>
       </div>
 
+      {isLoading ? (
+        <div className="flex h-40 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-5">
         <Card>
@@ -223,7 +225,7 @@ export default function SolicitudesEmpresaPage() {
               <Clock className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="font-semibold mb-2">No se encontraron solicitudes</h3>
               <p className="text-muted-foreground">
-                {applications.length === 0 
+                {initialApplications.length === 0 
                   ? 'Aun no ha recibido solicitudes de credito'
                   : 'Intente ajustar los filtros de busqueda'}
               </p>
@@ -245,14 +247,14 @@ export default function SolicitudesEmpresaPage() {
                   {filteredApplications.map((application) => (
                     <TableRow key={application.id}>
                       <TableCell className="font-medium">
-                        {application.producerName}
+                        {application.producer_profile?.user?.username || 'Productor'}
                       </TableCell>
-                      <TableCell>{application.farmName}</TableCell>
+                      <TableCell>{application.producer_profile?.farm_name || 'Finca'}</TableCell>
                       <TableCell>
-                        <span className="text-sm">{application.creditPlanTitle}</span>
+                        <span className="text-sm">{application.credit_plan_title || `Plan #${application.credit_plan}`}</span>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
-                        {formatDate(application.appliedAt)}
+                        {formatDate(application.application_date)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -282,7 +284,7 @@ export default function SolicitudesEmpresaPage() {
 
       {/* Detail Dialog */}
       <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Detalle de Solicitud</DialogTitle>
             <DialogDescription>
@@ -299,31 +301,28 @@ export default function SolicitudesEmpresaPage() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Nombre:</span>
-                      <span>{selectedApplication.producerName}</span>
+                      <span>{selectedApplication.producer_profile?.user?.username || 'Productor'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Finca:</span>
-                      <span>{selectedApplication.farmName}</span>
+                      <span>{selectedApplication.producer_profile?.farm_name || 'Finca'}</span>
                     </div>
-                    {(() => {
-                      const profile = getProducerProfile(selectedApplication.producerId);
-                      return profile ? (
-                        <>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Area Total:</span>
-                            <span>{profile.totalArea} ha</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Area Cultivada:</span>
-                            <span>{profile.cultivatedArea} ha</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Actividad:</span>
-                            <span>{profile.mainActivity}</span>
-                          </div>
-                        </>
-                      ) : null;
-                    })()}
+                    {selectedApplication.producer_profile && (
+                      <>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Area Total:</span>
+                          <span>{selectedApplication.producer_profile.total_area || 0} ha</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Area Cultivada:</span>
+                          <span>{selectedApplication.producer_profile.cultivated_area || 0} ha</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Actividad:</span>
+                          <span>{selectedApplication.producer_profile.main_activity || 'N/A'}</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -332,11 +331,11 @@ export default function SolicitudesEmpresaPage() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Plan:</span>
-                      <span>{selectedApplication.creditPlanTitle}</span>
+                      <span>{selectedApplication.credit_plan_title || `Plan #${selectedApplication.credit_plan}`}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Fecha Solicitud:</span>
-                      <span>{formatDate(selectedApplication.appliedAt)}</span>
+                      <span>{formatDate(selectedApplication.application_date)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Estado Actual:</span>
@@ -344,10 +343,10 @@ export default function SolicitudesEmpresaPage() {
                         {statusLabels[selectedApplication.status]}
                       </Badge>
                     </div>
-                    {selectedApplication.reviewedAt && (
+                    {selectedApplication.updated_at && (
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Fecha Revision:</span>
-                        <span>{formatDate(selectedApplication.reviewedAt)}</span>
+                        <span>{formatDate(selectedApplication.updated_at)}</span>
                       </div>
                     )}
                   </div>
@@ -362,20 +361,21 @@ export default function SolicitudesEmpresaPage() {
                 <Button 
                   variant="outline"
                   onClick={() => handleMarkUnderReview(selectedApplication.id)}
-                  disabled={selectedApplication.status === 'under_review'}
+                  disabled={selectedApplication.status === 'under_review' || isUpdating}
                 >
                   <AlertCircle className="w-4 h-4 mr-2" />
                   Marcar en Revision
                 </Button>
                 <Button 
                   variant="destructive"
+                  disabled={isUpdating}
                   onClick={() => handleReject(selectedApplication.id)}
                 >
                   <XCircle className="w-4 h-4 mr-2" />
                   Rechazar
                 </Button>
-                <Button onClick={() => handleApprove(selectedApplication.id)}>
-                  <CheckCircle className="w-4 h-4 mr-2" />
+                <Button disabled={isUpdating} onClick={() => handleApprove(selectedApplication.id)}>
+                  {isUpdating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
                   Aprobar
                 </Button>
               </>
@@ -383,6 +383,8 @@ export default function SolicitudesEmpresaPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </>
+      )}
     </div>
   );
 }

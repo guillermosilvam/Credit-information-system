@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Save, User, MapPin, Tractor, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
-import { landTenureLabels, roadConditionLabels } from '@/lib/mock-data';
+import { landTenureLabels, roadConditionLabels } from '@/lib/formatters';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,10 +13,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import type { LandTenure, RoadCondition } from '@/lib/types';
+import { accountService } from '@/services/accountService';
+import { Download } from 'lucide-react';
 
 export default function PerfilProductorPage() {
   const { user, producerProfile, updateProducerProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   
   const [formData, setFormData] = useState({
     farmName: producerProfile?.farmName || '',
@@ -59,6 +62,26 @@ export default function PerfilProductorPage() {
     
     setIsLoading(false);
     toast.success('Perfil actualizado correctamente');
+  };
+
+  const handleDownload = async () => {
+    if (!producerProfile?.id) return;
+    setIsExporting(true);
+    try {
+      const blob = await accountService.exportProducer(producerProfile.id);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `mis_datos_productor.json`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success('Datos descargados correctamente');
+    } catch (e: any) {
+      toast.error('Error al descargar los datos');
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -280,8 +303,17 @@ export default function PerfilProductorPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Save Button */}
-        <div className="flex justify-end mt-6">
+        {/* Save & Download Buttons */}
+        <div className="flex justify-end mt-6 gap-4">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={handleDownload}
+            disabled={isExporting || !producerProfile?.id}
+          >
+            {isExporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+            Descargar Mis Datos
+          </Button>
           <Button type="submit" disabled={isLoading}>
             {isLoading ? (
               <>

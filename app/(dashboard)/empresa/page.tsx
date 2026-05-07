@@ -2,8 +2,11 @@
 
 import Link from 'next/link';
 import { ArrowRight, CreditCard, FileText, Users, TrendingUp, Plus } from 'lucide-react';
-import { useAuth } from '@/lib/auth-context';
-import { mockCreditPlans, mockCreditApplications, formatCurrency, statusLabels } from '@/lib/mock-data';
+import { formatCurrency, statusLabels } from '@/lib/formatters';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import type { CreditPlanResponse, CreditApplicationResponse } from '@/services/creditService';
+import { Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,14 +14,17 @@ import { Badge } from '@/components/ui/badge';
 export default function EmpresaDashboard() {
   const { user, companyProfile } = useAuth();
 
-  // Filtrar planes de la empresa actual (mock: companyId = 1)
-  const companyPlans = mockCreditPlans.filter(plan => plan.companyId === 1);
-  const activePlans = companyPlans.filter(plan => plan.isActive);
+  const { data: plans = [], isLoading: loadingPlans } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
+  const { data: applications = [], isLoading: loadingApps } = useSWR<CreditApplicationResponse[]>('/credits/applications/', fetcher);
+
+  const isLoading = loadingPlans || loadingApps;
+
+  // Filtrar planes de la empresa actual
+  const companyPlans = plans.filter(plan => plan.company === companyProfile?.id);
+  const activePlans = companyPlans.filter(plan => plan.is_active);
   
   // Solicitudes recibidas para los planes de esta empresa
-  const receivedApplications = mockCreditApplications.filter(app => 
-    companyPlans.some(plan => plan.id === app.creditPlanId)
-  );
+  const receivedApplications = applications; // Backend already filters for this company
   const pendingApplications = receivedApplications.filter(app => 
     app.status === 'pending' || app.status === 'under_review'
   );
@@ -39,7 +45,7 @@ export default function EmpresaDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            Bienvenido, {companyProfile?.companyName || user?.username}
+            Bienvenido, {companyProfile?.company_name || user?.username}
           </h1>
           <p className="text-muted-foreground">
             Panel de Gestion de Creditos
@@ -53,6 +59,12 @@ export default function EmpresaDashboard() {
         </Link>
       </div>
 
+      {isLoading ? (
+        <div className="flex h-40 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -168,12 +180,12 @@ export default function EmpresaDashboard() {
                   className="flex items-center justify-between p-4 rounded-lg border bg-card"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium">{application.producerName}</p>
+                    <p className="font-medium">{application.producer_name || 'Productor'}</p>
                     <p className="text-sm text-muted-foreground">
-                      {application.farmName} - {application.creditPlanTitle}
+                      {application.credit_plan_title || `Plan #${application.credit_plan}`}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Aplicado: {new Date(application.appliedAt).toLocaleDateString('es-VE')}
+                      Aplicado: {new Date(application.applied_at).toLocaleDateString('es-VE')}
                     </p>
                   </div>
                   <Badge variant={getStatusVariant(application.status)}>
@@ -208,10 +220,10 @@ export default function EmpresaDashboard() {
               <Card key={plan.id} className="border">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <Badge variant={plan.isActive ? 'default' : 'secondary'}>
-                      {plan.isActive ? 'Activo' : 'Pausado'}
+                    <Badge variant={plan.is_active ? 'default' : 'secondary'}>
+                      {plan.is_active ? 'Activo' : 'Pausado'}
                     </Badge>
-                    <Badge variant="outline">{plan.agriculturalSector}</Badge>
+                    <Badge variant="outline">{plan.agricultural_sector}</Badge>
                   </div>
                   <CardTitle className="text-base mt-2">{plan.title}</CardTitle>
                 </CardHeader>
@@ -220,12 +232,12 @@ export default function EmpresaDashboard() {
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Monto:</span>
                       <span className="font-medium">
-                        {formatCurrency(plan.minAmount)} - {formatCurrency(plan.maxAmount)}
+                        {formatCurrency(plan.min_amount)} - {formatCurrency(plan.max_amount)}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Tasa:</span>
-                      <span className="font-medium">{plan.interestRate}%</span>
+                      <span className="font-medium">{plan.interest_rate}%</span>
                     </div>
                   </div>
                 </CardContent>
@@ -234,6 +246,8 @@ export default function EmpresaDashboard() {
           </div>
         </CardContent>
       </Card>
+      </>
+      )}
     </div>
   );
 }

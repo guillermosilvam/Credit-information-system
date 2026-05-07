@@ -1,13 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Filter, CheckCircle, XCircle, Clock, Eye, Building2 } from 'lucide-react';
-import { mockCompanyProfiles, companyTypeLabels, statusLabels } from '@/lib/mock-data';
+import { Search, Filter, CheckCircle, XCircle, Clock, Eye, Building2, Loader2 } from 'lucide-react';
+import { companyTypeLabels, statusLabels } from '@/lib/formatters';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import useSWR, { mutate } from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import { accountService, CompanyProfileResponse } from '@/services/accountService';
 import {
   Table,
   TableBody,
@@ -28,16 +31,18 @@ import { toast } from 'sonner';
 import type { CompanyProfile } from '@/lib/types';
 
 export default function AdminEmpresasPage() {
-  const [companies, setCompanies] = useState(mockCompanyProfiles);
+  const { data: companies = [], isLoading } = useSWR<CompanyProfileResponse[]>('/accounts/company/', fetcher);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [selectedCompany, setSelectedCompany] = useState<CompanyProfile | null>(null);
+  const [selectedCompany, setSelectedCompany] = useState<CompanyProfileResponse | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const filteredCompanies = companies.filter(company => {
+    const searchLower = searchTerm.toLowerCase();
     const matchesSearch = 
-      company.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      company.rif.toLowerCase().includes(searchTerm.toLowerCase());
+      (company.company_name && company.company_name.toLowerCase().includes(searchLower)) ||
+      (company.rif && company.rif.toLowerCase().includes(searchLower));
     const matchesStatus = statusFilter === 'all' || company.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -62,23 +67,35 @@ export default function AdminEmpresasPage() {
     }
   };
 
-  const handleApprove = (companyId: number) => {
-    setCompanies(companies.map(company =>
-      company.id === companyId ? { ...company, status: 'verified' as const } : company
-    ));
-    toast.success('Empresa aprobada exitosamente');
-    setShowDetailDialog(false);
+  const handleApprove = async (companyId: number) => {
+    setIsUpdating(true);
+    try {
+      await accountService.reviewCompany(companyId, 'verified');
+      toast.success('Empresa aprobada exitosamente');
+      mutate('/accounts/company/');
+      setShowDetailDialog(false);
+    } catch (e: any) {
+      toast.error(e.response?.data?.detail || 'Error al aprobar la empresa');
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
-  const handleReject = (companyId: number) => {
-    setCompanies(companies.map(company =>
-      company.id === companyId ? { ...company, status: 'rejected' as const } : company
-    ));
-    toast.success('Empresa rechazada');
-    setShowDetailDialog(false);
+  const handleReject = async (companyId: number) => {
+    setIsUpdating(true);
+    try {
+      await accountService.reviewCompany(companyId, 'rejected');
+      toast.success('Empresa rechazada');
+      mutate('/accounts/company/');
+      setShowDetailDialog(false);
+    } catch (e: any) {
+      toast.error(e.response?.data?.detail || 'Error al rechazar la empresa');
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
-  const viewDetails = (company: CompanyProfile) => {
+  const viewDetails = (company: CompanyProfileResponse) => {
     setSelectedCompany(company);
     setShowDetailDialog(true);
   };
@@ -101,7 +118,13 @@ export default function AdminEmpresasPage() {
         </p>
       </div>
 
-      {/* Stats */}
+      {isLoading ? (
+        <div className="flex h-40 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
+          {/* Stats */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
@@ -209,17 +232,17 @@ export default function AdminEmpresasPage() {
                     <TableRow key={company.id}>
                       <TableCell>
                         <div>
-                          <p className="font-medium">{company.companyName}</p>
-                          {company.legalName && (
-                            <p className="text-sm text-muted-foreground">{company.legalName}</p>
+                          <p className="font-medium">{company.company_name}</p>
+                          {company.legal_name && (
+                            <p className="text-sm text-muted-foreground">{company.legal_name}</p>
                           )}
                         </div>
                       </TableCell>
                       <TableCell>{company.rif}</TableCell>
                       <TableCell>
-                        {company.companyType ? (
+                        {company.company_type ? (
                           <Badge variant="outline">
-                            {companyTypeLabels[company.companyType]}
+                            {companyTypeLabels[company.company_type] || company.company_type}
                           </Badge>
                         ) : (
                           <span className="text-muted-foreground">-</span>
@@ -269,22 +292,22 @@ export default function AdminEmpresasPage() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Nombre:</span>
-                      <span>{selectedCompany.companyName}</span>
+                      <span>{selectedCompany.company_name}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">RIF:</span>
                       <span>{selectedCompany.rif}</span>
                     </div>
-                    {selectedCompany.legalName && (
+                    {selectedCompany.legal_name && (
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Razon Social:</span>
-                        <span>{selectedCompany.legalName}</span>
+                        <span>{selectedCompany.legal_name}</span>
                       </div>
                     )}
-                    {selectedCompany.companyType && (
+                    {selectedCompany.company_type && (
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Tipo:</span>
-                        <span>{companyTypeLabels[selectedCompany.companyType]}</span>
+                        <span>{companyTypeLabels[selectedCompany.company_type] || selectedCompany.company_type}</span>
                       </div>
                     )}
                   </div>
@@ -293,10 +316,10 @@ export default function AdminEmpresasPage() {
                 <div className="p-4 rounded-lg bg-muted/50">
                   <h4 className="font-semibold mb-3">Contacto</h4>
                   <div className="space-y-2 text-sm">
-                    {selectedCompany.corporatePhone && (
+                    {selectedCompany.corporate_phone && (
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Telefono:</span>
-                        <span>{selectedCompany.corporatePhone}</span>
+                        <span>{selectedCompany.corporate_phone}</span>
                       </div>
                     )}
                     {selectedCompany.website && (
@@ -307,20 +330,20 @@ export default function AdminEmpresasPage() {
                         </a>
                       </div>
                     )}
-                    {selectedCompany.responseTime && (
+                    {selectedCompany.response_time && (
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Tiempo Resp.:</span>
-                        <span>{selectedCompany.responseTime}</span>
+                        <span>{selectedCompany.response_time}</span>
                       </div>
                     )}
                   </div>
                 </div>
               </div>
 
-              {selectedCompany.fiscalAddress && (
+              {selectedCompany.fiscal_address && (
                 <div className="p-4 rounded-lg bg-muted/50">
                   <h4 className="font-semibold mb-2">Direccion Fiscal</h4>
-                  <p className="text-sm">{selectedCompany.fiscalAddress}</p>
+                  <p className="text-sm">{selectedCompany.fiscal_address}</p>
                 </div>
               )}
 
@@ -345,13 +368,14 @@ export default function AdminEmpresasPage() {
               <>
                 <Button 
                   variant="destructive"
+                  disabled={isUpdating}
                   onClick={() => handleReject(selectedCompany.id)}
                 >
-                  <XCircle className="w-4 h-4 mr-2" />
+                  {isUpdating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <XCircle className="w-4 h-4 mr-2" />}
                   Rechazar
                 </Button>
-                <Button onClick={() => handleApprove(selectedCompany.id)}>
-                  <CheckCircle className="w-4 h-4 mr-2" />
+                <Button disabled={isUpdating} onClick={() => handleApprove(selectedCompany.id)}>
+                  {isUpdating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CheckCircle className="w-4 h-4 mr-2" />}
                   Aprobar Empresa
                 </Button>
               </>
@@ -359,6 +383,8 @@ export default function AdminEmpresasPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </>
+      )}
     </div>
   );
 }

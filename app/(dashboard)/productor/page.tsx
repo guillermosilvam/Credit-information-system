@@ -3,18 +3,22 @@
 import Link from 'next/link';
 import { ArrowRight, CreditCard, FileText, TrendingUp, Wallet } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
-import { mockCreditApplications, mockCreditPlans, formatCurrency, statusLabels } from '@/lib/mock-data';
+import { formatCurrency, statusLabels } from '@/lib/formatters';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import type { CreditPlanResponse, CreditApplicationResponse } from '@/services/creditService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 export default function ProductorDashboard() {
   const { user, producerProfile } = useAuth();
+  
+  const { data: plans = [], isLoading: loadingPlans } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
+  const { data: userApplications = [], isLoading: loadingApps } = useSWR<CreditApplicationResponse[]>('/credits/applications/', fetcher);
 
-  // Filtrar solicitudes del usuario actual
-  const userApplications = mockCreditApplications.filter(app => app.producerId === 1);
-  const pendingApplications = userApplications.filter(app => app.status === 'pending' || app.status === 'under_review');
-  const approvedApplications = userApplications.filter(app => app.status === 'approved');
+  const pendingApplications = userApplications.filter((app: any) => app.status === 'pending' || app.status === 'under_review');
+  const approvedApplications = userApplications.filter((app: any) => app.status === 'approved');
 
   const getStatusVariant = (status: string) => {
     switch (status) {
@@ -46,7 +50,7 @@ export default function ProductorDashboard() {
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockCreditPlans.length}</div>
+            <div className="text-2xl font-bold">{plans.length}</div>
             <p className="text-xs text-muted-foreground">
               Planes activos para aplicar
             </p>
@@ -151,9 +155,9 @@ export default function ProductorDashboard() {
                   className="flex items-center justify-between p-4 rounded-lg border bg-card"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium">{application.creditPlanTitle}</p>
+                    <p className="font-medium">{application.credit_plan_title || `Plan #${application.credit_plan}`}</p>
                     <p className="text-sm text-muted-foreground">
-                      Aplicado: {new Date(application.appliedAt).toLocaleDateString('es-VE')}
+                      Aplicado: {new Date(application.applied_at).toLocaleDateString('es-VE')}
                     </p>
                   </div>
                   <Badge variant={getStatusVariant(application.status)}>
@@ -184,12 +188,12 @@ export default function ProductorDashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {mockCreditPlans.slice(0, 3).map((plan) => (
+            {plans.slice(0, 3).map((plan) => (
               <Card key={plan.id} className="border-2 hover:border-primary/50 transition-colors">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline">{plan.agriculturalSector}</Badge>
-                    <span className="text-xs text-muted-foreground">{plan.companyName}</span>
+                    <Badge variant="outline">{plan.agricultural_sector}</Badge>
+                    <span className="text-xs text-muted-foreground">{plan.company_name || 'Empresa'}</span>
                   </div>
                   <CardTitle className="text-lg mt-2">{plan.title}</CardTitle>
                 </CardHeader>
@@ -198,16 +202,16 @@ export default function ProductorDashboard() {
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Monto:</span>
                       <span className="font-medium">
-                        {formatCurrency(plan.minAmount)} - {formatCurrency(plan.maxAmount)}
+                        {formatCurrency(plan.min_amount)} - {formatCurrency(plan.max_amount)}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Tasa:</span>
-                      <span className="font-medium">{plan.interestRate}% anual</span>
+                      <span className="font-medium">{plan.interest_rate}% anual</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Plazo:</span>
-                      <span className="font-medium">{plan.termMonths} meses</span>
+                      <span className="font-medium">{plan.term_months} meses</span>
                     </div>
                   </div>
                   <Link href="/productor/creditos">

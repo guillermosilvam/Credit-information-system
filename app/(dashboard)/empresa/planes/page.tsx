@@ -2,8 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Plus, MoreHorizontal, Pencil, Trash2, Eye, EyeOff } from 'lucide-react';
-import { mockCreditPlans, formatCurrency, formatDate } from '@/lib/mock-data';
+import { Plus, MoreHorizontal, Pencil, Trash2, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { formatCurrency, formatDate } from '@/lib/formatters';
+import useSWR, { mutate } from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import { creditService, CreditPlanResponse } from '@/services/creditService';
+import { useAuth } from '@/lib/auth-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -35,25 +39,44 @@ import {
 import { toast } from 'sonner';
 
 export default function MisPlanesPage() {
-  const [plans, setPlans] = useState(mockCreditPlans.filter(p => p.companyId === 1));
+  const { companyProfile } = useAuth();
+  const { data: allPlans = [], isLoading } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
+  
+  // Filtrar solo los planes de esta empresa
+  const plans = allPlans.filter(p => p.company === companyProfile?.id);
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleToggleActive = (planId: number) => {
-    setPlans(plans.map(plan => 
-      plan.id === planId ? { ...plan, isActive: !plan.isActive } : plan
-    ));
-    const plan = plans.find(p => p.id === planId);
-    toast.success(plan?.isActive ? 'Plan pausado' : 'Plan activado');
+  const handleToggleActive = async (plan: CreditPlanResponse) => {
+    setIsUpdating(true);
+    try {
+      await creditService.updatePlan(plan.id, { is_active: !plan.is_active });
+      mutate('/credits/plans/');
+      toast.success(plan.is_active ? 'Plan pausado' : 'Plan activado');
+    } catch (e: any) {
+      toast.error('Error al actualizar el estado del plan');
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectedPlanId) {
-      setPlans(plans.filter(plan => plan.id !== selectedPlanId));
-      toast.success('Plan eliminado correctamente');
+      setIsUpdating(true);
+      try {
+        await creditService.deletePlan(selectedPlanId);
+        mutate('/credits/plans/');
+        toast.success('Plan eliminado correctamente');
+      } catch (e: any) {
+        toast.error('Error al eliminar el plan');
+      } finally {
+        setIsUpdating(false);
+        setDeleteDialogOpen(false);
+        setSelectedPlanId(null);
+      }
     }
-    setDeleteDialogOpen(false);
-    setSelectedPlanId(null);
   };
 
   const confirmDelete = (planId: number) => {
@@ -79,6 +102,12 @@ export default function MisPlanesPage() {
         </Link>
       </div>
 
+      {isLoading ? (
+        <div className="flex h-40 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -95,7 +124,7 @@ export default function MisPlanesPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">
-              {plans.filter(p => p.isActive).length}
+              {plans.filter(p => p.is_active).length}
             </div>
           </CardContent>
         </Card>
@@ -105,7 +134,7 @@ export default function MisPlanesPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-muted-foreground">
-              {plans.filter(p => !p.isActive).length}
+              {plans.filter(p => !p.is_active).length}
             </div>
           </CardContent>
         </Card>
@@ -155,22 +184,22 @@ export default function MisPlanesPage() {
                         <div className="font-medium">{plan.title}</div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="outline">{plan.agriculturalSector}</Badge>
+                        <Badge variant="outline">{plan.agricultural_sector}</Badge>
                       </TableCell>
                       <TableCell>
                         <span className="text-sm">
-                          {formatCurrency(plan.minAmount)} - {formatCurrency(plan.maxAmount)}
+                          {formatCurrency(plan.min_amount)} - {formatCurrency(plan.max_amount)}
                         </span>
                       </TableCell>
-                      <TableCell>{plan.interestRate}%</TableCell>
-                      <TableCell>{plan.termMonths} meses</TableCell>
+                      <TableCell>{plan.interest_rate}%</TableCell>
+                      <TableCell>{plan.term_months} meses</TableCell>
                       <TableCell>
-                        <Badge variant={plan.isActive ? 'default' : 'secondary'}>
-                          {plan.isActive ? 'Activo' : 'Pausado'}
+                        <Badge variant={plan.is_active ? 'default' : 'secondary'}>
+                          {plan.is_active ? 'Activo' : 'Pausado'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
-                        {formatDate(plan.createdAt)}
+                        {formatDate(plan.created_at)}
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>
@@ -185,8 +214,8 @@ export default function MisPlanesPage() {
                               <Pencil className="w-4 h-4 mr-2" />
                               Editar
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleToggleActive(plan.id)}>
-                              {plan.isActive ? (
+                            <DropdownMenuItem disabled={isUpdating} onClick={() => handleToggleActive(plan)}>
+                              {plan.is_active ? (
                                 <>
                                   <EyeOff className="w-4 h-4 mr-2" />
                                   Pausar
@@ -229,13 +258,16 @@ export default function MisPlanesPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogCancel disabled={isUpdating}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction disabled={isUpdating} onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {isUpdating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
               Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      </>
+      )}
     </div>
   );
 }

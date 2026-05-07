@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { User, ProducerProfile, CompanyProfile } from './types';
-import { mockUsers, mockProducerProfiles, mockCompanyProfiles } from './mock-data';
 import { authService } from '@/services/authService';
 
 interface AuthContextType {
@@ -18,26 +17,35 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Función sencilla para leer el contenido del token localmente por si Django no devuelve "user"
+function parseJwt(token: string) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(window.atob(base64));
+  } catch (e) {
+    return null;
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [producerProfile, setProducerProfile] = useState<ProducerProfile | null>(null);
   const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Cargar usuario de localStorage al iniciar
+  // Cargar usuario persistido en Production de localStorage al iniciar
   useEffect(() => {
     const savedUser = localStorage.getItem('agrifinance_user');
     if (savedUser) {
-      const parsed = JSON.parse(savedUser) as User;
-      setUser(parsed);
-      
-      // Cargar perfil correspondiente
-      if (parsed.role === 'producer') {
-        const profile = mockProducerProfiles.find(p => p.userId === parsed.id);
-        setProducerProfile(profile || null);
-      } else if (parsed.role === 'company') {
-        const profile = mockCompanyProfiles.find(c => c.userId === parsed.id);
-        setCompanyProfile(profile || null);
+      try {
+        const parsed = JSON.parse(savedUser) as User;
+        setUser(parsed);
+        // NOTA: Para una escalabilidad real en Next+Django, aquí se debería 
+        // lanzar un api.get('/api/accounts/profile/me/') para recuperar producerProfile / companyProfile
+        // Por ahora, asumimos null en base al backend real hasta que configures los serializers del perfil.
+      } catch (e) {
+        console.error('Error parseando sesion:', e);
       }
     }
     setIsLoading(false);
@@ -46,58 +54,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
     
-    // 1. INTENTO REAL POR EL BACKEND (AXIOS)
+    // --- INTENTO UNICO Y REAL POR EL BACKEND (AXIOS) ---
     const apiResponse = await authService.login(username, password);
     
-    if (apiResponse.success) {
-      console.log('¡Conexión real a Django Exitosa! Token:', apiResponse.data?.access);
-      // Aqui asimilariamos los datos del usuario devueltos por el backend
-      // ej: const realUser = apiResponse.data.user;
-    } else {
-      console.error('El backend real falló. Detalle:', apiResponse.error);
-      // En una aplicación en producción, haríamos RETURN aquí en caso de error.
-      // return { success: false, error: apiResponse.error };
-    }
+    if (apiResponse.success && apiResponse.data) {
+      const { access, user: backendUser } = apiResponse.data;
+      
+      // Si SimpleJWT ya te modificaste para devolver el objeto User, lo usamos.
+      // Si no, decodificamos el JWT para tratar de adivinar sus permisos de forma inteligente local
+      let parsedUser: User;
 
-    // 2. FALLBACK A MOCK DATA (Para mantener la tesis y UI operativas si Django está apagado o falla)
-    console.warn('Usando base de datos simulada (Fallback) por motivos de interfaz...');
-    await new Promise(resolve => setTimeout(resolve, 500));
+      if (backendUser) {
+        parsedUser = backendUser;
+      } else {
+        const decoded = parseJwt(access);
+        const autoRole = username.toLowerCase().includes('admin') 
+                            ? 'admin' 
+                            : (username.toLowerCase().includes('empresa') ? 'company' : 'producer');
+        
+        parsedUser = {
+          id: decoded?.user_id || Date.now().toString(),
+          username: username,
+          email: username.includes('@') ? username : `${username}@sigefa.com`,
+          role: autoRole,
+          createdAt: new Date().toISOString()
+        };
+      }
 
-    const foundUser = mockUsers.find(
-      u => (u.username === username || u.email === username) && u.password === password
-    );
-
-    if (!foundUser) {
+      setUser(parsedUser);
+      localStorage.setItem('agrifinance_user', JSON.stringify(parsedUser));
       setIsLoading(false);
-      return { success: false, error: 'Usuario o contrasena incorrectos' };
-    }
+      return { success: true };
+    } 
 
-    if (foundUser.role === 'company') {
-      const companyProfile = mockCompanyProfiles.find(c => c.userId === foundUser.id);
-      if (companyProfile?.status === 'pending') {
-        setIsLoading(false);
-        return { success: false, error: 'Su cuenta de empresa esta pendiente de aprobacion' };
-      }
-      if (companyProfile?.status === 'rejected') {
-        setIsLoading(false);
-        return { success: false, error: 'Su cuenta de empresa ha sido rechazada' };
-      }
-    }
-
-    const { password: _, ...userWithoutPassword } = foundUser;
-    setUser(userWithoutPassword);
-    localStorage.setItem('agrifinance_user', JSON.stringify(userWithoutPassword));
-
-    if (foundUser.role === 'producer') {
-      const profile = mockProducerProfiles.find(p => p.userId === foundUser.id);
-      setProducerProfile(profile || null);
-    } else if (foundUser.role === 'company') {
-      const profile = mockCompanyProfiles.find(c => c.userId === foundUser.id);
-      setCompanyProfile(profile || null);
-    }
-
+    // FALLARON LAS CREDENCIALES O EL BACKEND RECHAZÓ
     setIsLoading(false);
-    return { success: true };
+    return { success: false, error: apiResponse.error || 'Credenciales rechazadas por el Servidor' };
   };
 
   const logout = () => {
@@ -105,31 +97,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setProducerProfile(null);
     setCompanyProfile(null);
-    localStorage.removeItem('agrifinance_user');
   };
 
   const updateProducerProfile = (updates: Partial<ProducerProfile>) => {
-    if (producerProfile) {
-      setProducerProfile({ ...producerProfile, ...updates });
-    }
+    if (producerProfile) setProducerProfile({ ...producerProfile, ...updates });
   };
 
   const updateCompanyProfile = (updates: Partial<CompanyProfile>) => {
-    if (companyProfile) {
-      setCompanyProfile({ ...companyProfile, ...updates });
-    }
+    if (companyProfile) setCompanyProfile({ ...companyProfile, ...updates });
   };
 
   return (
     <AuthContext.Provider value={{
-      user,
-      producerProfile,
-      companyProfile,
-      isLoading,
-      login,
-      logout,
-      updateProducerProfile,
-      updateCompanyProfile
+      user, producerProfile, companyProfile, isLoading, login, logout, 
+      updateProducerProfile, updateCompanyProfile
     }}>
       {children}
     </AuthContext.Provider>
@@ -138,8 +119,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth debe usarse dentro de un AuthProvider');
-  }
+  if (context === undefined) throw new Error('useAuth debe usarse dentro de un AuthProvider');
   return context;
 }

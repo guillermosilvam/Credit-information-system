@@ -1,31 +1,41 @@
 'use client';
 
-import { Building2, CreditCard, FileText, Tractor, TrendingUp, Users } from 'lucide-react';
-import { mockAdminStats, mockCreditPlans, mockCreditApplications, mockCompanyProfiles, mockProducerProfiles } from '@/lib/mock-data';
+import { Building2, CreditCard, FileText, Tractor, TrendingUp, Users, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import type { CreditPlanResponse, CreditApplicationResponse } from '@/services/creditService';
+import type { CompanyProfileResponse, ProducerProfileResponse } from '@/services/accountService';
 
 export default function AdminEstadisticasPage() {
+  const { data: applications = [], isLoading: isLoadingApps } = useSWR<CreditApplicationResponse[]>('/credits/applications/', fetcher);
+  const { data: companies = [], isLoading: isLoadingComps } = useSWR<CompanyProfileResponse[]>('/accounts/company/', fetcher);
+  const { data: plans = [], isLoading: isLoadingPlans } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
+  const { data: producers = [], isLoading: isLoadingProds } = useSWR<ProducerProfileResponse[]>('/accounts/producer/', fetcher);
+
+  const isLoading = isLoadingApps || isLoadingComps || isLoadingPlans || isLoadingProds;
+
   // Calcular estadisticas
-  const totalApplications = mockCreditApplications.length;
-  const approvedApplications = mockCreditApplications.filter(a => a.status === 'approved').length;
-  const pendingApplications = mockCreditApplications.filter(a => a.status === 'pending' || a.status === 'under_review').length;
-  const rejectedApplications = mockCreditApplications.filter(a => a.status === 'rejected').length;
+  const totalApplications = applications.length;
+  const approvedApplications = applications.filter(a => a.status === 'approved').length;
+  const pendingApplications = applications.filter(a => a.status === 'pending' || a.status === 'under_review').length;
+  const rejectedApplications = applications.filter(a => a.status === 'rejected').length;
   
   const approvalRate = totalApplications > 0 ? Math.round((approvedApplications / totalApplications) * 100) : 0;
 
-  const verifiedCompanies = mockCompanyProfiles.filter(c => c.status === 'verified').length;
-  const pendingCompanies = mockCompanyProfiles.filter(c => c.status === 'pending').length;
+  const verifiedCompanies = companies.filter(c => c.status === 'verified').length;
+  const pendingCompanies = companies.filter(c => c.status === 'pending').length;
 
-  const activePlans = mockCreditPlans.filter(p => p.isActive).length;
+  const activePlans = plans.filter(p => p.is_active).length;
 
-  const totalArea = mockProducerProfiles.reduce((acc, p) => acc + (p.totalArea || 0), 0);
-  const cultivatedArea = mockProducerProfiles.reduce((acc, p) => acc + (p.cultivatedArea || 0), 0);
+  const totalArea = producers.reduce((acc, p) => acc + Number(p.total_area || 0), 0);
+  const cultivatedArea = producers.reduce((acc, p) => acc + Number(p.cultivated_area || 0), 0);
   const cultivationRate = totalArea > 0 ? Math.round((cultivatedArea / totalArea) * 100) : 0;
 
   // Datos por sector
-  const sectorData = mockCreditPlans.reduce((acc, plan) => {
-    acc[plan.agriculturalSector] = (acc[plan.agriculturalSector] || 0) + 1;
+  const sectorData = plans.reduce((acc, plan) => {
+    acc[plan.agricultural_sector] = (acc[plan.agricultural_sector] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
@@ -39,6 +49,12 @@ export default function AdminEstadisticasPage() {
         </p>
       </div>
 
+      {isLoading ? (
+        <div className="flex h-40 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
       {/* Main Stats */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
@@ -47,7 +63,7 @@ export default function AdminEstadisticasPage() {
             <Tractor className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockAdminStats.totalProducers}</div>
+            <div className="text-2xl font-bold">{producers.length}</div>
             <p className="text-xs text-muted-foreground">
               Registrados en la plataforma
             </p>
@@ -60,7 +76,7 @@ export default function AdminEstadisticasPage() {
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockAdminStats.totalCompanies}</div>
+            <div className="text-2xl font-bold">{companies.length}</div>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-xs text-green-600">{verifiedCompanies} verificadas</span>
               <span className="text-xs text-muted-foreground">|</span>
@@ -75,7 +91,7 @@ export default function AdminEstadisticasPage() {
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockAdminStats.totalCreditPlans}</div>
+            <div className="text-2xl font-bold">{plans.length}</div>
             <p className="text-xs text-muted-foreground">
               {activePlans} activos actualmente
             </p>
@@ -88,7 +104,7 @@ export default function AdminEstadisticasPage() {
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockAdminStats.totalApplications}</div>
+            <div className="text-2xl font-bold">{totalApplications}</div>
             <p className="text-xs text-muted-foreground">
               Total procesadas
             </p>
@@ -195,11 +211,11 @@ export default function AdminEstadisticasPage() {
                   <span className="text-2xl font-bold text-primary">{count}</span>
                 </div>
                 <Progress 
-                  value={(count / mockCreditPlans.length) * 100} 
+                  value={(count / (plans.length || 1)) * 100} 
                   className="h-2"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
-                  {Math.round((count / mockCreditPlans.length) * 100)}% del total
+                  {Math.round((count / (plans.length || 1)) * 100)}% del total
                 </p>
               </div>
             ))}
@@ -215,7 +231,7 @@ export default function AdminEstadisticasPage() {
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
                 <Tractor className="w-6 h-6 text-primary" />
               </div>
-              <div className="text-3xl font-bold">{mockAdminStats.totalProducers}</div>
+              <div className="text-3xl font-bold">{producers.length}</div>
               <p className="text-sm text-muted-foreground">Productores activos</p>
             </div>
           </CardContent>
@@ -245,6 +261,8 @@ export default function AdminEstadisticasPage() {
           </CardContent>
         </Card>
       </div>
+      </>
+      )}
     </div>
   );
 }

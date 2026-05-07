@@ -32,7 +32,10 @@ export const authService = {
         data: { access, refresh, user },
       };
     } catch (error: any) {
-      console.error("Error conectando con Django:", error);
+      // NOTA: Usamos console.warn en lugar de console.error para evitar que 
+      // Next.js salte con el recuadro rojo (Error Overlay) en modo desarrollo 
+      // cuando el servidor Django está apagado o da errores de CORS.
+      console.warn("Fallo de conexion real con Django (Fallback activado):", error.message);
       
       // Manejo estandar de errores de Axios
       let errorMessage = 'Error al conectar con el servidor';

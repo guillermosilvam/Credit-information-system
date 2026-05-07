@@ -3,7 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, Filter, CreditCard, Building2, Clock, Percent, Check, Eye } from 'lucide-react';
-import { mockCreditPlans, formatCurrency } from '@/lib/mock-data';
+import { formatCurrency } from '@/lib/formatters';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import { creditService, CreditPlanResponse } from '@/services/creditService';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,33 +25,41 @@ import { toast } from 'sonner';
 const sectors = ['Todos', 'General', 'Cerealero', 'Avicola', 'Horticola'];
 
 export default function ExplorarCreditosPage() {
+  const { data: plans = [], isLoading } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSector, setSelectedSector] = useState('Todos');
-  const [selectedPlan, setSelectedPlan] = useState<typeof mockCreditPlans[0] | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<CreditPlanResponse | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isApplying, setIsApplying] = useState(false);
 
-  const filteredPlans = mockCreditPlans.filter(plan => {
-    const matchesSearch = plan.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      plan.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesSector = selectedSector === 'Todos' || plan.agriculturalSector === selectedSector;
-    return matchesSearch && matchesSector && plan.isActive;
+  const filteredPlans = plans.filter(plan => {
+    const searchLower = searchTerm.toLowerCase();
+    const matchesSearch = 
+      (plan.title && plan.title.toLowerCase().includes(searchLower)) ||
+      (plan.description && plan.description.toLowerCase().includes(searchLower));
+    const matchesSector = selectedSector === 'Todos' || plan.agricultural_sector === selectedSector;
+    return matchesSearch && matchesSector && plan.is_active;
   });
 
-  const handleApply = (plan: typeof mockCreditPlans[0]) => {
+  const handleApply = (plan: CreditPlanResponse) => {
     setSelectedPlan(plan);
     setShowConfirmDialog(true);
   };
 
   const confirmApplication = async () => {
+    if (!selectedPlan) return;
     setIsApplying(true);
-    // Simular envio de solicitud
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsApplying(false);
-    setShowConfirmDialog(false);
-    toast.success('Solicitud enviada exitosamente', {
-      description: 'Recibira una notificacion cuando la entidad revise su solicitud.'
-    });
+    try {
+      await creditService.applyForCredit(selectedPlan.id);
+      toast.success('Solicitud enviada exitosamente', {
+        description: 'Recibira una notificacion cuando la entidad revise su solicitud.'
+      });
+      setShowConfirmDialog(false);
+    } catch (e: any) {
+      toast.error(e.response?.data?.detail || 'Error al enviar la solicitud');
+    } finally {
+      setIsApplying(false);
+    }
   };
 
   return (
@@ -114,11 +125,11 @@ export default function ExplorarCreditosPage() {
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
                   <Badge variant="outline" className="bg-primary/5">
-                    {plan.agriculturalSector}
+                    {plan.agricultural_sector}
                   </Badge>
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Building2 className="w-3 h-3" />
-                    {plan.companyName}
+                    {plan.company_name || 'Empresa'}
                   </div>
                 </div>
                 <CardTitle className="text-lg leading-tight">{plan.title}</CardTitle>
@@ -135,7 +146,7 @@ export default function ExplorarCreditosPage() {
                       <span className="text-sm text-muted-foreground">Monto</span>
                     </div>
                     <span className="font-semibold text-sm">
-                      {formatCurrency(plan.minAmount)} - {formatCurrency(plan.maxAmount)}
+                      {formatCurrency(plan.min_amount)} - {formatCurrency(plan.max_amount)}
                     </span>
                   </div>
                   
@@ -144,14 +155,14 @@ export default function ExplorarCreditosPage() {
                       <Percent className="w-4 h-4 text-secondary" />
                       <div>
                         <p className="text-xs text-muted-foreground">Tasa</p>
-                        <p className="font-medium text-sm">{plan.interestRate}%</p>
+                        <p className="font-medium text-sm">{plan.interest_rate}%</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/30">
                       <Clock className="w-4 h-4 text-secondary" />
                       <div>
                         <p className="text-xs text-muted-foreground">Plazo</p>
-                        <p className="font-medium text-sm">{plan.termMonths} meses</p>
+                        <p className="font-medium text-sm">{plan.term_months} meses</p>
                       </div>
                     </div>
                   </div>
@@ -191,32 +202,32 @@ export default function ExplorarCreditosPage() {
             <div className="space-y-4 py-4">
               <div className="p-4 rounded-lg bg-muted/50 space-y-3">
                 <h4 className="font-semibold">{selectedPlan.title}</h4>
-                <p className="text-sm text-muted-foreground">{selectedPlan.companyName}</p>
+                <p className="text-sm text-muted-foreground">{selectedPlan.company_name || 'Empresa'}</p>
                 
                 <div className="grid grid-cols-2 gap-4 pt-2 border-t">
                   <div>
                     <p className="text-xs text-muted-foreground">Monto</p>
                     <p className="font-medium">
-                      {formatCurrency(selectedPlan.minAmount)} - {formatCurrency(selectedPlan.maxAmount)}
+                      {formatCurrency(selectedPlan.min_amount)} - {formatCurrency(selectedPlan.max_amount)}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Tasa de Interes</p>
-                    <p className="font-medium">{selectedPlan.interestRate}% anual</p>
+                    <p className="font-medium">{selectedPlan.interest_rate}% anual</p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Plazo</p>
-                    <p className="font-medium">{selectedPlan.termMonths} meses</p>
+                    <p className="font-medium">{selectedPlan.term_months} meses</p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Sector</p>
-                    <p className="font-medium">{selectedPlan.agriculturalSector}</p>
+                    <p className="font-medium">{selectedPlan.agricultural_sector}</p>
                   </div>
                 </div>
               </div>
 
               <p className="text-sm text-muted-foreground">
-                Al confirmar, su solicitud sera enviada a {selectedPlan.companyName} para revision. 
+                Al confirmar, su solicitud sera enviada a {selectedPlan.company_name || 'la empresa'} para revision. 
                 Recibira una notificacion cuando su solicitud sea procesada.
               </p>
             </div>

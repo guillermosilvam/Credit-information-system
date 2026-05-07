@@ -2,7 +2,11 @@
 
 import Link from 'next/link';
 import { FileText, CreditCard, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
-import { mockCreditApplications, mockCreditPlans, formatCurrency, formatDate, statusLabels } from '@/lib/mock-data';
+import { formatCurrency, formatDate, statusLabels } from '@/lib/formatters';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import type { CreditApplicationResponse, CreditPlanResponse } from '@/services/creditService';
+import { Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,8 +20,10 @@ import {
 } from '@/components/ui/table';
 
 export default function MisSolicitudesPage() {
-  // Filtrar solicitudes del productor actual (mock: producerId = 1)
-  const userApplications = mockCreditApplications.filter(app => app.producerId === 1);
+  const { data: userApplications = [], isLoading: loadingApps } = useSWR<CreditApplicationResponse[]>('/credits/applications/', fetcher);
+  const { data: plans = [], isLoading: loadingPlans } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
+
+  const isLoading = loadingApps || loadingPlans;
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -43,7 +49,7 @@ export default function MisSolicitudesPage() {
   };
 
   const getPlanDetails = (planId: number) => {
-    return mockCreditPlans.find(plan => plan.id === planId);
+    return plans.find((plan) => plan.id === planId);
   };
 
   // Estadisticas
@@ -65,6 +71,12 @@ export default function MisSolicitudesPage() {
         </p>
       </div>
 
+      {isLoading ? (
+        <div className="flex h-40 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
@@ -142,28 +154,28 @@ export default function MisSolicitudesPage() {
                 </TableHeader>
                 <TableBody>
                   {userApplications.map((application) => {
-                    const plan = getPlanDetails(application.creditPlanId);
+                    const plan = getPlanDetails(application.credit_plan);
                     return (
                       <TableRow key={application.id}>
                         <TableCell>
                           <div>
-                            <p className="font-medium">{application.creditPlanTitle}</p>
+                            <p className="font-medium">{application.credit_plan_title || `Plan #${application.credit_plan}`}</p>
                             <p className="text-sm text-muted-foreground">
-                              {plan?.companyName || 'N/A'}
+                              {plan?.company_name || 'N/A'}
                             </p>
                           </div>
                         </TableCell>
                         <TableCell>
                           {plan ? (
                             <span>
-                              {formatCurrency(plan.minAmount)} - {formatCurrency(plan.maxAmount)}
+                              {formatCurrency(plan.min_amount)} - {formatCurrency(plan.max_amount)}
                             </span>
                           ) : (
                             'N/A'
                           )}
                         </TableCell>
                         <TableCell>
-                          {formatDate(application.appliedAt)}
+                          {formatDate(application.applied_at)}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
@@ -174,7 +186,7 @@ export default function MisSolicitudesPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          {application.reviewedAt ? formatDate(application.reviewedAt) : '-'}
+                          {application.updated_at ? formatDate(application.updated_at) : '-'}
                         </TableCell>
                       </TableRow>
                     );
@@ -204,6 +216,8 @@ export default function MisSolicitudesPage() {
           </div>
         </CardContent>
       </Card>
+      </>
+      )}
     </div>
   );
 }

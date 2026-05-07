@@ -178,29 +178,6 @@ export default function LoginPage() {
           </div>
         </CardFooter>
       </form>
-
-      {/* Credenciales de prueba */}
-      <div className="px-6 pb-6">
-        <div className="border-t pt-4">
-          <p className="text-xs text-muted-foreground text-center mb-2">
-            Credenciales de prueba:
-          </p>
-          <div className="grid grid-cols-1 gap-2 text-xs">
-            <div className="flex justify-between bg-muted/50 rounded px-3 py-2">
-              <span>Productor:</span>
-              <span className="font-mono">productor1 / 123456</span>
-            </div>
-            <div className="flex justify-between bg-muted/50 rounded px-3 py-2">
-              <span>Empresa:</span>
-              <span className="font-mono">bancoverde / 123456</span>
-            </div>
-            <div className="flex justify-between bg-muted/50 rounded px-3 py-2">
-              <span>Admin:</span>
-              <span className="font-mono">admin / admin123</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </Card>
   );
 }

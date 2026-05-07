@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Eye, Tractor, MapPin } from 'lucide-react';
-import { mockProducerProfiles, mockUsers, landTenureLabels, roadConditionLabels } from '@/lib/mock-data';
+import { Search, Eye, Tractor, MapPin, Loader2 } from 'lucide-react';
+import { landTenureLabels, roadConditionLabels } from '@/lib/formatters';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,30 +22,27 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import type { ProducerProfile } from '@/lib/types';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import type { ProducerProfileResponse } from '@/services/accountService';
 
 export default function AdminProductoresPage() {
+  const { data: producers = [], isLoading } = useSWR<ProducerProfileResponse[]>('/accounts/producer/', fetcher);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedProducer, setSelectedProducer] = useState<ProducerProfile | null>(null);
+  const [selectedProducer, setSelectedProducer] = useState<ProducerProfileResponse | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
 
-  const producers = mockProducerProfiles;
-
   const filteredProducers = producers.filter(producer => {
-    const user = mockUsers.find(u => u.id === producer.userId);
+    const searchLower = searchTerm.toLowerCase();
     return (
-      producer.farmName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      producer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user?.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user?.email.toLowerCase().includes(searchTerm.toLowerCase())
+      (producer.farm_name && producer.farm_name.toLowerCase().includes(searchLower)) ||
+      (producer.address && producer.address.toLowerCase().includes(searchLower)) ||
+      (producer.user?.username && producer.user.username.toLowerCase().includes(searchLower)) ||
+      (producer.user?.email && producer.user.email.toLowerCase().includes(searchLower))
     );
   });
 
-  const getUser = (userId: number) => {
-    return mockUsers.find(u => u.id === userId);
-  };
-
-  const viewDetails = (producer: ProducerProfile) => {
+  const viewDetails = (producer: ProducerProfileResponse) => {
     setSelectedProducer(producer);
     setShowDetailDialog(true);
   };
@@ -60,6 +57,12 @@ export default function AdminProductoresPage() {
         </p>
       </div>
 
+      {isLoading ? (
+        <div className="flex h-40 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <>
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -76,7 +79,7 @@ export default function AdminProductoresPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {producers.reduce((acc, p) => acc + (p.totalArea || 0), 0)} ha
+              {producers.reduce((acc, p) => acc + (p.total_area || 0), 0)} ha
             </div>
           </CardContent>
         </Card>
@@ -86,7 +89,7 @@ export default function AdminProductoresPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">
-              {producers.reduce((acc, p) => acc + (p.cultivatedArea || 0), 0)} ha
+              {producers.reduce((acc, p) => acc + (p.cultivated_area || 0), 0)} ha
             </div>
           </CardContent>
         </Card>
@@ -139,16 +142,15 @@ export default function AdminProductoresPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredProducers.map((producer) => {
-                    const user = getUser(producer.userId);
                     return (
                       <TableRow key={producer.id}>
                         <TableCell>
                           <div>
-                            <p className="font-medium">{user?.username}</p>
-                            <p className="text-sm text-muted-foreground">{user?.email}</p>
+                            <p className="font-medium">{producer.user?.username || 'Usuario'}</p>
+                            <p className="text-sm text-muted-foreground">{producer.user?.email || 'Sin email'}</p>
                           </div>
                         </TableCell>
-                        <TableCell className="font-medium">{producer.farmName}</TableCell>
+                        <TableCell className="font-medium">{producer.farm_name}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-1 text-sm text-muted-foreground">
                             <MapPin className="w-3 h-3" />
@@ -157,13 +159,13 @@ export default function AdminProductoresPage() {
                         </TableCell>
                         <TableCell>
                           <div className="text-sm">
-                            <span className="font-medium">{producer.cultivatedArea || 0}</span>
-                            <span className="text-muted-foreground"> / {producer.totalArea || 0} ha</span>
+                            <span className="font-medium">{producer.cultivated_area || 0}</span>
+                            <span className="text-muted-foreground"> / {producer.total_area || 0} ha</span>
                           </div>
                         </TableCell>
                         <TableCell>
-                          {producer.mainActivity ? (
-                            <Badge variant="outline">{producer.mainActivity}</Badge>
+                          {producer.main_activity ? (
+                            <Badge variant="outline">{producer.main_activity}</Badge>
                           ) : (
                             <span className="text-muted-foreground">-</span>
                           )}
@@ -189,7 +191,7 @@ export default function AdminProductoresPage() {
 
       {/* Detail Dialog */}
       <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Detalle de Productor</DialogTitle>
             <DialogDescription>
@@ -200,7 +202,6 @@ export default function AdminProductoresPage() {
           {selectedProducer && (
             <div className="space-y-6 py-4">
               {(() => {
-                const user = getUser(selectedProducer.userId);
                 return (
                   <>
                     <div className="grid gap-4 md:grid-cols-2">
@@ -209,22 +210,22 @@ export default function AdminProductoresPage() {
                         <div className="space-y-2 text-sm">
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">Usuario:</span>
-                            <span>{user?.username}</span>
+                            <span>{selectedProducer.user?.username}</span>
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Email:</span>
-                            <span>{user?.email}</span>
+                          <div className="flex justify-between gap-2">
+                            <span className="text-muted-foreground whitespace-nowrap">Email:</span>
+                            <span className="break-all text-right">{selectedProducer.user?.email}</span>
                           </div>
-                          {selectedProducer.nationalId && (
+                          {selectedProducer.national_id && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Cedula:</span>
-                              <span>{selectedProducer.nationalId}</span>
+                              <span>{selectedProducer.national_id}</span>
                             </div>
                           )}
-                          {selectedProducer.phoneNumber && (
+                          {selectedProducer.phone_number && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Telefono:</span>
-                              <span>{selectedProducer.phoneNumber}</span>
+                              <span>{selectedProducer.phone_number}</span>
                             </div>
                           )}
                         </div>
@@ -235,7 +236,7 @@ export default function AdminProductoresPage() {
                         <div className="space-y-2 text-sm">
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">Nombre:</span>
-                            <span>{selectedProducer.farmName}</span>
+                            <span>{selectedProducer.farm_name}</span>
                           </div>
                           {selectedProducer.rif && (
                             <div className="flex justify-between">
@@ -243,10 +244,10 @@ export default function AdminProductoresPage() {
                               <span>{selectedProducer.rif}</span>
                             </div>
                           )}
-                          {selectedProducer.landTenure && (
+                          {selectedProducer.land_tenure && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Tenencia:</span>
-                              <span>{landTenureLabels[selectedProducer.landTenure]}</span>
+                              <span>{landTenureLabels[selectedProducer.land_tenure] || selectedProducer.land_tenure}</span>
                             </div>
                           )}
                         </div>
@@ -260,34 +261,34 @@ export default function AdminProductoresPage() {
 
                     <div className="grid gap-4 md:grid-cols-3">
                       <div className="p-4 rounded-lg bg-primary/5 text-center">
-                        <p className="text-2xl font-bold text-primary">{selectedProducer.totalArea || 0}</p>
+                        <p className="text-2xl font-bold text-primary">{selectedProducer.total_area || 0}</p>
                         <p className="text-sm text-muted-foreground">Hectareas Totales</p>
                       </div>
                       <div className="p-4 rounded-lg bg-primary/5 text-center">
-                        <p className="text-2xl font-bold text-primary">{selectedProducer.cultivatedArea || 0}</p>
+                        <p className="text-2xl font-bold text-primary">{selectedProducer.cultivated_area || 0}</p>
                         <p className="text-sm text-muted-foreground">Hectareas Cultivadas</p>
                       </div>
                       <div className="p-4 rounded-lg bg-muted/50 text-center">
                         <p className="text-lg font-medium">
-                          {selectedProducer.roadCondition 
-                            ? roadConditionLabels[selectedProducer.roadCondition] 
+                          {selectedProducer.road_condition 
+                            ? (roadConditionLabels[selectedProducer.road_condition] || selectedProducer.road_condition)
                             : 'No especificado'}
                         </p>
                         <p className="text-sm text-muted-foreground">Condicion de Vias</p>
                       </div>
                     </div>
 
-                    {selectedProducer.mainActivity && (
+                    {selectedProducer.main_activity && (
                       <div className="p-4 rounded-lg bg-muted/50">
                         <h4 className="font-semibold mb-2">Actividad Principal</h4>
-                        <Badge variant="outline">{selectedProducer.mainActivity}</Badge>
+                        <Badge variant="outline">{selectedProducer.main_activity}</Badge>
                       </div>
                     )}
 
-                    {selectedProducer.machineryInventory && (
+                    {selectedProducer.machinery_inventory && (
                       <div className="p-4 rounded-lg bg-muted/50">
                         <h4 className="font-semibold mb-2">Inventario de Maquinaria</h4>
-                        <p className="text-sm">{selectedProducer.machineryInventory}</p>
+                        <p className="text-sm">{selectedProducer.machinery_inventory}</p>
                       </div>
                     )}
                   </>
@@ -297,6 +298,8 @@ export default function AdminProductoresPage() {
           )}
         </DialogContent>
       </Dialog>
+      </>
+      )}
     </div>
   );
 }

@@ -26,9 +26,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { mockCreditPlans, formatCurrency, mockCreditApplications } from '@/lib/mock-data';
+import { formatCurrency } from '@/lib/formatters';
 import { useAuth } from '@/lib/auth-context';
 import { toast } from 'sonner';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/fetcher';
+import { creditService, type CreditPlanResponse, type CreditApplicationResponse } from '@/services/creditService';
 
 export default function CreditDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -38,12 +41,21 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [hasApplied, setHasApplied] = useState(false);
 
-  const plan = mockCreditPlans.find(p => p.id === parseInt(id));
+  const { data: plans = [], isLoading: isLoadingPlans } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
+  const { data: applications = [] } = useSWR<CreditApplicationResponse[]>('/credits/applications/', fetcher);
+
+  const plan = plans.find(p => p.id === parseInt(id));
 
   // Verificar si ya aplico a este plan
-  const existingApplication = mockCreditApplications.find(
-    app => app.creditPlanId === parseInt(id) && app.producerId === user?.id
-  );
+  const existingApplication = applications.find(app => app.credit_plan === parseInt(id));
+
+  if (isLoadingPlans) {
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   if (!plan) {
     return (
@@ -61,14 +73,16 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
 
   const handleApply = async () => {
     setIsApplying(true);
-    
-    // Simular llamada al API
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsApplying(false);
-    setShowConfirmDialog(false);
-    setHasApplied(true);
-    toast.success('Solicitud enviada exitosamente');
+    try {
+      await creditService.applyForCredit(plan.id);
+      setHasApplied(true);
+      setShowConfirmDialog(false);
+      toast.success('Solicitud enviada exitosamente');
+    } catch (error: any) {
+      toast.error(error.response?.data?.detail || 'Error al enviar la solicitud');
+    } finally {
+      setIsApplying(false);
+    }
   };
 
   const alreadyApplied = existingApplication || hasApplied;
@@ -98,10 +112,10 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
                   <CardTitle className="text-xl">{plan.title}</CardTitle>
                   <CardDescription className="flex items-center gap-2 mt-1">
                     <Building2 className="w-4 h-4" />
-                    {plan.companyName}
+                    {plan.company_name}
                   </CardDescription>
                 </div>
-                <Badge variant="secondary">{plan.agriculturalSector}</Badge>
+                <Badge variant="secondary">{plan.agricultural_sector}</Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -122,7 +136,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
                   <div>
                     <p className="text-sm text-muted-foreground">Monto</p>
                     <p className="font-semibold">
-                      {formatCurrency(plan.minAmount)} - {formatCurrency(plan.maxAmount)}
+                      {formatCurrency(plan.min_amount)} - {formatCurrency(plan.max_amount)}
                     </p>
                   </div>
                 </div>
@@ -133,7 +147,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Tasa de Interes</p>
-                    <p className="font-semibold">{plan.interestRate}% anual</p>
+                    <p className="font-semibold">{plan.interest_rate}% anual</p>
                   </div>
                 </div>
 
@@ -143,7 +157,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Plazo</p>
-                    <p className="font-semibold">{plan.termMonths} meses</p>
+                    <p className="font-semibold">{plan.term_months} meses</p>
                   </div>
                 </div>
 
@@ -243,7 +257,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
                   <Building2 className="w-6 h-6 text-secondary-foreground" />
                 </div>
                 <div>
-                  <p className="font-medium">{plan.companyName}</p>
+                  <p className="font-medium">{plan.company_name}</p>
                   <p className="text-sm text-muted-foreground">Entidad Verificada</p>
                 </div>
               </div>
@@ -267,18 +281,18 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
           <div className="py-4">
             <div className="p-4 bg-muted rounded-lg space-y-2">
               <p className="font-medium">{plan.title}</p>
-              <p className="text-sm text-muted-foreground">{plan.companyName}</p>
+              <p className="text-sm text-muted-foreground">{plan.company_name}</p>
               <div className="flex justify-between text-sm pt-2 border-t">
                 <span>Monto:</span>
-                <span className="font-medium">{formatCurrency(plan.minAmount)} - {formatCurrency(plan.maxAmount)}</span>
+                <span className="font-medium">{formatCurrency(plan.min_amount)} - {formatCurrency(plan.max_amount)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Tasa:</span>
-                <span className="font-medium">{plan.interestRate}%</span>
+                <span className="font-medium">{plan.interest_rate}%</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span>Plazo:</span>
-                <span className="font-medium">{plan.termMonths} meses</span>
+                <span className="font-medium">{plan.term_months} meses</span>
               </div>
             </div>
           </div>
