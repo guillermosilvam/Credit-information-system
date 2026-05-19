@@ -34,6 +34,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchProfile = async (currentUser: User) => {
+    try {
+      const meResponse = await authService.getMe();
+      if (meResponse.success && meResponse.data) {
+        const fullUser = meResponse.data;
+        if (fullUser.is_producer && fullUser.profile) {
+          const p = fullUser.profile;
+          setProducerProfile({
+            id: p.id,
+            userId: currentUser.id,
+            farmName: p.farm_name,
+            address: p.address,
+            rif: p.rif,
+            nationalId: p.national_id,
+            phoneNumber: p.phone_number,
+            totalArea: p.total_area ? Number(p.total_area) : undefined,
+            cultivatedArea: p.cultivated_area ? Number(p.cultivated_area) : undefined,
+            landTenure: p.land_tenure as any,
+            machineryInventory: p.machinery_inventory,
+            roadCondition: p.road_condition as any,
+            mainActivity: p.main_activity,
+          });
+        } else if (fullUser.is_company && fullUser.profile) {
+          const c = fullUser.profile;
+          setCompanyProfile({
+            id: c.id,
+            userId: currentUser.id,
+            companyName: c.company_name,
+            rif: c.rif,
+            legalName: c.legal_name,
+            corporatePhone: c.corporate_phone,
+            website: c.website,
+            fiscalAddress: c.fiscal_address,
+            companyType: c.company_type as any,
+            description: c.description,
+            responseTime: c.response_time,
+            status: c.status as any,
+          });
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching profile', e);
+    }
+  };
+
   // Cargar usuario persistido en Production de localStorage al iniciar
   useEffect(() => {
     const savedUser = localStorage.getItem('agrifinance_user');
@@ -41,9 +86,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const parsed = JSON.parse(savedUser) as User;
         setUser(parsed);
-        // NOTA: Para una escalabilidad real en Next+Django, aquí se debería 
-        // lanzar un api.get('/api/accounts/profile/me/') para recuperar producerProfile / companyProfile
-        // Por ahora, asumimos null en base al backend real hasta que configures los serializers del perfil.
+        // Recuperar perfil desde el backend
+        fetchProfile(parsed);
       } catch (e) {
         console.error('Error parseando sesion:', e);
       }
@@ -83,6 +127,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setUser(parsedUser);
       localStorage.setItem('agrifinance_user', JSON.stringify(parsedUser));
+      
+      // Fetch profile to populate producerProfile or companyProfile
+      await fetchProfile(parsedUser);
+      
       setIsLoading(false);
       return { success: true };
     } 

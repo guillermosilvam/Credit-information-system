@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import type { CompanyRegisterForm, CompanyType } from '@/lib/types';
+import { authService } from '@/services/authService';
 
 export default function RegistroEmpresaPage() {
   const router = useRouter();
@@ -63,24 +64,42 @@ export default function RegistroEmpresaPage() {
     if (!validateForm()) return;
     
     setIsLoading(true);
-    // Simular registro
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    const response = await authService.registerCompany({
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      company_name: formData.companyName,
+      rif: formData.rif,
+      legal_name: formData.legalName || undefined,
+      corporate_phone: formData.corporatePhone || undefined,
+      website: formData.website || undefined,
+      fiscal_address: formData.fiscalAddress || undefined,
+      company_type: formData.companyType,
+      description: formData.description || undefined,
+      response_time: formData.responseTime || undefined
+    });
+    
     setIsLoading(false);
     
-    toast.success('Solicitud enviada. Un administrador revisara su cuenta.');
-    router.push('/login');
+    if (response.success) {
+      toast.success('Solicitud enviada. Un administrador revisara su cuenta.');
+      router.push('/login');
+    } else {
+      toast.error(response.error || 'Error al enviar solicitud de registro');
+    }
   };
 
   return (
     <Card className="border-0 shadow-xl">
       <CardHeader className="space-y-1">
         <div className="flex items-center gap-2 mb-2">
-          <Link href="/registro">
-            <Button variant="ghost" size="sm" className="gap-1 px-2">
+          <Button asChild variant="ghost" size="sm" className="gap-1 px-2">
+            <Link href="/registro">
               <ArrowLeft className="w-4 h-4" />
               Volver
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
         <CardTitle className="text-2xl font-bold flex items-center gap-2">
           <Building2 className="w-6 h-6 text-secondary" />
@@ -103,7 +122,7 @@ export default function RegistroEmpresaPage() {
           {/* Datos de la Cuenta */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg border-b pb-2">Datos de la Cuenta</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="username">Usuario *</Label>
                 <Input
@@ -124,7 +143,7 @@ export default function RegistroEmpresaPage() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="password">Contrasena *</Label>
                 <div className="relative">
@@ -162,7 +181,7 @@ export default function RegistroEmpresaPage() {
           {/* Datos de la Empresa */}
           <div className="space-y-4">
             <h3 className="font-semibold text-lg border-b pb-2">Datos de la Empresa</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="companyName">Nombre Comercial *</Label>
                 <Input
@@ -182,7 +201,7 @@ export default function RegistroEmpresaPage() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="legalName">Razon Social</Label>
                 <Input
@@ -210,7 +229,7 @@ export default function RegistroEmpresaPage() {
                 </Select>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="corporatePhone">Telefono Corporativo</Label>
                 <Input
@@ -262,7 +281,7 @@ export default function RegistroEmpresaPage() {
           </div>
         </CardContent>
 
-        <CardFooter className="flex flex-col gap-4">
+        <CardFooter className="flex flex-col gap-4 pt-6 mt-4 pb-6">
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, User, MapPin, Tractor, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { landTenureLabels, roadConditionLabels } from '@/lib/formatters';
@@ -22,18 +22,36 @@ export default function PerfilProductorPage() {
   const [isExporting, setIsExporting] = useState(false);
   
   const [formData, setFormData] = useState({
-    farmName: producerProfile?.farmName || '',
-    address: producerProfile?.address || '',
-    rif: producerProfile?.rif || '',
-    nationalId: producerProfile?.nationalId || '',
-    phoneNumber: producerProfile?.phoneNumber || '',
-    totalArea: producerProfile?.totalArea?.toString() || '',
-    cultivatedArea: producerProfile?.cultivatedArea?.toString() || '',
-    landTenure: producerProfile?.landTenure || '',
-    machineryInventory: producerProfile?.machineryInventory || '',
-    roadCondition: producerProfile?.roadCondition || '',
-    mainActivity: producerProfile?.mainActivity || '',
+    farmName: '',
+    address: '',
+    rif: '',
+    nationalId: '',
+    phoneNumber: '',
+    totalArea: '',
+    cultivatedArea: '',
+    landTenure: '',
+    machineryInventory: '',
+    roadCondition: '',
+    mainActivity: '',
   });
+
+  useEffect(() => {
+    if (producerProfile) {
+      setFormData({
+        farmName: producerProfile.farmName || '',
+        address: producerProfile.address || '',
+        rif: producerProfile.rif || '',
+        nationalId: producerProfile.nationalId || '',
+        phoneNumber: producerProfile.phoneNumber || '',
+        totalArea: producerProfile.totalArea?.toString() || '',
+        cultivatedArea: producerProfile.cultivatedArea?.toString() || '',
+        landTenure: producerProfile.landTenure || '',
+        machineryInventory: producerProfile.machineryInventory || '',
+        roadCondition: producerProfile.roadCondition || '',
+        mainActivity: producerProfile.mainActivity || '',
+      });
+    }
+  }, [producerProfile]);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));

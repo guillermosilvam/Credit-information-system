@@ -93,12 +93,12 @@ export default function RegistroPage() {
       </div>
 
       <div className="text-center">
-        <Link href="/login">
-          <Button variant="ghost" className="gap-2">
+        <Button asChild variant="ghost" className="gap-2">
+          <Link href="/login">
             <ArrowLeft className="w-4 h-4" />
             Volver al inicio de sesion
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </div>
   );
