@@ -1,6 +1,8 @@
 import { AuthProvider } from '@/lib/auth-context';
-import { Tractor, Info } from 'lucide-react';
+import { Tractor, Info, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function AuthLayout({
   children,
@@ -71,12 +73,25 @@ export default function AuthLayout({
         </div>
 
         {/* Panel derecho - Formularios */}
-        <div className="flex-1 flex items-center justify-center p-8 bg-background relative">
-          <div className="absolute top-4 right-8 lg:hidden flex items-center gap-2 text-primary font-bold">
-            <Tractor className="w-5 h-5"/> SIGEFA
+        <div className="flex-1 flex flex-col bg-background relative">
+          {/* Boton de volver e indicador mobile */}
+          <div className="absolute top-4 left-4 right-8 flex justify-between items-center z-20">
+            <Button asChild variant="ghost" size="sm" className="gap-2">
+              <Link href="/">
+                <ArrowLeft className="w-4 h-4" />
+                <span className="hidden sm:inline">Volver al Inicio</span>
+                <span className="sm:hidden">Inicio</span>
+              </Link>
+            </Button>
+            <div className="lg:hidden flex items-center gap-2 text-primary font-bold">
+              <Tractor className="w-5 h-5"/> SIGEFA
+            </div>
           </div>
-          <div className="w-full max-w-md">
-            {children}
+
+          <div className="flex-1 flex items-center justify-center p-8 mt-12 lg:mt-0">
+            <div className="w-full max-w-md">
+              {children}
+            </div>
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import { Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/lib/auth-context';
 
 export default function EmpresaDashboard() {
   const { user, companyProfile } = useAuth();

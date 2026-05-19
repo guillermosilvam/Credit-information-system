@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Calculator, DollarSign, Calendar, Percent, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,11 +28,7 @@ export function CalculadoraCredito() {
   }, [monto, plazo]);
 
   const formatoMoneda = (valor: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 0
-    }).format(valor);
+    return '$' + Math.round(valor).toLocaleString('en-US');
   };
 
   return (
@@ -57,7 +53,7 @@ export function CalculadoraCredito() {
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 bg-slate-50 p-6 md:p-10 rounded-[2.5rem] shadow-sm border border-slate-100">
             
             {/* Controles */}
-            <div className="space-y-10">
+            <div className="space-y-10 relative z-20">
               {/* Slider de Monto */}
               <div className="space-y-4">
                 <div className="flex justify-between items-end">
@@ -144,12 +140,12 @@ export function CalculadoraCredito() {
               </div>
 
               <div className="mt-10 relative z-10">
-                <Link href="/registro/productor">
-                  <Button className="w-full h-14 bg-primary text-white hover:bg-primary/90 text-base shadow-lg shadow-primary/20 transition-transform hover:scale-[1.02]">
+                <Button asChild className="w-full h-14 bg-primary text-white hover:bg-primary/90 text-base shadow-lg shadow-primary/20 transition-transform hover:scale-[1.02]">
+                  <Link href="/registro/productor">
                     Solicitar Perfil Financiero
                     <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
                 <p className="text-center text-xs text-slate-500 mt-4 font-light">
                   Resultados matematicos referenciales. No aplicables para obligaciones contractuales automáticas.
                 </p>

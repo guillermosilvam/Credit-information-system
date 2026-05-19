@@ -34,17 +34,18 @@ export default function HomePage() {
             </nav>
             
             {/* Botones de acción sin escalar */}
-            <div className="flex items-center gap-3 ml-4 pl-4 border-l border-white/20">
-              <Link href="/login">
-                <Button variant="ghost" className="text-white hover:bg-white/20 hover:text-white transition-colors">
-                  Ingresar
-                </Button>
-              </Link>
-              <Link href="/registro">
-                <Button className="bg-primary text-white hover:bg-primary/80 transition-colors shadow-lg shadow-primary/20">
-                  Registrarse
-                </Button>
-              </Link>
+            <div className="flex items-center gap-2 sm:gap-3 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-white/20">
+              <Button asChild variant="ghost" className="px-2 sm:px-4 text-white hover:bg-white/20 hover:text-white transition-colors">
+                <Link href="/login">
+                  <span className="hidden sm:inline">Ingresar</span>
+                  <span className="sm:hidden">Entrar</span>
+                </Link>
+              </Button>
+              <Button asChild className="px-3 sm:px-4 bg-primary text-white hover:bg-primary/80 transition-colors shadow-lg shadow-primary/20">
+                <Link href="/registro">
+                  Registrar
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -71,7 +72,7 @@ export default function HomePage() {
             <span className="text-sm font-bold tracking-wide">Sistema de Gestion y Enlace Financiero Agricola</span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-4 text-balance leading-tight tracking-tight drop-shadow-xl">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-white mb-4 text-balance leading-tight tracking-tight drop-shadow-xl">
             Cultivando el Futuro <br className="hidden md:block"/> 
             <span className="text-transparent bg-clip-text bg-linear-to-r from-green-300 to-green-500">
               Productivo de Venezuela
@@ -82,20 +83,20 @@ export default function HomePage() {
             Nuestra finalidad es impulsar el crecimiento agricola. Conectamos directamente a productores con entidades financieras a traves de una plataforma tecnologica segura y eficiente.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/registro/productor">
-              <Button size="lg" className="h-14 px-8 text-lg gap-2 shadow-2xl shadow-primary/40 bg-primary text-white hover:bg-primary/90 transition-all hover:scale-105 border border-primary/50">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full px-4 sm:px-0">
+            <Button asChild size="lg" className="w-full sm:w-auto h-14 px-8 text-lg gap-2 shadow-2xl shadow-primary/40 bg-primary text-white hover:bg-primary/90 transition-all hover:scale-105 border border-primary/50">
+              <Link href="/registro/productor" className="w-full sm:w-auto">
                 <Tractor className="w-6 h-6" />
                 Soy Productor
                 <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </Link>
-            <Link href="/registro/empresa">
-              <Button size="lg" className="h-14 px-8 text-lg gap-2 backdrop-blur-sm bg-white/10 text-white border-2 border-white hover:bg-white hover:text-slate-900 transition-all hover:scale-105 shadow-xl">
+              </Link>
+            </Button>
+            <Button asChild size="lg" className="w-full sm:w-auto h-14 px-8 text-lg gap-2 backdrop-blur-sm bg-white/10 text-white border-2 border-white hover:bg-white hover:text-slate-900 transition-all hover:scale-105 shadow-xl">
+              <Link href="/registro/empresa" className="w-full sm:w-auto">
                 <Building2 className="w-6 h-6" />
                 Entidad Financiera
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

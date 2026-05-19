@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Save, Building2, Globe, Phone, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { companyTypeLabels } from '@/lib/formatters';
@@ -19,16 +19,32 @@ export default function PerfilEmpresaPage() {
   const [isLoading, setIsLoading] = useState(false);
   
   const [formData, setFormData] = useState({
-    companyName: companyProfile?.companyName || '',
-    rif: companyProfile?.rif || '',
-    legalName: companyProfile?.legalName || '',
-    corporatePhone: companyProfile?.corporatePhone || '',
-    website: companyProfile?.website || '',
-    fiscalAddress: companyProfile?.fiscalAddress || '',
-    companyType: companyProfile?.companyType || '',
-    description: companyProfile?.description || '',
-    responseTime: companyProfile?.responseTime || '',
+    companyName: '',
+    rif: '',
+    legalName: '',
+    corporatePhone: '',
+    website: '',
+    fiscalAddress: '',
+    companyType: '',
+    description: '',
+    responseTime: '',
   });
+
+  useEffect(() => {
+    if (companyProfile) {
+      setFormData({
+        companyName: companyProfile.companyName || '',
+        rif: companyProfile.rif || '',
+        legalName: companyProfile.legalName || '',
+        corporatePhone: companyProfile.corporatePhone || '',
+        website: companyProfile.website || '',
+        fiscalAddress: companyProfile.fiscalAddress || '',
+        companyType: companyProfile.companyType || '',
+        description: companyProfile.description || '',
+        responseTime: companyProfile.responseTime || '',
+      });
+    }
+  }, [companyProfile]);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));

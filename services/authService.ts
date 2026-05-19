@@ -61,5 +61,52 @@ export const authService = {
       localStorage.removeItem('refresh_token');
       localStorage.removeItem('agrifinance_user');
     }
+  },
+
+  /**
+   * Obtiene el perfil completo del usuario autenticado
+   */
+  async getMe() {
+    try {
+      const response = await api.get('/accounts/users/me/');
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      console.warn("Error al obtener perfil:", error.message);
+      return { success: false, error: 'Error al obtener perfil' };
+    }
+  },
+
+  async registerProducer(data: any) {
+    try {
+      const response = await api.post('/accounts/register/producer/', data);
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      let errorMessage = 'Error al registrar productor';
+      if (error.response?.data) {
+        if (typeof error.response.data === 'object' && error.response.data !== null) {
+          errorMessage = Object.values(error.response.data).flat().join(', ') || errorMessage;
+        } else {
+          errorMessage = error.response.data.detail || errorMessage;
+        }
+      }
+      return { success: false, error: errorMessage };
+    }
+  },
+
+  async registerCompany(data: any) {
+    try {
+      const response = await api.post('/accounts/register/company/', data);
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      let errorMessage = 'Error al registrar empresa';
+      if (error.response?.data) {
+        if (typeof error.response.data === 'object' && error.response.data !== null) {
+          errorMessage = Object.values(error.response.data).flat().join(', ') || errorMessage;
+        } else {
+          errorMessage = error.response.data.detail || errorMessage;
+        }
+      }
+      return { success: false, error: errorMessage };
+    }
   }
 };

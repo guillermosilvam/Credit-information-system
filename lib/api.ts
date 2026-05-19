@@ -1,8 +1,16 @@
 import axios from 'axios';
 
-// La URL base asume el puerto 8000 confirmado por el entorno de desarrollo local Django
-// Usamos 127.0.0.1 en lugar de localhost para evitar problemas de resolucion IPv6 en Windows
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+// Determinamos dinámicamente la URL para que funcione si se accede desde otro dispositivo (ej. teléfono)
+const getApiUrl = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== 'undefined') {
+    // Si estamos en el navegador del teléfono, usa la IP del host en lugar de 127.0.0.1
+    return `http://${window.location.hostname}:8000/api`;
+  }
+  return 'http://127.0.0.1:8000/api'; // Fallback para SSR
+};
+
+const API_URL = getApiUrl();
 
 const api = axios.create({
   baseURL: API_URL,

@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import type { ProducerRegisterForm, LandTenure, RoadCondition } from '@/lib/types';
+import { authService } from '@/services/authService';
 
 const steps = [
   { id: 1, title: 'Cuenta', description: 'Datos de acceso' },
@@ -89,24 +90,44 @@ export default function RegistroProductorPage() {
     if (!validateStep(3)) return;
     
     setIsLoading(true);
-    // Simular registro
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    const response = await authService.registerProducer({
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      farm_name: formData.farmName,
+      address: formData.address,
+      rif: formData.rif || undefined,
+      national_id: formData.nationalId || undefined,
+      phone_number: formData.phoneNumber || undefined,
+      total_area: formData.totalArea,
+      cultivated_area: formData.cultivatedArea,
+      land_tenure: formData.landTenure,
+      machinery_inventory: formData.machineryInventory || undefined,
+      road_condition: formData.roadCondition,
+      main_activity: formData.mainActivity || undefined
+    });
+    
     setIsLoading(false);
     
-    toast.success('Cuenta creada exitosamente');
-    router.push('/login');
+    if (response.success) {
+      toast.success('Cuenta creada exitosamente');
+      router.push('/login');
+    } else {
+      toast.error(response.error || 'Error al crear cuenta');
+    }
   };
 
   return (
     <Card className="border-0 shadow-xl">
       <CardHeader className="space-y-1">
         <div className="flex items-center gap-2 mb-2">
-          <Link href="/registro">
-            <Button variant="ghost" size="sm" className="gap-1 px-2">
+          <Button asChild variant="ghost" size="sm" className="gap-1 px-2">
+            <Link href="/registro">
               <ArrowLeft className="w-4 h-4" />
               Volver
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
         <CardTitle className="text-2xl font-bold">Registro de Productor</CardTitle>
         <CardDescription>
@@ -193,7 +214,7 @@ export default function RegistroProductorPage() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-0 top-0 h-full px-3"
+                  className="absolute right-0 top-0 h-full px-3 z-10"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -234,7 +255,7 @@ export default function RegistroProductorPage() {
                 onChange={(e) => updateFormData('address', e.target.value)}
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="rif">RIF (Opcional)</Label>
                 <Input
@@ -263,7 +284,7 @@ export default function RegistroProductorPage() {
                 onChange={(e) => updateFormData('phoneNumber', e.target.value)}
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="totalArea">Area Total (ha)</Label>
                 <Input
@@ -355,7 +376,7 @@ export default function RegistroProductorPage() {
         )}
       </CardContent>
 
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-between pt-6 mt-4">
         {currentStep > 1 ? (
           <Button variant="outline" onClick={prevStep}>
             <ArrowLeft className="w-4 h-4 mr-2" />

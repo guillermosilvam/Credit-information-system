@@ -39,6 +39,23 @@ export default function RootLayout({
   return (
     <html lang="es" className="bg-background">
       <body className={`${poppins.variable} ${sourceSans.variable} font-sans antialiased`}>
+        <div id="error-boundary-debug" style={{ position: 'fixed', top: 0, left: 0, right: 0, background: 'red', color: 'white', zIndex: 99999, padding: '10px', display: 'none', maxHeight: '50vh', overflow: 'auto', fontSize: '12px' }}></div>
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.addEventListener('error', function(event) {
+            var el = document.getElementById('error-boundary-debug');
+            if (el) {
+              el.style.display = 'block';
+              el.innerHTML += '<p><strong>Error:</strong> ' + event.message + '</p>';
+            }
+          });
+          window.addEventListener('unhandledrejection', function(event) {
+            var el = document.getElementById('error-boundary-debug');
+            if (el) {
+              el.style.display = 'block';
+              el.innerHTML += '<p><strong>Rejection:</strong> ' + (event.reason ? event.reason.message || event.reason : 'unknown') + '</p>';
+            }
+          });
+        ` }} />
         {children}
         <Toaster richColors position="top-right" />
         {process.env.NODE_ENV === 'production' && <Analytics />}
