@@ -24,7 +24,7 @@ export default function AdminDashboard() {
   const totalApplications = applications?.length || 0;
   
   // Sort applications by applied_at descending (assuming the API returns an array)
-  const sortedApps = applications ? [...applications].sort((a: any, b: any) => new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime()) : [];
+  const sortedApps = applications ? [...applications].sort((a: any, b: any) => new Date(b.application_date).getTime() - new Date(a.application_date).getTime()) : [];
   const recentApplications = sortedApps.slice(0, 5);
 
   if (isLoading) {
@@ -102,7 +102,7 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Planes de Credito</CardTitle>
+            <CardTitle className="text-sm font-medium">Planes de Crédito</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -186,7 +186,7 @@ export default function AdminDashboard() {
             </div>
           ) : (
             <div className="space-y-4">
-              {pendingCompanies.map((company) => (
+              {pendingCompanies.map((company: any) => (
                 <div
                   key={company.id}
                   className="flex items-center justify-between p-4 rounded-lg border bg-card"
@@ -217,15 +217,15 @@ export default function AdminDashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {recentApplications.map((application) => (
+            {recentApplications.map((application: any) => (
               <div
                 key={application.id}
                 className="flex items-center justify-between p-4 rounded-lg border bg-card"
               >
                 <div className="space-y-1">
-                  <p className="font-medium">{application.producer_name || 'Productor'}</p>
+                  <p className="font-medium">{application.producer_profile?.farm_name || 'Productor'}</p>
                   <p className="text-sm text-muted-foreground">
-                    {application.credit_plan_title || 'Plan'} - {formatDate(application.applied_at)}
+                    {application.credit_plan_title || 'Plan'} - {formatDate(application.application_date)}
                   </p>
                 </div>
                 <Badge variant={

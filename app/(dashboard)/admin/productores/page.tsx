@@ -75,7 +75,7 @@ export default function AdminProductoresPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Area Total Registrada</CardTitle>
+            <CardTitle className="text-sm font-medium">Área Total Registrada</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -85,7 +85,7 @@ export default function AdminProductoresPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Area Cultivada</CardTitle>
+            <CardTitle className="text-sm font-medium">Área Cultivada</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">
@@ -135,7 +135,7 @@ export default function AdminProductoresPage() {
                     <TableHead>Productor</TableHead>
                     <TableHead>Finca</TableHead>
                     <TableHead>Ubicacion</TableHead>
-                    <TableHead>Area</TableHead>
+                    <TableHead>Área</TableHead>
                     <TableHead>Actividad</TableHead>
                     <TableHead className="w-12"></TableHead>
                   </TableRow>
@@ -195,7 +195,7 @@ export default function AdminProductoresPage() {
           <DialogHeader>
             <DialogTitle>Detalle de Productor</DialogTitle>
             <DialogDescription>
-              Informacion completa del productor y su finca
+              Información completa del productor y su finca
             </DialogDescription>
           </DialogHeader>
           
@@ -218,13 +218,13 @@ export default function AdminProductoresPage() {
                           </div>
                           {selectedProducer.national_id && (
                             <div className="flex justify-between">
-                              <span className="text-muted-foreground">Cedula:</span>
+                              <span className="text-muted-foreground">Cédula:</span>
                               <span>{selectedProducer.national_id}</span>
                             </div>
                           )}
                           {selectedProducer.phone_number && (
                             <div className="flex justify-between">
-                              <span className="text-muted-foreground">Telefono:</span>
+                              <span className="text-muted-foreground">Teléfono:</span>
                               <span>{selectedProducer.phone_number}</span>
                             </div>
                           )}
@@ -232,7 +232,7 @@ export default function AdminProductoresPage() {
                       </div>
 
                       <div className="p-4 rounded-lg bg-muted/50">
-                        <h4 className="font-semibold mb-3">Informacion de Finca</h4>
+                        <h4 className="font-semibold mb-3">Información de Finca</h4>
                         <div className="space-y-2 text-sm">
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">Nombre:</span>

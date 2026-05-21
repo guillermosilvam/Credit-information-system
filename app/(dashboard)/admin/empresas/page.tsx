@@ -112,7 +112,7 @@ export default function AdminEmpresasPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Gestion de Empresas</h1>
+        <h1 className="text-2xl font-bold text-foreground">Gestión de Empresas</h1>
         <p className="text-muted-foreground">
           Administre y apruebe las entidades financieras registradas
         </p>
@@ -212,7 +212,7 @@ export default function AdminEmpresasPage() {
               <Building2 className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="font-semibold mb-2">No se encontraron empresas</h3>
               <p className="text-muted-foreground">
-                Intente ajustar los filtros de busqueda
+                Intente ajustar los filtros de búsqueda
               </p>
             </div>
           ) : (
@@ -280,7 +280,7 @@ export default function AdminEmpresasPage() {
           <DialogHeader>
             <DialogTitle>Detalle de Empresa</DialogTitle>
             <DialogDescription>
-              Revise la informacion y tome una decision
+              Revise la información y tome una decisión
             </DialogDescription>
           </DialogHeader>
           
@@ -288,7 +288,7 @@ export default function AdminEmpresasPage() {
             <div className="space-y-6 py-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="p-4 rounded-lg bg-muted/50">
-                  <h4 className="font-semibold mb-3">Informacion General</h4>
+                  <h4 className="font-semibold mb-3">Información General</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Nombre:</span>
@@ -300,7 +300,7 @@ export default function AdminEmpresasPage() {
                     </div>
                     {selectedCompany.legal_name && (
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Razon Social:</span>
+                        <span className="text-muted-foreground">Razón Social:</span>
                         <span>{selectedCompany.legal_name}</span>
                       </div>
                     )}
@@ -318,7 +318,7 @@ export default function AdminEmpresasPage() {
                   <div className="space-y-2 text-sm">
                     {selectedCompany.corporate_phone && (
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Telefono:</span>
+                        <span className="text-muted-foreground">Teléfono:</span>
                         <span>{selectedCompany.corporate_phone}</span>
                       </div>
                     )}
@@ -342,7 +342,7 @@ export default function AdminEmpresasPage() {
 
               {selectedCompany.fiscal_address && (
                 <div className="p-4 rounded-lg bg-muted/50">
-                  <h4 className="font-semibold mb-2">Direccion Fiscal</h4>
+                  <h4 className="font-semibold mb-2">Dirección Fiscal</h4>
                   <p className="text-sm">{selectedCompany.fiscal_address}</p>
                 </div>
               )}

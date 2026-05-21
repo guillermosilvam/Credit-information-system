@@ -14,13 +14,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import type { LandTenure, RoadCondition } from '@/lib/types';
 import { accountService } from '@/services/accountService';
-import { Download } from 'lucide-react';
 
 export default function PerfilProductorPage() {
   const { user, producerProfile, updateProducerProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     farmName: '',
     address: '',
@@ -82,25 +80,7 @@ export default function PerfilProductorPage() {
     toast.success('Perfil actualizado correctamente');
   };
 
-  const handleDownload = async () => {
-    if (!producerProfile?.id) return;
-    setIsExporting(true);
-    try {
-      const blob = await accountService.exportProducer(producerProfile.id);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `mis_datos_productor.json`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      toast.success('Datos descargados correctamente');
-    } catch (e: any) {
-      toast.error('Error al descargar los datos');
-    } finally {
-      setIsExporting(false);
-    }
-  };
+
 
   return (
     <div className="space-y-6">
@@ -108,7 +88,7 @@ export default function PerfilProductorPage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Mi Perfil</h1>
         <p className="text-muted-foreground">
-          Administre su informacion personal y de su unidad de produccion
+          Administre su información personal y de su unidad de producción
         </p>
       </div>
 
@@ -121,11 +101,11 @@ export default function PerfilProductorPage() {
             </TabsTrigger>
             <TabsTrigger value="ubicacion" className="gap-2">
               <MapPin className="w-4 h-4" />
-              <span className="hidden sm:inline">Ubicacion</span>
+              <span className="hidden sm:inline">Ubicación</span>
             </TabsTrigger>
             <TabsTrigger value="produccion" className="gap-2">
               <Tractor className="w-4 h-4" />
-              <span className="hidden sm:inline">Produccion</span>
+              <span className="hidden sm:inline">Producción</span>
             </TabsTrigger>
           </TabsList>
 
@@ -133,9 +113,9 @@ export default function PerfilProductorPage() {
           <TabsContent value="cuenta">
             <Card>
               <CardHeader>
-                <CardTitle>Informacion de la Cuenta</CardTitle>
+                <CardTitle>Información de la Cuenta</CardTitle>
                 <CardDescription>
-                  Datos basicos de su cuenta de usuario
+                  Datos básicos de su cuenta de usuario
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -153,7 +133,7 @@ export default function PerfilProductorPage() {
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Correo Electronico</Label>
+                    <Label htmlFor="email">Correo Electrónico</Label>
                     <Input
                       id="email"
                       type="email"
@@ -165,7 +145,7 @@ export default function PerfilProductorPage() {
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="nationalId">Cedula de Identidad</Label>
+                    <Label htmlFor="nationalId">Cédula de Identidad</Label>
                     <Input
                       id="nationalId"
                       value={formData.nationalId}
@@ -174,7 +154,7 @@ export default function PerfilProductorPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phoneNumber">Telefono</Label>
+                    <Label htmlFor="phoneNumber">Teléfono</Label>
                     <Input
                       id="phoneNumber"
                       value={formData.phoneNumber}
@@ -193,7 +173,7 @@ export default function PerfilProductorPage() {
               <CardHeader>
                 <CardTitle>Ubicacion y Finca</CardTitle>
                 <CardDescription>
-                  Informacion de su unidad de produccion agricola
+                  Información de su unidad de producción agrícola
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -204,7 +184,7 @@ export default function PerfilProductorPage() {
                       id="farmName"
                       value={formData.farmName}
                       onChange={(e) => handleChange('farmName', e.target.value)}
-                      placeholder="Hacienda Los Alamos"
+                      placeholder="Hacienda Los Álamos"
                     />
                   </div>
                   <div className="space-y-2">
@@ -218,7 +198,7 @@ export default function PerfilProductorPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="address">Direccion</Label>
+                  <Label htmlFor="address">Dirección</Label>
                   <Textarea
                     id="address"
                     value={formData.address}
@@ -229,7 +209,7 @@ export default function PerfilProductorPage() {
                 </div>
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="space-y-2">
-                    <Label htmlFor="totalArea">Area Total (ha)</Label>
+                    <Label htmlFor="totalArea">Área Total (ha)</Label>
                     <Input
                       id="totalArea"
                       type="number"
@@ -239,7 +219,7 @@ export default function PerfilProductorPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="cultivatedArea">Area Cultivada (ha)</Label>
+                    <Label htmlFor="cultivatedArea">Área Cultivada (ha)</Label>
                     <Input
                       id="cultivatedArea"
                       type="number"
@@ -275,7 +255,7 @@ export default function PerfilProductorPage() {
               <CardHeader>
                 <CardTitle>Datos Productivos</CardTitle>
                 <CardDescription>
-                  Informacion sobre su actividad agricola
+                  Información sobre su actividad agrícola
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -321,17 +301,8 @@ export default function PerfilProductorPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Save & Download Buttons */}
+        {/* Save Button */}
         <div className="flex justify-end mt-6 gap-4">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={handleDownload}
-            disabled={isExporting || !producerProfile?.id}
-          >
-            {isExporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
-            Descargar Mis Datos
-          </Button>
           <Button type="submit" disabled={isLoading}>
             {isLoading ? (
               <>

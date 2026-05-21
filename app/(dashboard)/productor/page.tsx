@@ -157,7 +157,7 @@ export default function ProductorDashboard() {
                   <div className="space-y-1">
                     <p className="font-medium">{application.credit_plan_title || `Plan #${application.credit_plan}`}</p>
                     <p className="text-sm text-muted-foreground">
-                      Aplicado: {new Date(application.applied_at).toLocaleDateString('es-VE')}
+                      Aplicado: {new Date(application.application_date).toLocaleDateString('es-VE')}
                     </p>
                   </div>
                   <Badge variant={getStatusVariant(application.status)}>

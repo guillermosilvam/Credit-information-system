@@ -46,10 +46,10 @@ export default function EmpresaDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            Bienvenido, {companyProfile?.company_name || user?.username}
+            Bienvenido, {companyProfile?.companyName || user?.username}
           </h1>
           <p className="text-muted-foreground">
-            Panel de Gestion de Creditos
+            Panel de Gestión de Créditos
           </p>
         </div>
         <Link href="/empresa/planes/nuevo">
@@ -89,7 +89,7 @@ export default function EmpresaDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{receivedApplications.length}</div>
             <p className="text-xs text-muted-foreground">
-              Total historico
+              Total histórico
             </p>
           </CardContent>
         </Card>
@@ -102,7 +102,7 @@ export default function EmpresaDashboard() {
           <CardContent>
             <div className="text-2xl font-bold text-amber-600">{pendingApplications.length}</div>
             <p className="text-xs text-muted-foreground">
-              Requieren revision
+              Requieren revisión
             </p>
           </CardContent>
         </Card>
@@ -170,8 +170,8 @@ export default function EmpresaDashboard() {
           {receivedApplications.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No ha recibido solicitudes todavia</p>
-              <p className="text-sm">Los productores podran aplicar cuando publique planes de credito</p>
+              <p>No ha recibido solicitudes todavía</p>
+              <p className="text-sm">Los productores podrán aplicar cuando publique planes de crédito</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -181,12 +181,12 @@ export default function EmpresaDashboard() {
                   className="flex items-center justify-between p-4 rounded-lg border bg-card"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium">{application.producer_name || 'Productor'}</p>
+                    <p className="font-medium">{application.producer_profile?.farm_name || application.producer_profile?.user?.username || 'Productor'}</p>
                     <p className="text-sm text-muted-foreground">
                       {application.credit_plan_title || `Plan #${application.credit_plan}`}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Aplicado: {new Date(application.applied_at).toLocaleDateString('es-VE')}
+                      Aplicado: {new Date(application.application_date).toLocaleDateString('es-VE')}
                     </p>
                   </div>
                   <Badge variant={getStatusVariant(application.status)}>

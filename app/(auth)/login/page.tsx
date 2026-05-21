@@ -64,7 +64,7 @@ export default function LoginPage() {
         }
       }
     } else {
-      toast.error(result.error || 'Error al iniciar sesion');
+      toast.error(result.error || 'Error al iniciar sesión');
     }
   };
 
@@ -79,7 +79,7 @@ export default function LoginPage() {
             <span className="text-xl font-bold text-foreground tracking-tight">SIGEFA</span>
           </div>
         </div>
-        <CardTitle className="text-2xl font-bold">Iniciar Sesion</CardTitle>
+        <CardTitle className="text-2xl font-bold">Iniciar Sesión</CardTitle>
         <CardDescription>
           Ingrese sus credenciales para acceder a la plataforma
         </CardDescription>
@@ -87,7 +87,7 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">Usuario o Correo Electronico</Label>
+            <Label htmlFor="username">Usuario o Correo Electrónico</Label>
             <Input
               id="username"
               type="text"
@@ -99,11 +99,11 @@ export default function LoginPage() {
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password">Contrasena</Label>
+              <Label htmlFor="password">Contraseña</Label>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <button type="button" className="text-sm text-primary hover:underline bg-transparent border-0 p-0 text-left cursor-pointer">
-                    Olvide mi contrasena
+                    Olvidé mi contraseña
                   </button>
                 </AlertDialogTrigger>
                 <AlertDialogContent className="sm:max-w-md">
@@ -114,10 +114,10 @@ export default function LoginPage() {
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-sm md:text-base text-muted-foreground pt-3 space-y-3">
                       <span>
-                        Por estrictos motivos de seguridad y resguardo de su perfil tecnico agrario, el restablecimiento automatico de contrasenas se encuentra inhabilitado en la plataforma.
+                        Por estrictos motivos de seguridad y resguardo de su perfil técnico agrario, el restablecimiento automático de contraseñas se encuentra inhabilitado en la plataforma.
                       </span>
                       <span className="block mt-2">
-                        Por favor, redacte un correo electronico formal al Administrador Central indicando su <strong>R.I.F</strong> y la razon de la perdida a:
+                        Por favor, redacte un correo electrónico formal al Administrador Central indicando su <strong>R.I.F</strong> y la razón de la pérdida a:
                       </span>
                       <span className="block font-semibold text-foreground text-center bg-muted p-2 rounded-md mt-4">
                         soporte@sigefa.com
@@ -153,7 +153,7 @@ export default function LoginPage() {
                   <Eye className="h-4 w-4 text-muted-foreground" />
                 )}
                 <span className="sr-only">
-                  {showPassword ? 'Ocultar contrasena' : 'Mostrar contrasena'}
+                  {showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                 </span>
               </Button>
             </div>
@@ -171,9 +171,9 @@ export default function LoginPage() {
             )}
           </Button>
           <div className="text-center text-sm text-muted-foreground">
-            No tienes una cuenta?{' '}
+            ¿No tienes una cuenta?{' '}
             <Link href="/registro" className="text-primary font-medium hover:underline">
-              Registrate aqui
+              Regístrate aquí
             </Link>
           </div>
         </CardFooter>

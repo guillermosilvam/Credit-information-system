@@ -288,7 +288,7 @@ export default function SolicitudesEmpresaPage() {
           <DialogHeader>
             <DialogTitle>Detalle de Solicitud</DialogTitle>
             <DialogDescription>
-              Revise la informacion del productor y tome una decision
+              Revise la información del productor y tome una decisión
             </DialogDescription>
           </DialogHeader>
           
@@ -297,7 +297,7 @@ export default function SolicitudesEmpresaPage() {
               {/* Producer Info */}
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="p-4 rounded-lg bg-muted/50">
-                  <h4 className="font-semibold mb-3">Informacion del Productor</h4>
+                  <h4 className="font-semibold mb-3">Información del Productor</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Nombre:</span>
@@ -310,11 +310,11 @@ export default function SolicitudesEmpresaPage() {
                     {selectedApplication.producer_profile && (
                       <>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Area Total:</span>
+                          <span className="text-muted-foreground">Área Total:</span>
                           <span>{selectedApplication.producer_profile.total_area || 0} ha</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Area Cultivada:</span>
+                          <span className="text-muted-foreground">Área Cultivada:</span>
                           <span>{selectedApplication.producer_profile.cultivated_area || 0} ha</span>
                         </div>
                         <div className="flex justify-between">

@@ -59,7 +59,7 @@ export default function ProductoresPage() {
               <CardTitle className="text-xl">{producer.farm_name || 'Finca Sin Nombre'}</CardTitle>
               <CardDescription className="flex items-center gap-1.5 mt-1.5">
                 <MapPin className="w-3.5 h-3.5" />
-                <span className="truncate" title={producer.address}>{producer.address || 'Sin Direccion'}</span>
+                <span className="truncate" title={producer.address}>{producer.address || 'Sin Dirección'}</span>
               </CardDescription>
             </CardHeader>
             <CardContent>

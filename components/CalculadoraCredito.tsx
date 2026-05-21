@@ -106,7 +106,7 @@ export function CalculadoraCredito() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-800">Tasa de Referencia Asumida: {tasaAnual}%</p>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">Este valor es un promedio referencial de banca agricola nacional. Las entidades impondran su propia politica final.</p>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">Este valor es un promedio referencial de banca agricola nacional. Las entidades impondrán su propia política final.</p>
                 </div>
               </div>
             </div>

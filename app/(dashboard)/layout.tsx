@@ -173,14 +173,14 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 <DropdownMenuItem asChild>
                   <Link href={`/${user.role === 'producer' ? 'productor' : 'empresa'}/perfil`}>
                     <Settings className="mr-2 h-4 w-4" />
-                    Configuracion
+                    Configuración
                   </Link>
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-destructive">
                 <LogOut className="mr-2 h-4 w-4" />
-                Cerrar Sesion
+                Cerrar sesión
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

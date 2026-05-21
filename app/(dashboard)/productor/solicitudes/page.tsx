@@ -175,7 +175,7 @@ export default function MisSolicitudesPage() {
                           )}
                         </TableCell>
                         <TableCell>
-                          {formatDate(application.applied_at)}
+                          {formatDate(application.application_date)}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
@@ -208,7 +208,7 @@ export default function MisSolicitudesPage() {
             <div>
               <h3 className="font-semibold mb-1">Sobre el proceso de solicitud</h3>
               <p className="text-sm text-muted-foreground">
-                Una vez enviada su solicitud, la entidad financiera revisara su perfil y la informacion 
+                Una vez enviada su solicitud, la entidad financiera revisará su perfil y la información 
                 de su finca. El tiempo de respuesta varia segun la entidad. Mantendra su perfil actualizado 
                 para agilizar el proceso de aprobacion.
               </p>

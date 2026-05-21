@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
-import { Download, Tractor, MapPin, ChevronLeft, Calendar, FileText, Anchor, Layers, Settings, Loader2 } from 'lucide-react';
+import { Tractor, MapPin, ChevronLeft, Calendar, FileText, Anchor, Layers, Settings, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -34,24 +34,7 @@ export default function ProductorDetailPage() {
 
   const user = profile.user;
 
-  const handleDownload = async () => {
-    setIsExporting(true);
-    try {
-      const blob = await accountService.exportProducer(producerId);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `datos_productor_${producerId}.json`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      toast.success('Datos descargados correctamente');
-    } catch (e: any) {
-      toast.error('Error al descargar los datos');
-    } finally {
-      setIsExporting(false);
-    }
-  };
+
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-12">
@@ -74,7 +57,7 @@ export default function ProductorDetailPage() {
               <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">Verificado</Badge>
             </div>
             <p className="flex items-center gap-1.5 text-muted-foreground mt-2">
-              <MapPin className="w-4 h-4" /> {profile.address || 'Sin Direccion'}
+              <MapPin className="w-4 h-4" /> {profile.address || 'Sin Dirección'}
             </p>
             <p className="flex items-center gap-1.5 text-sm text-muted-foreground mt-1">
               <FileText className="w-4 h-4" /> RIF: {profile.rif || 'No especificado'}
@@ -82,16 +65,7 @@ export default function ProductorDetailPage() {
           </div>
         </div>
         
-        {/* Descargar Datos Button */}
-        <Button 
-          className="shrink-0 gap-2 shadow-lg shadow-primary/20 hover:scale-105 transition-transform" 
-          size="lg"
-          onClick={handleDownload}
-          disabled={isExporting}
-        >
-          {isExporting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
-          Descargar Datos (JSON)
-        </Button>
+
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
@@ -138,7 +112,7 @@ export default function ProductorDetailPage() {
             </CardHeader>
             <CardContent className="pt-6">
               <p className="text-foreground leading-relaxed">
-                {profile.machinery_inventory || 'No se ha especificado informacion sobre maquinaria.'}
+                {profile.machinery_inventory || 'No se ha especificado información sobre maquinaria.'}
               </p>
             </CardContent>
           </Card>
@@ -168,7 +142,7 @@ export default function ProductorDetailPage() {
               </div>
               <Separator />
               <div>
-                <dt className="text-sm font-medium text-muted-foreground mb-1">Cedula de Identidad</dt>
+                <dt className="text-sm font-medium text-muted-foreground mb-1">Cédula de Identidad</dt>
                 <dd className="text-base font-medium">{profile.national_id || 'N/A'}</dd>
               </div>
             </CardContent>
@@ -180,7 +154,7 @@ export default function ProductorDetailPage() {
             </CardHeader>
             <CardContent className="pt-4 space-y-3 test-sm">
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Telefono</span>
+                <span className="text-muted-foreground">Teléfono</span>
                 <span className="font-medium">{profile.phone_number || 'N/A'}</span>
               </div>
               <div className="flex justify-between items-center">

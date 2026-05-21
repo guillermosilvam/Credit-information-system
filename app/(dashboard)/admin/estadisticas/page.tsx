@@ -87,7 +87,7 @@ export default function AdminEstadisticasPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Planes de Credito</CardTitle>
+            <CardTitle className="text-sm font-medium">Planes de Crédito</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -165,7 +165,7 @@ export default function AdminEstadisticasPage() {
               Cobertura Agricola
             </CardTitle>
             <CardDescription>
-              Area registrada por productores
+              Área registrada por productores
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">

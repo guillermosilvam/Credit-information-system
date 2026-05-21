@@ -28,8 +28,8 @@ export default function AyudaPage() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12 max-w-4xl">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold tracking-tight mb-4">Ayuda y Documentacion General</h1>
-          <p className="text-xl text-muted-foreground">Wiki interna de SIGEFA. Encuentra guias operativas, glosario tecnico y respuestas a interrogantes frecuentes.</p>
+          <h1 className="text-4xl font-bold tracking-tight mb-4">Ayuda y Documentación General</h1>
+          <p className="text-xl text-muted-foreground">Wiki interna de SIGEFA. Encuentra guías operativas, glosario técnico y respuestas a interrogantes frecuentes.</p>
         </div>
 
         {/* Guía de Usuario */}
@@ -38,13 +38,13 @@ export default function AyudaPage() {
             <div className="p-3 bg-primary/10 rounded-lg">
               <BookOpen className="w-6 h-6 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold">Guia de Usuario para Productores</h2>
+            <h2 className="text-2xl font-bold">Guía de Usuario para Productores</h2>
           </div>
           <div className="bg-card border border-border/50 rounded-2xl p-8 shadow-sm">
-            <h3 className="text-lg font-semibold mb-4">¿Como llenar el Perfil Tecnico Agricola?</h3>
+            <h3 className="text-lg font-semibold mb-4">¿Cómo llenar el Perfil Técnico Agrícola?</h3>
             <ol className="list-decimal list-inside space-y-4 text-muted-foreground">
               <li>
-                <strong className="text-foreground">Datos Basicos (Cédula de Identidad y RIF):</strong> Antes de solicitar un crédito, debes tener tus documentos vigentes. Ingrésalos tal como aparecen en los registros oficiales del Estado Venezolano.
+                <strong className="text-foreground">Datos Básicos (Cédula de Identidad y RIF):</strong> Antes de solicitar un crédito, debes tener tus documentos vigentes. Ingrésalos tal como aparecen en los registros oficiales del Estado Venezolano.
               </li>
               <li>
                 <strong className="text-foreground">Superficie y Linderos:</strong> El sistema evalúa el potencial de la inversión en base a la extensión de tierra. Debes ser exacto en diferenciar <span className="italic">"Hectáreas Totales"</span> de <span className="italic">"Hectáreas Cultivables o Aprovechables"</span>.
@@ -53,7 +53,7 @@ export default function AyudaPage() {
                 <strong className="text-foreground">Inventario y Vialidad:</strong> Selecciona de manera honesta el estado de la vialidad hacia la finca (Óptima, Regular, Difícil). Informar la maquinaria de propiedad acelerará los procesos de los analistas de las bancas.
               </li>
               <li>
-                <strong className="text-foreground">Envio y Espera:</strong> Una vez llenado el perfil en el apartado "/perfil", entra al Directorio de Ofertas. Aplica a una que cuadre con tu rubro agrario. Las notificaciones llegarán pronto.
+                <strong className="text-foreground">Envío y Espera:</strong> Una vez llenado el perfil en el apartado "/perfil", entra al Directorio de Ofertas. Aplica a una que cuadre con tu rubro agrario. Las notificaciones llegarán pronto.
               </li>
             </ol>
           </div>
@@ -65,15 +65,15 @@ export default function AyudaPage() {
             <div className="p-3 bg-primary/10 rounded-lg">
               <GraduationCap className="w-6 h-6 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold">Glosario Terminos Tecnicos y Financieros</h2>
+            <h2 className="text-2xl font-bold">Glosario Términos Técnicos y Financieros</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="bg-card p-6 rounded-xl border border-border/50">
-              <h4 className="font-bold text-lg mb-2">Tasa de Interes Nominal</h4>
+              <h4 className="font-bold text-lg mb-2">Tasa de Interés Nominal</h4>
               <p className="text-sm text-muted-foreground">Es la rentabilidad o costo de un producto financiero estipulada en los contratos. Es el porcentaje bruto que el banco cobra por el uso del capital prestado.</p>
             </div>
             <div className="bg-card p-6 rounded-xl border border-border/50">
-              <h4 className="font-bold text-lg mb-2">Periodo de Gracia</h4>
+              <h4 className="font-bold text-lg mb-2">Período de Gracia</h4>
               <p className="text-sm text-muted-foreground">Es el tiempo (ya sean semanas o meses) posterior a la entrega del capital y previo al inicio del cobro de las cuotas. Se diseña para que la semilla sea sembrada y de frutos, previniendo ahogos financieros.</p>
             </div>
             <div className="bg-card p-6 rounded-xl border border-border/50">
@@ -81,8 +81,8 @@ export default function AyudaPage() {
               <p className="text-sm text-muted-foreground">Condición estatuaria del lote agrario. Puede ser propia (Títulos INTI comprobables), Arrendamiento (pagando canon) o en condición de adjudicación provisional.</p>
             </div>
             <div className="bg-card p-6 rounded-xl border border-border/50">
-              <h4 className="font-bold text-lg mb-2">Garantia Prendaria o Hipotecaria</h4>
-              <p className="text-sm text-muted-foreground">Se trata del seguro resguardado por maquinaria (prendaria) o tierras/galpones (Hipotecas) que exige el financista como metodo de repago legal en escenario de incumplimiento extremo.</p>
+              <h4 className="font-bold text-lg mb-2">Garantía Prendaria o Hipotecaria</h4>
+              <p className="text-sm text-muted-foreground">Se trata del seguro resguardado por maquinaria (prendaria) o tierras/galpones (Hipotecas) que exige el financista como método de repago legal en escenario de incumplimiento extremo.</p>
             </div>
           </div>
         </section>
@@ -98,30 +98,30 @@ export default function AyudaPage() {
           
           <Accordion type="single" collapsible className="w-full bg-card rounded-2xl border border-border/50 px-6">
             <AccordionItem value="item-1" className="border-b-border/50">
-              <AccordionTrigger className="text-base font-semibold hover:no-underline hover:text-primary">¿Cuanto tiempo tarda la verificacion del sistema?</AccordionTrigger>
+              <AccordionTrigger className="text-base font-semibold hover:no-underline hover:text-primary">¿Cuánto tiempo tarda la verificación del sistema?</AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
-                Los analisis documentales basicos suelen demorar entre 24 y 48 horas habiles. En un primer nivel intervienen administradores de SIGEFA evaluando consistencia, en el nivel 2, el banco dictaminara.
+                Los análisis documentales básicos suelen demorar entre 24 y 48 horas hábiles. En un primer nivel intervienen administradores de SIGEFA evaluando consistencia, en el nivel 2, el banco dictaminará.
               </AccordionContent>
             </AccordionItem>
             
             <AccordionItem value="item-2" className="border-b-border/50">
               <AccordionTrigger className="text-base font-semibold hover:no-underline hover:text-primary">¿Cualquier tipo de rubro o cultivo es financiado?</AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
-                Si, de manera estructural. Todo depende de las Empresas crediticias y los fondos de inversion activos temporalmente; algunas empresas se centran solo en leguminosas (Frijol, Maiz, Sorgo), y otras pueden cubrir un espectro pecuario (Avicultura, Porcinos).
+                Sí, de manera estructural. Todo depende de las Empresas crediticias y los fondos de inversión activos temporalmente; algunas empresas se centran solo en leguminosas (Frijol, Maíz, Sorgo), y otras pueden cubrir un espectro pecuario (Avicultura, Porcinos).
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-3" className="border-b-border/50">
               <AccordionTrigger className="text-base font-semibold hover:no-underline hover:text-primary">¿Que ocurre si un Fondo rechaza mi propuesta?</AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
-                No hay mayores inconvenientes. La flexibilidad de SIGEFA permite que tu perfil de productor continue existiendo. Si una solicitud fracasa ante la Entidad A, eres totalmente libre de aplicar simultaneamente por el Plan Crediticio de la Entidad B.
+                No hay mayores inconvenientes. La flexibilidad de SIGEFA permite que tu perfil de productor continúe existiendo. Si una solicitud fracasa ante la Entidad A, eres totalmente libre de aplicar simultáneamente por el Plan Crediticio de la Entidad B.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-4" className="border-none">
-              <AccordionTrigger className="text-base font-semibold hover:no-underline hover:text-primary">¿Esta pagina (SIGEFA) maneja o recibe mis abonos referenciales del credito?</AccordionTrigger>
+              <AccordionTrigger className="text-base font-semibold hover:no-underline hover:text-primary">¿Esta página (SIGEFA) maneja o recibe mis abonos referenciales del crédito?</AccordionTrigger>
               <AccordionContent className="text-muted-foreground font-medium text-foreground/90">
-                Absolutamente NO. Toda amortizacion de deuda, acuerdos contractuales firmados, cobro de cuotas y flujos de efectivo se manejan externalmente a traves del canal financiero establecido por la Entidad Bancaria o del Fondo (sus portales de pago nativos).
+                Absolutamente NO. Toda amortización de deuda, acuerdos contractuales firmados, cobro de cuotas y flujos de efectivo se manejan externamente a través del canal financiero establecido por la Entidad Bancaria o del Fondo (sus portales de pago nativos).
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -130,7 +130,7 @@ export default function AyudaPage() {
       </main>
       
       <footer className="py-8 text-center text-sm text-muted-foreground border-t">
-        <p>&copy; {new Date().getFullYear()} SIGEFA. Documentacion Tecnico-legal Administrativa.</p>
+        <p>&copy; {new Date().getFullYear()} SIGEFA. Documentación técnico-legal administrativa.</p>
       </footer>
     </div>
   );

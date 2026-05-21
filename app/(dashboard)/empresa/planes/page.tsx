@@ -89,7 +89,7 @@ export default function MisPlanesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Mis Planes de Credito</h1>
+          <h1 className="text-2xl font-bold text-foreground">Mis Planes de Crédito</h1>
           <p className="text-muted-foreground">
             Gestione los planes de credito que ofrece a los productores
           </p>

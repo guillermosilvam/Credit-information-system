@@ -52,7 +52,7 @@ export default function ExplorarCreditosPage() {
     try {
       await creditService.applyForCredit(selectedPlan.id);
       toast.success('Solicitud enviada exitosamente', {
-        description: 'Recibira una notificacion cuando la entidad revise su solicitud.'
+        description: 'Recibirá una notificación cuando la entidad revise su solicitud.'
       });
       setShowConfirmDialog(false);
     } catch (e: any) {
@@ -66,9 +66,9 @@ export default function ExplorarCreditosPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Explorar Creditos</h1>
+        <h1 className="text-2xl font-bold text-foreground">Explorar Créditos</h1>
         <p className="text-muted-foreground">
-          Encuentre el plan de financiamiento ideal para su actividad agricola
+          Encuentre el plan de financiamiento ideal para su actividad agrícola
         </p>
       </div>
 
@@ -79,7 +79,7 @@ export default function ExplorarCreditosPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nombre o descripcion..."
+                placeholder="Buscar por nombre o descripción..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -114,7 +114,7 @@ export default function ExplorarCreditosPage() {
             <CreditCard className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
             <h3 className="font-semibold mb-2">No se encontraron planes</h3>
             <p className="text-muted-foreground">
-              Intente ajustar los filtros de busqueda
+              Intente ajustar los filtros de búsqueda
             </p>
           </CardContent>
         </Card>
@@ -192,9 +192,9 @@ export default function ExplorarCreditosPage() {
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirmar Solicitud de Credito</DialogTitle>
+            <DialogTitle>Confirmar Solicitud de Crédito</DialogTitle>
             <DialogDescription>
-              Esta a punto de aplicar al siguiente plan de credito
+              Está a punto de aplicar al siguiente plan de crédito
             </DialogDescription>
           </DialogHeader>
           
@@ -227,8 +227,8 @@ export default function ExplorarCreditosPage() {
               </div>
 
               <p className="text-sm text-muted-foreground">
-                Al confirmar, su solicitud sera enviada a {selectedPlan.company_name || 'la empresa'} para revision. 
-                Recibira una notificacion cuando su solicitud sea procesada.
+                Al confirmar, su solicitud será enviada a {selectedPlan.company_name || 'la empresa'} para revisión. 
+                Recibirá una notificación cuando su solicitud sea procesada.
               </p>
             </div>
           )}

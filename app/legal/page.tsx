@@ -23,7 +23,7 @@ export default function LegalPage() {
       <main className="container mx-auto px-4 py-12 max-w-4xl">
         <div className="mb-12">
           <h1 className="text-4xl font-bold tracking-tight mb-4">Apartado Legal y Normativo</h1>
-          <p className="text-xl text-muted-foreground">Documentacion legal y terminos de servicio del Sistema de Gestion y Enlace Financiero Agricola (SIGEFA).</p>
+          <p className="text-xl text-muted-foreground">Documentación legal y términos de servicio del Sistema de Gestión y Enlace Financiero Agrícola (SIGEFA).</p>
         </div>
 
         <section id="terminos" className="mb-16 bg-card border border-border/50 rounded-2xl p-8 shadow-sm">
@@ -31,12 +31,12 @@ export default function LegalPage() {
             <div className="p-3 bg-primary/10 rounded-lg">
               <Scale className="w-6 h-6 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold">Terminos y Condiciones</h2>
+            <h2 className="text-2xl font-bold">Términos y Condiciones</h2>
           </div>
           <div className="space-y-4 text-muted-foreground leading-relaxed">
-            <p><strong>1. Aceptacion de los Terminos:</strong> Al acceder y utilizar la plataforma SIGEFA, el usuario (Productor o Representante de la Entidad Financiera) acepta ceñirse integramente a las normas operativas, de respeto mutuo y de buena fe comercial estipuladas en el presente documento.</p>
-            <p><strong>2. Veracidad de la Informacion:</strong> El Productor garantiza por este medio que toda la documentacion vinculada a tamaño de linderos, capacidad productiva, avaluo de maquinaria, y registro mercantil o de finca (RIF, Titularidad) proporcionada a traves del sistema, es cien por ciento veraz, legitima y verificable. Cualquier falsedad o adulteracion constituye un fraude unilateral del usuario y representara la exclusion permanente del sistema SIGEFA.</p>
-            <p><strong>3. Uso Correcto de la Plataforma:</strong> SIGEFA proporciona el espacio tecnologico y las herramientas visuales para presentar perfiles de inversion y riesgo a organizaciones competentes constituidas bajo la legislacion venezolana, a su entera discrecionalidad civil y mercantil.</p>
+            <p><strong>1. Aceptación de los Términos:</strong> Al acceder y utilizar la plataforma SIGEFA, el usuario (Productor o Representante de la Entidad Financiera) acepta ceñirse íntegramente a las normas operativas, de respeto mutuo y de buena fe comercial estipuladas en el presente documento.</p>
+            <p><strong>2. Veracidad de la Información:</strong> El Productor garantiza por este medio que toda la documentación vinculada a tamaño de linderos, capacidad productiva, avalúo de maquinaria, y registro mercantil o de finca (RIF, Titularidad) proporcionada a través del sistema, es cien por ciento veraz, legítima y verificable. Cualquier falsedad o adulteración constituye un fraude unilateral del usuario y representará la exclusión permanente del sistema SIGEFA.</p>
+            <p><strong>3. Uso Correcto de la Plataforma:</strong> SIGEFA proporciona el espacio tecnológico y las herramientas visuales para presentar perfiles de inversión y riesgo a organizaciones competentes constituidas bajo la legislación venezolana, a su entera discrecionalidad civil y mercantil.</p>
           </div>
         </section>
 
@@ -45,12 +45,12 @@ export default function LegalPage() {
             <div className="p-3 bg-primary/10 rounded-lg">
               <ShieldCheck className="w-6 h-6 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold">Politica de Privacidad</h2>
+            <h2 className="text-2xl font-bold">Política de Privacidad</h2>
           </div>
           <div className="space-y-4 text-muted-foreground leading-relaxed">
-            <p><strong>Tratamiento de Datos:</strong> En estricto cumplimiento del marco juridico nacional y las buenas practicas internacionales de Proteccion de Datos (habeas data), ratificamos que SIGEFA resguardara los datos socio-economicos, fotograficos e instrumentales (documentos de propiedad o contables) mediante encriptacion en nuestras bases de datos estructuradas.</p>
-            <p><strong>Confidencialidad:</strong> Ningun dato o documento de un Productor sera vendido, transferido o cedido a terceros fuera de la red de Entidades Financieras previamente autorizadas. El Productor asume activamente que al crear su perfil y aceptar estos terminos, consiente tacitamente la exposicion de sus datos a las carteras de los bancos o fondos acreditados dentro de nuestro portal.</p>
-            <p><strong>Retencion:</strong> El usuario tiene el derecho pleno a solicitar la eliminacion de su cuenta, accion que desencadenara el borrado del historial productivo de nuestros servidores en el lapso estipulado por los administradores primarios (Super Administrador).</p>
+            <p><strong>Tratamiento de Datos:</strong> En estricto cumplimiento del marco jurídico nacional y las buenas prácticas internacionales de Protección de Datos (habeas data), ratificamos que SIGEFA resguardará los datos socio-económicos, fotográficos e instrumentales (documentos de propiedad o contables) mediante encriptación en nuestras bases de datos estructuradas.</p>
+            <p><strong>Confidencialidad:</strong> Ningún dato o documento de un Productor será vendido, transferido o cedido a terceros fuera de la red de Entidades Financieras previamente autorizadas. El Productor asume activamente que al crear su perfil y aceptar estos términos, consiente tácitamente la exposición de sus datos a las carteras de los bancos o fondos acreditados dentro de nuestro portal.</p>
+            <p><strong>Retención:</strong> El usuario tiene el derecho pleno a solicitar la eliminación de su cuenta, acción que desencadenará el borrado del historial productivo de nuestros servidores en el lapso estipulado por los administradores primarios (Super Administrador).</p>
           </div>
         </section>
 
@@ -62,7 +62,7 @@ export default function LegalPage() {
             <h2 className="text-2xl font-bold">Descargos de Responsabilidad</h2>
           </div>
           <div className="space-y-4 text-foreground/80 leading-relaxed font-medium">
-            <p>SIGEFA actua estrictamente bajo la figura juridica y practica de <strong>Servicio Tecnologico para la Intermediacion y Enlace de Partes</strong>. Al registrarse, enviar solicitudes o realizar contactos cruzados a traves del portal web, toda la comunidad de usuarios declara y asume conocer lo siguiente:</p>
+            <p>SIGEFA actúa estrictamente bajo la figura jurídica y práctica de <strong>Servicio Tecnológico para la Intermediación y Enlace de Partes</strong>. Al registrarse, enviar solicitudes o realizar contactos cruzados a traves del portal web, toda la comunidad de usuarios declara y asume conocer lo siguiente:</p>
             <ul className="list-disc list-inside space-y-2 mt-4 ml-2">
               <li>SIGEFA <strong>NO CAPTA FONDOS PUBLICOS</strong> ni otorga financiamientos, adelantos, prestamos o garantias pecuniarias directamente.</li>
               <li>La organizacion desarrolladora del sistema <strong>no influye, no tiene potestad ni garantiza</strong> el otorgamiento, montos, tasas de interes ni aprobacion final de ningun credito o herramienta financiera.</li>

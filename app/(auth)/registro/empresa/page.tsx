@@ -45,11 +45,11 @@ export default function RegistroEmpresaPage() {
       return false;
     }
     if (formData.password !== formData.confirmPassword) {
-      toast.error('Las contrasenas no coinciden');
+      toast.error('Las contraseñas no coinciden');
       return false;
     }
     if (formData.password.length < 6) {
-      toast.error('La contrasena debe tener al menos 6 caracteres');
+      toast.error('La contraseña debe tener al menos 6 caracteres');
       return false;
     }
     if (!formData.companyName || !formData.rif) {
@@ -145,7 +145,7 @@ export default function RegistroEmpresaPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="password">Contrasena *</Label>
+                <Label htmlFor="password">Contraseña *</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -170,7 +170,7 @@ export default function RegistroEmpresaPage() {
                 <Input
                   id="confirmPassword"
                   type="password"
-                  placeholder="Repita la contrasena"
+                  placeholder="Repita la contraseña"
                   value={formData.confirmPassword}
                   onChange={(e) => updateFormData('confirmPassword', e.target.value)}
                 />
@@ -231,7 +231,7 @@ export default function RegistroEmpresaPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="corporatePhone">Telefono Corporativo</Label>
+                <Label htmlFor="corporatePhone">Teléfono Corporativo</Label>
                 <Input
                   id="corporatePhone"
                   placeholder="+58 212 1234567"
@@ -251,10 +251,10 @@ export default function RegistroEmpresaPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="fiscalAddress">Direccion Fiscal</Label>
+              <Label htmlFor="fiscalAddress">Dirección Fiscal</Label>
               <Textarea
                 id="fiscalAddress"
-                placeholder="Direccion completa de la sede"
+                placeholder="Dirección completa de la sede"
                 value={formData.fiscalAddress}
                 onChange={(e) => updateFormData('fiscalAddress', e.target.value)}
               />
@@ -296,7 +296,7 @@ export default function RegistroEmpresaPage() {
             )}
           </Button>
           <p className="text-xs text-center text-muted-foreground">
-            Al registrarse, acepta nuestros terminos de servicio y politica de privacidad
+            Al registrarse, acepta nuestros términos de servicio y política de privacidad
           </p>
         </CardFooter>
       </form>

@@ -297,7 +297,7 @@ export default function HomePage() {
             <div className="space-y-5">
               <h4 className="font-bold text-slate-800">Normativas</h4>
               <ul className="space-y-3 text-sm text-slate-500 font-medium">
-                <li><Link href="/legal#terminos" className="hover:text-primary transition-colors inline-flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 hover:border-primary/30"><Scale className="w-3.5 h-3.5"/> Terminos y Condiciones</Link></li>
+                <li><Link href="/legal#terminos" className="hover:text-primary transition-colors inline-flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 hover:border-primary/30"><Scale className="w-3.5 h-3.5"/> Términos y Condiciones</Link></li>
                 <li><Link href="/legal#privacidad" className="hover:text-primary transition-colors inline-flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 hover:border-primary/30"><ExternalLink className="w-3.5 h-3.5"/> Privacidad de Datos</Link></li>
                 <li><Link href="/legal#descargo" className="hover:text-primary transition-colors inline-flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 hover:border-primary/30"><ExternalLink className="w-3.5 h-3.5"/> Descargo de Responsabilidad</Link></li>
               </ul>

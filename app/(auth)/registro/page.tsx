@@ -96,7 +96,7 @@ export default function RegistroPage() {
         <Button asChild variant="ghost" className="gap-2">
           <Link href="/login">
             <ArrowLeft className="w-4 h-4" />
-            Volver al inicio de sesion
+            Volver al inicio de sesión
           </Link>
         </Button>
       </div>

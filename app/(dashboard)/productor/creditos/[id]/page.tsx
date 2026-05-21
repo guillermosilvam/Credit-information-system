@@ -103,7 +103,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Informacion principal */}
+        {/* Información principal */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
@@ -184,7 +184,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
                 {[
                   'Ser productor agricola registrado en la plataforma',
                   'Tener perfil completo con datos de la finca',
-                  'Cedula de identidad vigente',
+                  'Cédula de identidad vigente',
                   'RIF actualizado',
                   'Documentos que acrediten la tenencia de la tierra',
                   'Referencias bancarias (opcional)'

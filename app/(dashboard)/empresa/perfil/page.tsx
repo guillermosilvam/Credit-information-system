@@ -93,7 +93,7 @@ export default function PerfilEmpresaPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Perfil de Empresa</h1>
           <p className="text-muted-foreground">
-            Administre la informacion de su entidad financiera
+            Administre la información de su entidad financiera
           </p>
         </div>
         {getStatusBadge()}
@@ -107,7 +107,7 @@ export default function PerfilEmpresaPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="w-5 h-5" />
-                  Informacion de la Empresa
+                  Información de la Empresa
                 </CardTitle>
                 <CardDescription>
                   Datos legales y comerciales de su entidad
@@ -162,12 +162,12 @@ export default function PerfilEmpresaPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="fiscalAddress">Direccion Fiscal</Label>
+                  <Label htmlFor="fiscalAddress">Dirección Fiscal</Label>
                   <Textarea
                     id="fiscalAddress"
                     value={formData.fiscalAddress}
                     onChange={(e) => handleChange('fiscalAddress', e.target.value)}
-                    placeholder="Direccion completa de la sede principal"
+                    placeholder="Dirección completa de la sede principal"
                     rows={3}
                   />
                 </div>
@@ -191,13 +191,13 @@ export default function PerfilEmpresaPage() {
                   Contacto
                 </CardTitle>
                 <CardDescription>
-                  Informacion de contacto corporativo
+                  Información de contacto corporativo
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="corporatePhone">Telefono Corporativo</Label>
+                    <Label htmlFor="corporatePhone">Teléfono Corporativo</Label>
                     <Input
                       id="corporatePhone"
                       value={formData.corporatePhone}
@@ -244,7 +244,7 @@ export default function PerfilEmpresaPage() {
                   <Input value={user?.username || ''} disabled className="bg-muted" />
                 </div>
                 <div className="space-y-2">
-                  <Label>Correo Electronico</Label>
+                  <Label>Correo Electrónico</Label>
                   <Input value={user?.email || ''} disabled className="bg-muted" />
                 </div>
               </CardContent>
@@ -263,12 +263,12 @@ export default function PerfilEmpresaPage() {
                   <div>
                     <p className="font-medium">
                       {companyProfile?.status === 'verified' ? 'Empresa Verificada' :
-                       companyProfile?.status === 'pending' ? 'Pendiente de Aprobacion' : 'Rechazada'}
+                       companyProfile?.status === 'pending' ? 'Pendiente de Aprobación' : 'Rechazada'}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {companyProfile?.status === 'verified' 
-                        ? 'Su empresa esta autorizada para publicar planes de credito'
-                        : 'Un administrador revisara su solicitud'}
+                        ? 'Su empresa está autorizada para publicar planes de crédito'
+                        : 'Un administrador revisará su solicitud'}
                     </p>
                   </div>
                 </div>

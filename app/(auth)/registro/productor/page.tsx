@@ -16,8 +16,8 @@ import { authService } from '@/services/authService';
 
 const steps = [
   { id: 1, title: 'Cuenta', description: 'Datos de acceso' },
-  { id: 2, title: 'Ubicacion', description: 'Datos de la finca' },
-  { id: 3, title: 'Produccion', description: 'Actividad agricola' }
+  { id: 2, title: 'Ubicación', description: 'Datos de la finca' },
+  { id: 3, title: 'Producción', description: 'Actividad agrícola' }
 ];
 
 export default function RegistroProductorPage() {
@@ -55,17 +55,17 @@ export default function RegistroProductorPage() {
           return false;
         }
         if (formData.password !== formData.confirmPassword) {
-          toast.error('Las contrasenas no coinciden');
+          toast.error('Las contraseñas no coinciden');
           return false;
         }
         if (formData.password.length < 6) {
-          toast.error('La contrasena debe tener al menos 6 caracteres');
+          toast.error('La contraseña debe tener al menos 6 caracteres');
           return false;
         }
         return true;
       case 2:
         if (!formData.farmName || !formData.address) {
-          toast.error('Ingrese el nombre y direccion de la finca');
+          toast.error('Ingrese el nombre y dirección de la finca');
           return false;
         }
         return true;
@@ -191,7 +191,7 @@ export default function RegistroProductorPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Correo Electronico *</Label>
+              <Label htmlFor="email">Correo Electrónico *</Label>
               <Input
                 id="email"
                 type="email"
@@ -201,7 +201,7 @@ export default function RegistroProductorPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Contrasena *</Label>
+              <Label htmlFor="password">Contraseña *</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -222,11 +222,11 @@ export default function RegistroProductorPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmar Contrasena *</Label>
+              <Label htmlFor="confirmPassword">Confirmar Contraseña *</Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Repita la contrasena"
+                placeholder="Repita la contraseña"
                 value={formData.confirmPassword}
                 onChange={(e) => updateFormData('confirmPassword', e.target.value)}
               />
@@ -247,7 +247,7 @@ export default function RegistroProductorPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="address">Direccion *</Label>
+              <Label htmlFor="address">Dirección *</Label>
               <Textarea
                 id="address"
                 placeholder="Sector, Municipio, Estado"
@@ -266,7 +266,7 @@ export default function RegistroProductorPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="nationalId">Cedula</Label>
+                <Label htmlFor="nationalId">Cédula</Label>
                 <Input
                   id="nationalId"
                   placeholder="12345678"
@@ -276,7 +276,7 @@ export default function RegistroProductorPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phoneNumber">Telefono</Label>
+              <Label htmlFor="phoneNumber">Teléfono</Label>
               <Input
                 id="phoneNumber"
                 placeholder="+58 412 1234567"
@@ -286,7 +286,7 @@ export default function RegistroProductorPage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="totalArea">Area Total (ha)</Label>
+                <Label htmlFor="totalArea">Área Total (ha)</Label>
                 <Input
                   id="totalArea"
                   type="number"
@@ -296,7 +296,7 @@ export default function RegistroProductorPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="cultivatedArea">Area Cultivada (ha)</Label>
+                <Label htmlFor="cultivatedArea">Área Cultivada (ha)</Label>
                 <Input
                   id="cultivatedArea"
                   type="number"

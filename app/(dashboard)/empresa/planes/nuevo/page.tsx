@@ -87,7 +87,7 @@ export default function NuevoPlanPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Crear Plan de Credito</h1>
           <p className="text-muted-foreground">
-            Defina los terminos y condiciones de su nuevo plan de financiamiento
+            Defina los términos y condiciones de su nuevo plan de financiamiento
           </p>
         </div>
       </div>
@@ -98,9 +98,9 @@ export default function NuevoPlanPage() {
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Informacion General</CardTitle>
+                <CardTitle>Información General</CardTitle>
                 <CardDescription>
-                  Datos basicos del plan de credito
+                  Datos básicos del plan de crédito
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
