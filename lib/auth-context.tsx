@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const fullUser = meResponse.data;
             // Construimos un usuario básico si el backend no devuelve el objecto user completo
             const parsedUser: User = {
-              id: fullUser.id || fullUser.user?.id || (Date.now().toString()),
+              id: Number(fullUser.id || fullUser.user?.id || Date.now()),
               username: fullUser.username || fullUser.user?.username || 'user',
               email: fullUser.email || fullUser.user?.email || '',
               role: fullUser.is_company ? 'company' : (fullUser.is_producer ? 'producer' : 'producer'),
@@ -153,7 +153,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             : (username.toLowerCase().includes('empresa') ? 'company' : 'producer');
         
         parsedUser = {
-          id: decoded?.user_id || Date.now().toString(),
+          id: Number(decoded?.user_id || Date.now()),
           username: username,
           email: username.includes('@') ? username : `${username}@sigefa.com`,
           role: autoRole,

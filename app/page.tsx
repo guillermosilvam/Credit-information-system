@@ -25,11 +25,11 @@ export default function HomePage() {
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-white/90">
               <Link href="/ayuda" className="group relative flex items-center gap-2 transition-colors hover:text-white py-1">
                 <BookOpen className="w-4 h-4" /> Guia y Ayuda
-                <span className="absolute bottom-0 left-1/2 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full group-hover:-translate-x-1/2"></span>
+                <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full group-hover:-translate-x-1/2"></span>
               </Link>
               <Link href="/legal" className="group relative flex items-center gap-2 transition-colors hover:text-white py-1">
                 <Scale className="w-4 h-4" /> Apartado Legal
-                <span className="absolute bottom-0 left-1/2 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full group-hover:-translate-x-1/2"></span>
+                <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full group-hover:-translate-x-1/2"></span>
               </Link>
             </nav>
             
@@ -232,7 +232,7 @@ export default function HomePage() {
       {/* Visual Break - Call to Action Invertido */}
       <section className="py-12 px-4 bg-slate-50">
         <div className="container mx-auto">
-          <div className="relative rounded-[3rem] w-full overflow-hidden flex items-center justify-center text-center shadow-2xl min-h-[450px]">
+          <div className="relative rounded-[3rem] w-full overflow-hidden flex items-center justify-center text-center shadow-2xl min-h-112.5">
             <Image 
               src="/images/steven-weeks-DUPFowqI6oI-unsplash.jpg" 
               fill 

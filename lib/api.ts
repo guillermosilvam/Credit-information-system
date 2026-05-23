@@ -19,9 +19,21 @@ const api = axios.create({
   },
 });
 
-// Interceptor para inyectar via Header el Token JWT devuelto por simplejwt
+// Interceptor para ajustar la ruta y inyectar via Header el Token JWT devuelto por simplejwt
 api.interceptors.request.use(
   (config) => {
+    // Ajustar URL: si la llamada no es una URL completa y no contiene /api, anteponer /api
+    if (config && typeof config.url === 'string') {
+      const isFullUrl = config.url.startsWith('http://') || config.url.startsWith('https://');
+      if (!isFullUrl) {
+        if (!config.url.startsWith('/api')) {
+          // asegurar leading slash
+          if (!config.url.startsWith('/')) config.url = '/' + config.url;
+          config.url = `/api${config.url}`;
+        }
+      }
+    }
+
     // Evitamos problemas si se ejecuta desde SSR en Next.js
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('access_token');
