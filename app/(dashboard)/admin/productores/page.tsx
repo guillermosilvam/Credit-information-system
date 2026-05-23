@@ -191,7 +191,7 @@ export default function AdminProductoresPage() {
 
       {/* Detail Dialog */}
       <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-full max-w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Detalle de Productor</DialogTitle>
             <DialogDescription>
@@ -225,7 +225,7 @@ export default function AdminProductoresPage() {
                           {selectedProducer.phone_number && (
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Teléfono:</span>
-                              <span>{selectedProducer.phone_number}</span>
+                              <span className="break-all text-right">{selectedProducer.phone_number}</span>
                             </div>
                           )}
                         </div>

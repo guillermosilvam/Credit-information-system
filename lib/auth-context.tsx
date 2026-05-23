@@ -111,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               id: fullUser.id || fullUser.user?.id || (Date.now().toString()),
               username: fullUser.username || fullUser.user?.username || 'user',
               email: fullUser.email || fullUser.user?.email || '',
-              role: fullUser.is_company ? 'company' : (fullUser.is_producer ? 'producer' : 'user'),
+              role: fullUser.is_company ? 'company' : (fullUser.is_producer ? 'producer' : 'producer'),
               createdAt: new Date().toISOString(),
             };
 

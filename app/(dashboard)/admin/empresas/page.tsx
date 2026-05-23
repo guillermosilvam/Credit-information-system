@@ -276,7 +276,7 @@ export default function AdminEmpresasPage() {
 
       {/* Detail Dialog */}
       <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="w-full max-w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Detalle de Empresa</DialogTitle>
             <DialogDescription>
@@ -319,13 +319,13 @@ export default function AdminEmpresasPage() {
                     {selectedCompany.corporate_phone && (
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Teléfono:</span>
-                        <span>{selectedCompany.corporate_phone}</span>
+                        <span className="break-all text-right">{selectedCompany.corporate_phone}</span>
                       </div>
                     )}
                     {selectedCompany.website && (
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Web:</span>
-                        <a href={selectedCompany.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        <a href={selectedCompany.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline break-all text-right inline-block max-w-[60%]">
                           {selectedCompany.website}
                         </a>
                       </div>

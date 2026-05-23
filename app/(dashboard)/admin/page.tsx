@@ -189,7 +189,7 @@ export default function AdminDashboard() {
               {pendingCompanies.map((company: any) => (
                 <div
                   key={company.id}
-                  className="flex items-center justify-between p-4 rounded-lg border bg-card"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 rounded-lg border bg-card gap-2"
                 >
                   <div className="space-y-1">
                     <p className="font-medium">{company.company_name}</p>
