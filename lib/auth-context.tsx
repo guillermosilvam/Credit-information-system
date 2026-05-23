@@ -39,6 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const meResponse = await authService.getMe();
       if (meResponse.success && meResponse.data) {
         const fullUser = meResponse.data;
+        // Permitir que un usuario tenga ambos perfiles y setearlos independientemente
         if (fullUser.is_producer && fullUser.profile) {
           const p = fullUser.profile;
           setProducerProfile({
@@ -56,7 +57,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             roadCondition: p.road_condition as any,
             mainActivity: p.main_activity,
           });
-        } else if (fullUser.is_company && fullUser.profile) {
+        }
+        if (fullUser.is_company && fullUser.profile) {
           const c = fullUser.profile;
           setCompanyProfile({
             id: c.id,
@@ -237,6 +239,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: false, error: 'Error updating company profile' };
     }
   };
+
+  useEffect(() => {
+    // Poll profile periodically for company accounts so verification status updates in real time
+    if (!user || user.role !== 'company') return;
+    const iv = setInterval(async () => {
+      try {
+        await fetchProfile(user);
+      } catch (e) {
+        // ignore errors
+      }
+    }, 30000); // 30s
+    return () => clearInterval(iv);
+  }, [user]);
 
   return (
     <AuthContext.Provider value={{

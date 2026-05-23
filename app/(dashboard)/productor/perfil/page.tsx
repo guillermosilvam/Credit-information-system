@@ -145,6 +145,7 @@ export default function PerfilProductorPage() {
                     <Label htmlFor="username">Nombre de Usuario</Label>
                     <Input
                       id="username"
+                      maxLength={30}
                       value={formData.username}
                       onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
                       onBlur={async () => {
@@ -184,6 +185,9 @@ export default function PerfilProductorPage() {
                     <Label htmlFor="nationalId">Cédula de Identidad</Label>
                     <Input
                       id="nationalId"
+                      inputMode="numeric"
+                      pattern="\d*"
+                      maxLength={8}
                       value={formData.nationalId}
                       onChange={(e) => handleChange('nationalId', e.target.value)}
                       placeholder="12345678"
@@ -193,9 +197,11 @@ export default function PerfilProductorPage() {
                     <Label htmlFor="phoneNumber">Teléfono</Label>
                     <Input
                       id="phoneNumber"
+                      inputMode="tel"
+                      maxLength={12}
                       value={formData.phoneNumber}
                       onChange={(e) => handleChange('phoneNumber', e.target.value)}
-                      placeholder="+58 412 1234567"
+                      placeholder="412-1234567"
                     />
                   </div>
                 </div>
@@ -218,6 +224,7 @@ export default function PerfilProductorPage() {
                     <Label htmlFor="farmName">Nombre de la Finca</Label>
                     <Input
                       id="farmName"
+                      maxLength={80}
                       value={formData.farmName}
                       onChange={(e) => handleChange('farmName', e.target.value)}
                       placeholder="Hacienda Los Álamos"
@@ -227,6 +234,7 @@ export default function PerfilProductorPage() {
                     <Label htmlFor="rif">RIF</Label>
                     <Input
                       id="rif"
+                      maxLength={12}
                       value={formData.rif}
                       onChange={(e) => handleChange('rif', e.target.value)}
                       placeholder="V-12345678-9"
@@ -237,6 +245,7 @@ export default function PerfilProductorPage() {
                   <Label htmlFor="address">Dirección</Label>
                   <Textarea
                     id="address"
+                    maxLength={200}
                     value={formData.address}
                     onChange={(e) => handleChange('address', e.target.value)}
                     placeholder="Sector, Municipio, Estado"
@@ -300,6 +309,7 @@ export default function PerfilProductorPage() {
                     <Label htmlFor="mainActivity">Actividad Principal</Label>
                     <Input
                       id="mainActivity"
+                      maxLength={100}
                       value={formData.mainActivity}
                       onChange={(e) => handleChange('mainActivity', e.target.value)}
                       placeholder="Cultivo de Maiz, Ganaderia, etc."
@@ -326,6 +336,7 @@ export default function PerfilProductorPage() {
                   <Label htmlFor="machineryInventory">Inventario de Maquinaria</Label>
                   <Textarea
                     id="machineryInventory"
+                    maxLength={255}
                     value={formData.machineryInventory}
                     onChange={(e) => handleChange('machineryInventory', e.target.value)}
                     placeholder="Describa los equipos y maquinarias disponibles en su finca"

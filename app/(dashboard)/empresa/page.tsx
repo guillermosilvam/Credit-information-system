@@ -30,6 +30,10 @@ export default function EmpresaDashboard() {
     app.status === 'pending' || app.status === 'under_review'
   );
 
+  const approvedReceived = receivedApplications.filter(a => a.status === 'approved').length;
+  const totalReceived = receivedApplications.length;
+  const approvalRate = totalReceived > 0 ? Math.round((approvedReceived / totalReceived) * 100) : null;
+
   const getStatusVariant = (status: string): "default" | "secondary" | "outline" | "destructive" => {
     switch (status) {
       case 'approved': return 'default';

@@ -186,6 +186,7 @@ export default function RegistroProductorPage() {
               <Input
                 id="username"
                 placeholder="usuario123"
+                maxLength={16}
                 value={formData.username}
                 onChange={(e) => updateFormData('username', e.target.value)}
               />
@@ -196,6 +197,7 @@ export default function RegistroProductorPage() {
                 id="email"
                 type="email"
                 placeholder="correo@ejemplo.com"
+                maxLength={80}
                 value={formData.email}
                 onChange={(e) => updateFormData('email', e.target.value)}
               />
@@ -242,6 +244,7 @@ export default function RegistroProductorPage() {
               <Input
                 id="farmName"
                 placeholder="Hacienda Los Alamos"
+                maxLength={40}
                 value={formData.farmName}
                 onChange={(e) => updateFormData('farmName', e.target.value)}
               />
@@ -251,6 +254,7 @@ export default function RegistroProductorPage() {
               <Textarea
                 id="address"
                 placeholder="Sector, Municipio, Estado"
+                maxLength={200}
                 value={formData.address}
                 onChange={(e) => updateFormData('address', e.target.value)}
               />
@@ -261,6 +265,7 @@ export default function RegistroProductorPage() {
                 <Input
                   id="rif"
                   placeholder="V-12345678-9"
+                  maxLength={12}
                   value={formData.rif}
                   onChange={(e) => updateFormData('rif', e.target.value)}
                 />
@@ -270,6 +275,9 @@ export default function RegistroProductorPage() {
                 <Input
                   id="nationalId"
                   placeholder="12345678"
+                  inputMode="numeric"
+                  pattern="\d*"
+                  maxLength={8}
                   value={formData.nationalId}
                   onChange={(e) => updateFormData('nationalId', e.target.value)}
                 />
@@ -279,7 +287,9 @@ export default function RegistroProductorPage() {
               <Label htmlFor="phoneNumber">Teléfono</Label>
               <Input
                 id="phoneNumber"
-                placeholder="+58 412 1234567"
+                placeholder="412-1234567"
+                inputMode="tel"
+                maxLength={12}
                 value={formData.phoneNumber}
                 onChange={(e) => updateFormData('phoneNumber', e.target.value)}
               />

@@ -139,6 +139,7 @@ export default function PerfilEmpresaPage() {
                     <Label htmlFor="companyName">Nombre Comercial</Label>
                     <Input
                       id="companyName"
+                      maxLength={80}
                       value={formData.companyName}
                       onChange={(e) => handleChange('companyName', e.target.value)}
                       placeholder="Mi Empresa C.A."
@@ -148,6 +149,7 @@ export default function PerfilEmpresaPage() {
                     <Label htmlFor="rif">RIF</Label>
                     <Input
                       id="rif"
+                      maxLength={12}
                       value={formData.rif}
                       onChange={(e) => handleChange('rif', e.target.value)}
                       placeholder="J-12345678-9"
@@ -159,6 +161,7 @@ export default function PerfilEmpresaPage() {
                     <Label htmlFor="legalName">Razon Social</Label>
                     <Input
                       id="legalName"
+                      maxLength={80}
                       value={formData.legalName}
                       onChange={(e) => handleChange('legalName', e.target.value)}
                       placeholder="Nombre legal completo"
@@ -185,6 +188,7 @@ export default function PerfilEmpresaPage() {
                   <Label htmlFor="fiscalAddress">Dirección Fiscal</Label>
                   <Textarea
                     id="fiscalAddress"
+                    maxLength={200}
                     value={formData.fiscalAddress}
                     onChange={(e) => handleChange('fiscalAddress', e.target.value)}
                     placeholder="Dirección completa de la sede principal"
@@ -195,6 +199,7 @@ export default function PerfilEmpresaPage() {
                   <Label htmlFor="description">Descripcion de la Empresa</Label>
                   <Textarea
                     id="description"
+                    maxLength={255}
                     value={formData.description}
                     onChange={(e) => handleChange('description', e.target.value)}
                     placeholder="Breve descripcion de su empresa y servicios"
@@ -220,9 +225,11 @@ export default function PerfilEmpresaPage() {
                     <Label htmlFor="corporatePhone">Teléfono Corporativo</Label>
                     <Input
                       id="corporatePhone"
+                      inputMode="tel"
+                      maxLength={12}
                       value={formData.corporatePhone}
                       onChange={(e) => handleChange('corporatePhone', e.target.value)}
-                      placeholder="+58 212 1234567"
+                      placeholder="212-1234567"
                     />
                   </div>
                   <div className="space-y-2">
@@ -230,6 +237,7 @@ export default function PerfilEmpresaPage() {
                     <Input
                       id="website"
                       type="url"
+                      maxLength={200}
                       value={formData.website}
                       onChange={(e) => handleChange('website', e.target.value)}
                       placeholder="https://miempresa.com"
@@ -240,6 +248,7 @@ export default function PerfilEmpresaPage() {
                   <Label htmlFor="responseTime">Tiempo de Respuesta</Label>
                   <Input
                     id="responseTime"
+                    maxLength={40}
                     value={formData.responseTime}
                     onChange={(e) => handleChange('responseTime', e.target.value)}
                     placeholder="Ej: 3 a 5 dias habiles"

@@ -87,11 +87,12 @@ export default function LoginPage() {
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">Usuario o Correo Electrónico</Label>
+            <Label htmlFor="username">Usuario</Label>
             <Input
               id="username"
               type="text"
-              placeholder="usuario o correo@ejemplo.com"
+              placeholder="usuario123"
+              maxLength={30}
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               disabled={isLoading}

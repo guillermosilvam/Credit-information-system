@@ -128,6 +128,7 @@ export default function RegistroEmpresaPage() {
                 <Input
                   id="username"
                   placeholder="usuario_empresa"
+                  maxLength={30}
                   value={formData.username}
                   onChange={(e) => updateFormData('username', e.target.value)}
                 />
@@ -138,6 +139,7 @@ export default function RegistroEmpresaPage() {
                   id="email"
                   type="email"
                   placeholder="contacto@empresa.com"
+                  maxLength={80}
                   value={formData.email}
                   onChange={(e) => updateFormData('email', e.target.value)}
                 />
@@ -187,6 +189,7 @@ export default function RegistroEmpresaPage() {
                 <Input
                   id="companyName"
                   placeholder="Mi Empresa C.A."
+                  maxLength={80}
                   value={formData.companyName}
                   onChange={(e) => updateFormData('companyName', e.target.value)}
                 />
@@ -196,6 +199,7 @@ export default function RegistroEmpresaPage() {
                 <Input
                   id="rif"
                   placeholder="J-12345678-9"
+                  maxLength={12}
                   value={formData.rif}
                   onChange={(e) => updateFormData('rif', e.target.value)}
                 />
@@ -207,6 +211,7 @@ export default function RegistroEmpresaPage() {
                 <Input
                   id="legalName"
                   placeholder="Nombre legal completo"
+                  maxLength={100}
                   value={formData.legalName}
                   onChange={(e) => updateFormData('legalName', e.target.value)}
                 />
@@ -234,7 +239,9 @@ export default function RegistroEmpresaPage() {
                 <Label htmlFor="corporatePhone">Teléfono Corporativo</Label>
                 <Input
                   id="corporatePhone"
-                  placeholder="+58 212 1234567"
+                  placeholder="212-1234567"
+                  inputMode="tel"
+                  maxLength={12}
                   value={formData.corporatePhone}
                   onChange={(e) => updateFormData('corporatePhone', e.target.value)}
                 />
@@ -245,6 +252,7 @@ export default function RegistroEmpresaPage() {
                   id="website"
                   type="url"
                   placeholder="https://miempresa.com"
+                  maxLength={200}
                   value={formData.website}
                   onChange={(e) => updateFormData('website', e.target.value)}
                 />
@@ -255,6 +263,7 @@ export default function RegistroEmpresaPage() {
               <Textarea
                 id="fiscalAddress"
                 placeholder="Dirección completa de la sede"
+                maxLength={200}
                 value={formData.fiscalAddress}
                 onChange={(e) => updateFormData('fiscalAddress', e.target.value)}
               />
@@ -264,6 +273,7 @@ export default function RegistroEmpresaPage() {
               <Textarea
                 id="description"
                 placeholder="Breve descripcion de la empresa y sus servicios"
+                maxLength={255}
                 rows={3}
                 value={formData.description}
                 onChange={(e) => updateFormData('description', e.target.value)}
@@ -274,6 +284,7 @@ export default function RegistroEmpresaPage() {
               <Input
                 id="responseTime"
                 placeholder="Ej: 3 a 5 dias habiles"
+                maxLength={40}
                 value={formData.responseTime}
                 onChange={(e) => updateFormData('responseTime', e.target.value)}
               />

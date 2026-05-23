@@ -201,7 +201,7 @@ export default function MisPlanesPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
-                        {formatDate(plan.created_at)}
+                        {formatDate(plan.created_at || (plan as any).createdAt)}
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>
