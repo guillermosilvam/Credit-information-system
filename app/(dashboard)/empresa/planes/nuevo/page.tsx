@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
+import { creditService } from '@/services/creditService';
 
 const sectors = [
   'General',
@@ -67,12 +68,24 @@ export default function NuevoPlanPage() {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    // Simular guardado
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    
-    toast.success('Plan de credito creado exitosamente');
-    router.push('/empresa/planes');
+    try {
+      await creditService.createPlan({
+        title: formData.title,
+        description: formData.description,
+        agricultural_sector: formData.agriculturalSector,
+        min_amount: Number(formData.minAmount),
+        max_amount: Number(formData.maxAmount),
+        interest_rate: Number(formData.interestRate),
+        term_months: Number(formData.termMonths),
+        is_active: formData.isActive
+      });
+      toast.success('Plan de credito creado exitosamente');
+      router.push('/empresa/planes');
+    } catch (error: any) {
+      toast.error(error.response?.data?.detail || 'Error al crear el plan de credito');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
