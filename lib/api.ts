@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Determinamos dinámicamente la URL para que funcione si se accede desde otro dispositivo (ej. teléfono)
 const getApiUrl = () => {
-  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '');
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL.replace(/\/api\/?$/,'').replace(/\/$/, '');
   if (typeof window !== 'undefined') {
     // Si estamos en el navegador del teléfono, usa la IP del host en lugar de 127.0.0.1
     return `http://${window.location.hostname}:8000`;
