@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Save, User, MapPin, Tractor, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { landTenureLabels, roadConditionLabels } from '@/lib/formatters';
@@ -12,45 +12,103 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import type { LandTenure, RoadCondition } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { LandTenure, RoadCondition, ProducerProfile } from '@/lib/types';
 import { accountService } from '@/services/accountService';
+import { authService } from '@/services/authService';
+
+function mapApiProfileToProducer(apiProfile: any, userId: number): ProducerProfile {
+  return {
+    id: apiProfile.id,
+    userId,
+    farmName: apiProfile.farm_name || '',
+    address: apiProfile.address || '',
+    rif: apiProfile.rif || '',
+    nationalId: apiProfile.national_id || '',
+    phoneNumber: apiProfile.phone_number || '',
+    totalArea: apiProfile.total_area ? Number(apiProfile.total_area) : undefined,
+    cultivatedArea: apiProfile.cultivated_area ? Number(apiProfile.cultivated_area) : undefined,
+    landTenure: apiProfile.land_tenure as LandTenure | undefined,
+    machineryInventory: apiProfile.machinery_inventory || '',
+    roadCondition: apiProfile.road_condition as RoadCondition | undefined,
+    mainActivity: apiProfile.main_activity || '',
+  };
+}
 
 export default function PerfilProductorPage() {
-  const { user, producerProfile, updateProducerProfile } = useAuth();
+  const { user, producerProfile: contextProfile, updateProducerProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [localProfile, setLocalProfile] = useState<ProducerProfile | null>(null);
+  const [pageLoading, setPageLoading] = useState(!contextProfile);
+
+  const activeProfile = localProfile || contextProfile;
 
   const [formData, setFormData] = useState(() => ({
     username: user?.username || '',
-    farmName: producerProfile?.farmName || '',
-    address: producerProfile?.address || '',
-    rif: producerProfile?.rif || '',
-    nationalId: producerProfile?.nationalId || '',
-    phoneNumber: producerProfile?.phoneNumber || '',
-    totalArea: producerProfile?.totalArea?.toString() || '',
-    cultivatedArea: producerProfile?.cultivatedArea?.toString() || '',
-    landTenure: producerProfile?.landTenure || '',
-    machineryInventory: producerProfile?.machineryInventory || '',
-    roadCondition: producerProfile?.roadCondition || '',
-    mainActivity: producerProfile?.mainActivity || '',
+    farmName: activeProfile?.farmName || '',
+    address: activeProfile?.address || '',
+    rif: activeProfile?.rif || '',
+    nationalId: activeProfile?.nationalId || '',
+    phoneNumber: activeProfile?.phoneNumber || '',
+    totalArea: activeProfile?.totalArea?.toString() || '',
+    cultivatedArea: activeProfile?.cultivatedArea?.toString() || '',
+    landTenure: activeProfile?.landTenure || '',
+    machineryInventory: activeProfile?.machineryInventory || '',
+    roadCondition: activeProfile?.roadCondition || '',
+    mainActivity: activeProfile?.mainActivity || '',
   }));
   const [usernameError, setUsernameError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const syncFormWithProfile = useCallback((profile: ProducerProfile, usr: typeof user) => {
     setFormData({
-      username: user?.username || '',
-      farmName: producerProfile?.farmName || '',
-      address: producerProfile?.address || '',
-      rif: producerProfile?.rif || '',
-      nationalId: producerProfile?.nationalId || '',
-      phoneNumber: producerProfile?.phoneNumber || '',
-      totalArea: producerProfile?.totalArea?.toString() || '',
-      cultivatedArea: producerProfile?.cultivatedArea?.toString() || '',
-      landTenure: producerProfile?.landTenure || '',
-      machineryInventory: producerProfile?.machineryInventory || '',
-      roadCondition: producerProfile?.roadCondition || '',
-      mainActivity: producerProfile?.mainActivity || '',
+      username: usr?.username || '',
+      farmName: profile.farmName || '',
+      address: profile.address || '',
+      rif: profile.rif || '',
+      nationalId: profile.nationalId || '',
+      phoneNumber: profile.phoneNumber || '',
+      totalArea: profile.totalArea?.toString() || '',
+      cultivatedArea: profile.cultivatedArea?.toString() || '',
+      landTenure: profile.landTenure || '',
+      machineryInventory: profile.machineryInventory || '',
+      roadCondition: profile.roadCondition || '',
+      mainActivity: profile.mainActivity || '',
     });
-  }, [producerProfile, user]);
+  }, []);
+
+  useEffect(() => {
+    if (contextProfile) {
+      setLocalProfile(contextProfile);
+      setPageLoading(false);
+      return;
+    }
+
+    if (!user) return;
+
+    const loadProfile = async () => {
+      try {
+        const res = await authService.getMe();
+        if (res.success && res.data) {
+          const fullUser = res.data;
+          if (fullUser.is_producer && fullUser.profile) {
+            const mapped = mapApiProfileToProducer(fullUser.profile, user.id);
+            setLocalProfile(mapped);
+          }
+        }
+      } catch (e) {
+        console.error('Error loading producer profile', e);
+      } finally {
+        setPageLoading(false);
+      }
+    };
+    loadProfile();
+  }, [contextProfile, user]);
+
+  useEffect(() => {
+    if (activeProfile) {
+      syncFormWithProfile(activeProfile, user);
+    }
+  }, [activeProfile, user, syncFormWithProfile]);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -98,6 +156,25 @@ export default function PerfilProductorPage() {
   };
 
 
+
+  if (pageLoading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-4 w-72 mt-2" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-10 w-full" />
+          <div className="grid gap-4 md:grid-cols-2">
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+          </div>
+          <Skeleton className="h-20 w-full" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

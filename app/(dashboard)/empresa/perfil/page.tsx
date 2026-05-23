@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Save, Building2, Globe, Phone, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { companyTypeLabels } from '@/lib/formatters';
@@ -12,41 +12,98 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import type { CompanyType } from '@/lib/types';
+import { authService } from '@/services/authService';
+import type { CompanyType, CompanyProfile } from '@/lib/types';
+
+function mapApiProfileToCompany(apiProfile: any, userId: number): CompanyProfile {
+  return {
+    id: apiProfile.id,
+    userId,
+    companyName: apiProfile.company_name || '',
+    rif: apiProfile.rif || '',
+    legalName: apiProfile.legal_name || '',
+    corporatePhone: apiProfile.corporate_phone || '',
+    website: apiProfile.website || '',
+    fiscalAddress: apiProfile.fiscal_address || '',
+    companyType: apiProfile.company_type as CompanyType | undefined,
+    description: apiProfile.description || '',
+    responseTime: apiProfile.response_time || '',
+    status: apiProfile.status || 'pending',
+  };
+}
 
 export default function PerfilEmpresaPage() {
-  const { user, companyProfile, updateCompanyProfile } = useAuth();
+  const { user, companyProfile: contextProfile, updateCompanyProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  
+  const [localProfile, setLocalProfile] = useState<CompanyProfile | null>(null);
+  const [pageLoading, setPageLoading] = useState(!contextProfile);
+
+  const activeProfile = localProfile || contextProfile;
+
   const [formData, setFormData] = useState(() => ({
     username: user?.username || '',
-    companyName: companyProfile?.companyName || '',
-    rif: companyProfile?.rif || '',
-    legalName: companyProfile?.legalName || '',
-    corporatePhone: companyProfile?.corporatePhone || '',
-    website: companyProfile?.website || '',
-    fiscalAddress: companyProfile?.fiscalAddress || '',
-    companyType: companyProfile?.companyType || '',
-    description: companyProfile?.description || '',
-    responseTime: companyProfile?.responseTime || '',
+    companyName: activeProfile?.companyName || '',
+    rif: activeProfile?.rif || '',
+    legalName: activeProfile?.legalName || '',
+    corporatePhone: activeProfile?.corporatePhone || '',
+    website: activeProfile?.website || '',
+    fiscalAddress: activeProfile?.fiscalAddress || '',
+    companyType: activeProfile?.companyType || '',
+    description: activeProfile?.description || '',
+    responseTime: activeProfile?.responseTime || '',
   }));
   const [usernameError, setUsernameError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const syncFormWithProfile = useCallback((profile: CompanyProfile, usr: typeof user) => {
     setFormData({
-      username: user?.username || '',
-      companyName: companyProfile?.companyName || '',
-      rif: companyProfile?.rif || '',
-      legalName: companyProfile?.legalName || '',
-      corporatePhone: companyProfile?.corporatePhone || '',
-      website: companyProfile?.website || '',
-      fiscalAddress: companyProfile?.fiscalAddress || '',
-      companyType: companyProfile?.companyType || '',
-      description: companyProfile?.description || '',
-      responseTime: companyProfile?.responseTime || '',
+      username: usr?.username || '',
+      companyName: profile.companyName || '',
+      rif: profile.rif || '',
+      legalName: profile.legalName || '',
+      corporatePhone: profile.corporatePhone || '',
+      website: profile.website || '',
+      fiscalAddress: profile.fiscalAddress || '',
+      companyType: profile.companyType || '',
+      description: profile.description || '',
+      responseTime: profile.responseTime || '',
     });
-  }, [companyProfile, user]);
+  }, []);
+
+  useEffect(() => {
+    if (contextProfile) {
+      setLocalProfile(contextProfile);
+      setPageLoading(false);
+      return;
+    }
+
+    if (!user) return;
+
+    const loadProfile = async () => {
+      try {
+        const res = await authService.getMe();
+        if (res.success && res.data) {
+          const fullUser = res.data;
+          if (fullUser.is_company && fullUser.profile) {
+            const mapped = mapApiProfileToCompany(fullUser.profile, user.id);
+            setLocalProfile(mapped);
+          }
+        }
+      } catch (e) {
+        console.error('Error loading company profile', e);
+      } finally {
+        setPageLoading(false);
+      }
+    };
+    loadProfile();
+  }, [contextProfile, user]);
+
+  useEffect(() => {
+    if (activeProfile) {
+      syncFormWithProfile(activeProfile, user);
+    }
+  }, [activeProfile, user, syncFormWithProfile]);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -90,7 +147,7 @@ export default function PerfilEmpresaPage() {
   };
 
   const getStatusBadge = () => {
-    switch (companyProfile?.status) {
+    switch (activeProfile?.status) {
       case 'verified':
         return <Badge className="bg-green-100 text-green-800">Verificado</Badge>;
       case 'pending':
@@ -101,6 +158,30 @@ export default function PerfilEmpresaPage() {
         return null;
     }
   };
+
+  if (pageLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-64 mt-2" />
+          </div>
+          <Skeleton className="h-6 w-24 rounded-full" />
+        </div>
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2 space-y-6">
+            <Skeleton className="h-64 w-full" />
+            <Skeleton className="h-48 w-full" />
+          </div>
+          <div className="space-y-6">
+            <Skeleton className="h-48 w-full" />
+            <Skeleton className="h-32 w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -301,16 +382,16 @@ export default function PerfilEmpresaPage() {
               <CardContent>
                 <div className="flex items-center gap-3">
                   <div className={`w-3 h-3 rounded-full ${
-                    companyProfile?.status === 'verified' ? 'bg-green-500' :
-                    companyProfile?.status === 'pending' ? 'bg-amber-500' : 'bg-red-500'
+                    activeProfile?.status === 'verified' ? 'bg-green-500' :
+                    activeProfile?.status === 'pending' ? 'bg-amber-500' : 'bg-red-500'
                   }`} />
                   <div>
                     <p className="font-medium">
-                      {companyProfile?.status === 'verified' ? 'Empresa Verificada' :
-                       companyProfile?.status === 'pending' ? 'Pendiente de Aprobación' : 'Rechazada'}
+                      {activeProfile?.status === 'verified' ? 'Empresa Verificada' :
+                       activeProfile?.status === 'pending' ? 'Pendiente de Aprobación' : 'Rechazada'}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {companyProfile?.status === 'verified' 
+                      {activeProfile?.status === 'verified' 
                         ? 'Su empresa está autorizada para publicar planes de crédito'
                         : 'Un administrador revisará su solicitud'}
                     </p>
