@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Plus, MoreHorizontal, Pencil, Trash2, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import useSWR, { mutate } from 'swr';
@@ -40,6 +41,7 @@ import { toast } from 'sonner';
 
 export default function MisPlanesPage() {
   const { companyProfile } = useAuth();
+  const router = useRouter();
   const { data: allPlans = [], isLoading } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
   
   // Filtrar solo los planes de esta empresa
@@ -210,7 +212,7 @@ export default function MisPlanesPage() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push(`/empresa/planes/nuevo?edit=${plan.id}`)}>
                               <Pencil className="w-4 h-4 mr-2" />
                               Editar
                             </DropdownMenuItem>

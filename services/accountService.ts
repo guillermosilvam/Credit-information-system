@@ -83,5 +83,17 @@ export const accountService = {
   updateCompanyProfile: async (id: number, data: Partial<CompanyProfileResponse>) => {
     const response = await api.patch(`/accounts/company/${id}/`, data);
     return response.data;
+  },
+
+  // Actualiza campos del usuario autenticado (username, email)
+  updateUserMe: async (data: { username?: string; email?: string; password?: string }) => {
+    const response = await api.patch('/accounts/users/me/', data);
+    return response.data;
+  },
+
+  // Verifica disponibilidad de nombre de usuario
+  checkUsernameAvailability: async (username: string) => {
+    const response = await api.get(`/accounts/users/check-username/?username=${encodeURIComponent(username)}`);
+    return response.data; // { available: true/false }
   }
 };

@@ -33,6 +33,12 @@ export const creditService = {
     return response.data;
   },
 
+  // Obtener un plan por id
+  getPlan: async (id: number): Promise<CreditPlanResponse> => {
+    const response = await api.get(`/credits/plans/${id}/`);
+    return response.data;
+  },
+
   createPlan: async (data: Partial<CreditPlanResponse>) => {
     const response = await api.post('/credits/plans/', data);
     return response.data;

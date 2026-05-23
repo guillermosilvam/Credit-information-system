@@ -20,6 +20,7 @@ export default function PerfilProductorPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
+    username: '',
     farmName: '',
     address: '',
     rif: '',
@@ -32,10 +33,12 @@ export default function PerfilProductorPage() {
     roadCondition: '',
     mainActivity: '',
   });
+  const [usernameError, setUsernameError] = useState<string | null>(null);
 
   useEffect(() => {
     if (producerProfile) {
       setFormData({
+        username: user?.username || '',
         farmName: producerProfile.farmName || '',
         address: producerProfile.address || '',
         rif: producerProfile.rif || '',
@@ -48,8 +51,10 @@ export default function PerfilProductorPage() {
         roadCondition: producerProfile.roadCondition || '',
         mainActivity: producerProfile.mainActivity || '',
       });
+    } else if (user) {
+      setFormData(prev => ({ ...prev, username: user.username }));
     }
-  }, [producerProfile]);
+  }, [producerProfile, user]);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -57,27 +62,43 @@ export default function PerfilProductorPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (usernameError) {
+      toast.error('Por favor corrija el nombre de usuario');
+      return;
+    }
+
     setIsLoading(true);
-    
-    // Simular guardado
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    updateProducerProfile({
-      farmName: formData.farmName,
-      address: formData.address,
-      rif: formData.rif,
-      nationalId: formData.nationalId,
-      phoneNumber: formData.phoneNumber,
-      totalArea: formData.totalArea ? Number(formData.totalArea) : undefined,
-      cultivatedArea: formData.cultivatedArea ? Number(formData.cultivatedArea) : undefined,
-      landTenure: formData.landTenure as LandTenure,
-      machineryInventory: formData.machineryInventory,
-      roadCondition: formData.roadCondition as RoadCondition,
-      mainActivity: formData.mainActivity,
-    });
-    
-    setIsLoading(false);
-    toast.success('Perfil actualizado correctamente');
+    try {
+      // Primero actualizar username/email si cambió
+      const currentUsername = user?.username || '';
+      if (formData.username && formData.username !== currentUsername) {
+        await accountService.updateUserMe({ username: formData.username });
+        // actualizar local user
+        const updatedUser = { ...user, username: formData.username };
+        localStorage.setItem('agrifinance_user', JSON.stringify(updatedUser));
+      }
+
+      const res = await updateProducerProfile({
+        farmName: formData.farmName,
+        address: formData.address,
+        rif: formData.rif,
+        nationalId: formData.nationalId,
+        phoneNumber: formData.phoneNumber,
+        totalArea: formData.totalArea ? Number(formData.totalArea) : undefined,
+        cultivatedArea: formData.cultivatedArea ? Number(formData.cultivatedArea) : undefined,
+        landTenure: formData.landTenure as LandTenure,
+        machineryInventory: formData.machineryInventory,
+        roadCondition: formData.roadCondition as RoadCondition,
+        mainActivity: formData.mainActivity,
+      });
+
+      if (!res || (res as any).success === false) throw new Error('Error saving');
+      toast.success('Perfil actualizado correctamente');
+    } catch (e:any) {
+      toast.error(e.response?.data?.detail || e.message || 'Error al actualizar perfil');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
 
@@ -124,10 +145,25 @@ export default function PerfilProductorPage() {
                     <Label htmlFor="username">Nombre de Usuario</Label>
                     <Input
                       id="username"
-                      value={user?.username || ''}
-                      disabled
-                      className="bg-muted"
+                      value={formData.username}
+                      onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
+                      onBlur={async () => {
+                        const current = user?.username || '';
+                        if (formData.username && formData.username !== current) {
+                          try {
+                            const res = await accountService.checkUsernameAvailability(formData.username);
+                            if (!res.available) setUsernameError('Nombre de usuario no disponible');
+                            else setUsernameError(null);
+                          } catch (e) {
+                            // ignore
+                          }
+                        } else {
+                          setUsernameError(null);
+                        }
+                      }}
+                      className={usernameError ? 'border border-destructive' : ''}
                     />
+                    {usernameError && <p className="text-xs text-destructive mt-1">{usernameError}</p>}
                     <p className="text-xs text-muted-foreground">
                       El nombre de usuario no puede ser modificado
                     </p>

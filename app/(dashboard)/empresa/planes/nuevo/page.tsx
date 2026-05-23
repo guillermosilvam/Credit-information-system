@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,7 +27,10 @@ const sectors = [
 
 export default function NuevoPlanPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingPlanId, setEditingPlanId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -42,6 +45,37 @@ export default function NuevoPlanPage() {
   const handleChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  useEffect(() => {
+    const editId = searchParams?.get('edit');
+    if (editId) {
+      const idNum = Number(editId);
+      if (!Number.isNaN(idNum)) {
+        (async () => {
+          try {
+            setIsLoading(true);
+            const plan = await creditService.getPlan(idNum);
+            setFormData({
+              title: plan.title,
+              description: plan.description,
+              agriculturalSector: plan.agricultural_sector,
+              minAmount: String(plan.min_amount),
+              maxAmount: String(plan.max_amount),
+              interestRate: String(plan.interest_rate),
+              termMonths: String(plan.term_months),
+              isActive: plan.is_active
+            });
+            setIsEditing(true);
+            setEditingPlanId(idNum);
+          } catch (e:any) {
+            toast.error('No se pudo cargar el plan para editar');
+          } finally {
+            setIsLoading(false);
+          }
+        })();
+      }
+    }
+  }, [searchParams]);
 
   const validateForm = (): boolean => {
     if (!formData.title || !formData.description || !formData.agriculturalSector) {
@@ -69,7 +103,7 @@ export default function NuevoPlanPage() {
 
     setIsLoading(true);
     try {
-      await creditService.createPlan({
+      const payload = {
         title: formData.title,
         description: formData.description,
         agricultural_sector: formData.agriculturalSector,
@@ -78,11 +112,19 @@ export default function NuevoPlanPage() {
         interest_rate: Number(formData.interestRate),
         term_months: Number(formData.termMonths),
         is_active: formData.isActive
-      });
-      toast.success('Plan de credito creado exitosamente');
+      };
+
+      if (isEditing && editingPlanId) {
+        await creditService.updatePlan(editingPlanId, payload);
+        toast.success('Plan de credito actualizado');
+      } else {
+        await creditService.createPlan(payload);
+        toast.success('Plan de credito creado exitosamente');
+      }
+
       router.push('/empresa/planes');
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Error al crear el plan de credito');
+      toast.error(error.response?.data?.detail || 'Error al guardar el plan de credito');
     } finally {
       setIsLoading(false);
     }

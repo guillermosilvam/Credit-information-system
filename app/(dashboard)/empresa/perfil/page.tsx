@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Save, Building2, Globe, Phone, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { companyTypeLabels } from '@/lib/formatters';
+import { accountService } from '@/services/accountService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +20,7 @@ export default function PerfilEmpresaPage() {
   const [isLoading, setIsLoading] = useState(false);
   
   const [formData, setFormData] = useState({
+    username: '',
     companyName: '',
     rif: '',
     legalName: '',
@@ -29,10 +31,12 @@ export default function PerfilEmpresaPage() {
     description: '',
     responseTime: '',
   });
+  const [usernameError, setUsernameError] = useState<string | null>(null);
 
   useEffect(() => {
     if (companyProfile) {
       setFormData({
+        username: user?.username || '',
         companyName: companyProfile.companyName || '',
         rif: companyProfile.rif || '',
         legalName: companyProfile.legalName || '',
@@ -43,8 +47,10 @@ export default function PerfilEmpresaPage() {
         description: companyProfile.description || '',
         responseTime: companyProfile.responseTime || '',
       });
+    } else if (user) {
+      setFormData(prev => ({ ...prev, username: user.username }));
     }
-  }, [companyProfile]);
+  }, [companyProfile, user]);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -52,25 +58,39 @@ export default function PerfilEmpresaPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (usernameError) {
+      toast.error('Por favor corrija el nombre de usuario');
+      return;
+    }
+
     setIsLoading(true);
-    
-    // Simular guardado
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    updateCompanyProfile({
-      companyName: formData.companyName,
-      rif: formData.rif,
-      legalName: formData.legalName,
-      corporatePhone: formData.corporatePhone,
-      website: formData.website,
-      fiscalAddress: formData.fiscalAddress,
-      companyType: formData.companyType as CompanyType,
-      description: formData.description,
-      responseTime: formData.responseTime,
-    });
-    
-    setIsLoading(false);
-    toast.success('Perfil actualizado correctamente');
+    try {
+      const currentUsername = user?.username || '';
+      if (formData.username && formData.username !== currentUsername) {
+        await accountService.updateUserMe({ username: formData.username });
+        const updatedUser = { ...user, username: formData.username };
+        localStorage.setItem('agrifinance_user', JSON.stringify(updatedUser));
+      }
+
+      const res = await updateCompanyProfile({
+        companyName: formData.companyName,
+        rif: formData.rif,
+        legalName: formData.legalName,
+        corporatePhone: formData.corporatePhone,
+        website: formData.website,
+        fiscalAddress: formData.fiscalAddress,
+        companyType: formData.companyType as CompanyType,
+        description: formData.description,
+        responseTime: formData.responseTime,
+      });
+
+      if (!res || (res as any).success === false) throw new Error('Error saving');
+      toast.success('Perfil actualizado correctamente');
+    } catch (e:any) {
+      toast.error(e.response?.data?.detail || e.message || 'Error al actualizar perfil');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getStatusBadge = () => {
@@ -241,7 +261,26 @@ export default function PerfilEmpresaPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>Usuario</Label>
-                  <Input value={user?.username || ''} disabled className="bg-muted" />
+                  <Input
+                    value={formData.username}
+                    onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
+                    onBlur={async () => {
+                      const current = user?.username || '';
+                      if (formData.username && formData.username !== current) {
+                        try {
+                          const res = await accountService.checkUsernameAvailability(formData.username);
+                          if (!res.available) setUsernameError('Nombre de usuario no disponible');
+                          else setUsernameError(null);
+                        } catch (e) {
+                          // ignore
+                        }
+                      } else {
+                        setUsernameError(null);
+                      }
+                    }}
+                    className={usernameError ? 'border border-destructive' : ''}
+                  />
+                  {usernameError && <p className="text-xs text-destructive mt-1">{usernameError}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label>Correo Electrónico</Label>

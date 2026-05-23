@@ -11,8 +11,8 @@ interface AuthContextType {
   isLoading: boolean;
   login: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
-  updateProducerProfile: (profile: Partial<ProducerProfile>) => void;
-  updateCompanyProfile: (profile: Partial<CompanyProfile>) => void;
+  updateProducerProfile: (profile: Partial<ProducerProfile>) => Promise<{ success: boolean; error?: string } | undefined>;
+  updateCompanyProfile: (profile: Partial<CompanyProfile>) => Promise<{ success: boolean; error?: string } | undefined>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -82,6 +82,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Cargar usuario persistido en Production de localStorage al iniciar
   useEffect(() => {
     const savedUser = localStorage.getItem('agrifinance_user');
+    const accessToken = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+
     if (savedUser) {
       try {
         const parsed = JSON.parse(savedUser) as User;
@@ -90,8 +92,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         fetchProfile(parsed);
       } catch (e) {
         console.error('Error parseando sesion:', e);
+      } finally {
+        setIsLoading(false);
       }
+      return;
     }
+
+    // Si existe token pero no hay usuario persistido, intentar obtener perfil desde el backend
+    if (accessToken) {
+      (async () => {
+        try {
+          setIsLoading(true);
+          const meResponse = await authService.getMe();
+          if (meResponse.success && meResponse.data) {
+            const fullUser = meResponse.data;
+            // Construimos un usuario básico si el backend no devuelve el objecto user completo
+            const parsedUser: User = {
+              id: fullUser.id || fullUser.user?.id || (Date.now().toString()),
+              username: fullUser.username || fullUser.user?.username || 'user',
+              email: fullUser.email || fullUser.user?.email || '',
+              role: fullUser.is_company ? 'company' : (fullUser.is_producer ? 'producer' : 'user'),
+              createdAt: new Date().toISOString(),
+            };
+
+            setUser(parsedUser);
+            localStorage.setItem('agrifinance_user', JSON.stringify(parsedUser));
+            await fetchProfile(parsedUser);
+          }
+        } catch (e) {
+          console.error('Error recuperando perfil desde token:', e);
+        } finally {
+          setIsLoading(false);
+        }
+      })();
+      return;
+    }
+
     setIsLoading(false);
   }, []);
 
@@ -147,12 +183,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setCompanyProfile(null);
   };
 
-  const updateProducerProfile = (updates: Partial<ProducerProfile>) => {
-    if (producerProfile) setProducerProfile({ ...producerProfile, ...updates });
+  const updateProducerProfile = async (updates: Partial<ProducerProfile>) => {
+    if (!producerProfile) return { success: false, error: 'No producer profile' };
+    try {
+      // Persistir en backend
+      const payload: any = {
+        farm_name: updates.farmName,
+        address: updates.address,
+        rif: updates.rif,
+        national_id: updates.nationalId,
+        phone_number: updates.phoneNumber,
+        total_area: updates.totalArea,
+        cultivated_area: updates.cultivatedArea,
+        land_tenure: updates.landTenure,
+        machinery_inventory: updates.machineryInventory,
+        road_condition: updates.roadCondition,
+        main_activity: updates.mainActivity,
+      };
+
+      await (await import('@/services/accountService')).accountService.updateProducerProfile(producerProfile.id, payload);
+
+      // Si actualiza username/email, actualizamos user también (caller should include those via updateUserMe separately)
+      setProducerProfile({ ...producerProfile, ...updates });
+      localStorage.setItem('agrifinance_user', JSON.stringify(user));
+      return { success: true };
+    } catch (e:any) {
+      console.error('Error updating producer profile', e);
+      return { success: false, error: 'Error updating producer profile' };
+    }
   };
 
-  const updateCompanyProfile = (updates: Partial<CompanyProfile>) => {
-    if (companyProfile) setCompanyProfile({ ...companyProfile, ...updates });
+  const updateCompanyProfile = async (updates: Partial<CompanyProfile>) => {
+    if (!companyProfile) return { success: false, error: 'No company profile' };
+    try {
+      const payload: any = {
+        company_name: updates.companyName,
+        rif: updates.rif,
+        legal_name: updates.legalName,
+        corporate_phone: updates.corporatePhone,
+        website: updates.website,
+        fiscal_address: updates.fiscalAddress,
+        company_type: updates.companyType,
+        description: updates.description,
+        response_time: updates.responseTime,
+      };
+
+      await (await import('@/services/accountService')).accountService.updateCompanyProfile(companyProfile.id, payload);
+      setCompanyProfile({ ...companyProfile, ...updates });
+      localStorage.setItem('agrifinance_user', JSON.stringify(user));
+      return { success: true };
+    } catch (e:any) {
+      console.error('Error updating company profile', e);
+      return { success: false, error: 'Error updating company profile' };
+    }
   };
 
   return (
