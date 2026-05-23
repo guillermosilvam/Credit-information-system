@@ -19,41 +19,37 @@ export default function PerfilProductorPage() {
   const { user, producerProfile, updateProducerProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    username: '',
-    farmName: '',
-    address: '',
-    rif: '',
-    nationalId: '',
-    phoneNumber: '',
-    totalArea: '',
-    cultivatedArea: '',
-    landTenure: '',
-    machineryInventory: '',
-    roadCondition: '',
-    mainActivity: '',
-  });
+  const [formData, setFormData] = useState(() => ({
+    username: user?.username || '',
+    farmName: producerProfile?.farmName || '',
+    address: producerProfile?.address || '',
+    rif: producerProfile?.rif || '',
+    nationalId: producerProfile?.nationalId || '',
+    phoneNumber: producerProfile?.phoneNumber || '',
+    totalArea: producerProfile?.totalArea?.toString() || '',
+    cultivatedArea: producerProfile?.cultivatedArea?.toString() || '',
+    landTenure: producerProfile?.landTenure || '',
+    machineryInventory: producerProfile?.machineryInventory || '',
+    roadCondition: producerProfile?.roadCondition || '',
+    mainActivity: producerProfile?.mainActivity || '',
+  }));
   const [usernameError, setUsernameError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (producerProfile) {
-      setFormData({
-        username: user?.username || '',
-        farmName: producerProfile.farmName || '',
-        address: producerProfile.address || '',
-        rif: producerProfile.rif || '',
-        nationalId: producerProfile.nationalId || '',
-        phoneNumber: producerProfile.phoneNumber || '',
-        totalArea: producerProfile.totalArea?.toString() || '',
-        cultivatedArea: producerProfile.cultivatedArea?.toString() || '',
-        landTenure: producerProfile.landTenure || '',
-        machineryInventory: producerProfile.machineryInventory || '',
-        roadCondition: producerProfile.roadCondition || '',
-        mainActivity: producerProfile.mainActivity || '',
-      });
-    } else if (user) {
-      setFormData(prev => ({ ...prev, username: user.username }));
-    }
+    setFormData({
+      username: user?.username || '',
+      farmName: producerProfile?.farmName || '',
+      address: producerProfile?.address || '',
+      rif: producerProfile?.rif || '',
+      nationalId: producerProfile?.nationalId || '',
+      phoneNumber: producerProfile?.phoneNumber || '',
+      totalArea: producerProfile?.totalArea?.toString() || '',
+      cultivatedArea: producerProfile?.cultivatedArea?.toString() || '',
+      landTenure: producerProfile?.landTenure || '',
+      machineryInventory: producerProfile?.machineryInventory || '',
+      roadCondition: producerProfile?.roadCondition || '',
+      mainActivity: producerProfile?.mainActivity || '',
+    });
   }, [producerProfile, user]);
 
   const handleChange = (field: string, value: string) => {

@@ -60,6 +60,7 @@ export const authService = {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       localStorage.removeItem('agrifinance_user');
+      localStorage.removeItem('session_start');
     }
   },
 
@@ -107,6 +108,23 @@ export const authService = {
         }
       }
       return { success: false, error: errorMessage };
+    }
+  },
+
+  /**
+   * Refresca el access token usando el refresh_token almacenado
+   */
+  async refreshToken(): Promise<{ success: boolean; data?: { access: string } }> {
+    const refresh = typeof window !== 'undefined' ? localStorage.getItem('refresh_token') : null;
+    if (!refresh) return { success: false };
+    try {
+      const response = await api.post('/token/refresh/', { refresh });
+      const { access } = response.data;
+      localStorage.setItem('access_token', access);
+      return { success: true, data: { access } };
+    } catch (error: any) {
+      console.warn('Error al refrescar token:', error.message);
+      return { success: false };
     }
   }
 };

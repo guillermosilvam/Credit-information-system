@@ -17,6 +17,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { AuthProvider, useAuth } from '@/lib/auth-context';
+import { SessionTimeoutProvider } from '@/lib/session-timeout';
 import {
   Sidebar,
   SidebarContent,
@@ -206,7 +207,9 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthProvider>
-      <DashboardContent>{children}</DashboardContent>
+      <SessionTimeoutProvider>
+        <DashboardContent>{children}</DashboardContent>
+      </SessionTimeoutProvider>
     </AuthProvider>
   );
 }

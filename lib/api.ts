@@ -48,17 +48,69 @@ api.interceptors.request.use(
   }
 );
 
+let isRefreshing = false;
+let pendingRequests: Array<{ resolve: (token: string) => void; reject: (err: any) => void }> = [];
+
+const processPendingRequests = (error: any, token: string | null = null) => {
+  pendingRequests.forEach((req) => {
+    if (token) {
+      req.resolve(token);
+    } else {
+      req.reject(error);
+    }
+  });
+  pendingRequests = [];
+};
+
 api.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
-    // Si recibe codigo 401 (Unauthorized) por un token expirado, puede emitirse una alerta 
-    // o forzar el deslogueo en un futuro.
-    if (error.response?.status === 401 && typeof window !== 'undefined') {
-      console.warn('Token expirado o no autorizado. Se requiere nuevo inicio de sesion.');
-      // Opcional: localStorage.removeItem('access_token'); window.location.href = '/login';
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry && typeof window !== 'undefined') {
+      const refreshToken = localStorage.getItem('refresh_token');
+
+      if (!refreshToken) {
+        localStorage.removeItem('access_token');
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        return new Promise<string>((resolve, reject) => {
+          pendingRequests.push({ resolve, reject });
+        }).then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        }).catch((err) => {
+          return Promise.reject(err);
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const response = await api.post('/token/refresh/', { refresh: refreshToken });
+        const { access } = response.data;
+        localStorage.setItem('access_token', access);
+        processPendingRequests(null, access);
+        originalRequest.headers.Authorization = `Bearer ${access}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        processPendingRequests(refreshError, null);
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('agrifinance_user');
+        localStorage.removeItem('session_start');
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
     return Promise.reject(error);
   }
 );

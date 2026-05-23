@@ -19,37 +19,33 @@ export default function PerfilEmpresaPage() {
   const { user, companyProfile, updateCompanyProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   
-  const [formData, setFormData] = useState({
-    username: '',
-    companyName: '',
-    rif: '',
-    legalName: '',
-    corporatePhone: '',
-    website: '',
-    fiscalAddress: '',
-    companyType: '',
-    description: '',
-    responseTime: '',
-  });
+  const [formData, setFormData] = useState(() => ({
+    username: user?.username || '',
+    companyName: companyProfile?.companyName || '',
+    rif: companyProfile?.rif || '',
+    legalName: companyProfile?.legalName || '',
+    corporatePhone: companyProfile?.corporatePhone || '',
+    website: companyProfile?.website || '',
+    fiscalAddress: companyProfile?.fiscalAddress || '',
+    companyType: companyProfile?.companyType || '',
+    description: companyProfile?.description || '',
+    responseTime: companyProfile?.responseTime || '',
+  }));
   const [usernameError, setUsernameError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (companyProfile) {
-      setFormData({
-        username: user?.username || '',
-        companyName: companyProfile.companyName || '',
-        rif: companyProfile.rif || '',
-        legalName: companyProfile.legalName || '',
-        corporatePhone: companyProfile.corporatePhone || '',
-        website: companyProfile.website || '',
-        fiscalAddress: companyProfile.fiscalAddress || '',
-        companyType: companyProfile.companyType || '',
-        description: companyProfile.description || '',
-        responseTime: companyProfile.responseTime || '',
-      });
-    } else if (user) {
-      setFormData(prev => ({ ...prev, username: user.username }));
-    }
+    setFormData({
+      username: user?.username || '',
+      companyName: companyProfile?.companyName || '',
+      rif: companyProfile?.rif || '',
+      legalName: companyProfile?.legalName || '',
+      corporatePhone: companyProfile?.corporatePhone || '',
+      website: companyProfile?.website || '',
+      fiscalAddress: companyProfile?.fiscalAddress || '',
+      companyType: companyProfile?.companyType || '',
+      description: companyProfile?.description || '',
+      responseTime: companyProfile?.responseTime || '',
+    });
   }, [companyProfile, user]);
 
   const handleChange = (field: string, value: string) => {

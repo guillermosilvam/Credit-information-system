@@ -119,6 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             setUser(parsedUser);
             localStorage.setItem('agrifinance_user', JSON.stringify(parsedUser));
+            localStorage.setItem('session_start', String(Date.now()));
             await fetchProfile(parsedUser);
           }
         } catch (e) {
@@ -165,6 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setUser(parsedUser);
       localStorage.setItem('agrifinance_user', JSON.stringify(parsedUser));
+      localStorage.setItem('session_start', String(Date.now()));
       
       // Fetch profile to populate producerProfile or companyProfile
       await fetchProfile(parsedUser);
