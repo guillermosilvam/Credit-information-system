@@ -21,7 +21,7 @@ export default function EmpresaDashboard() {
   const isLoading = loadingPlans || loadingApps;
 
   // Filtrar planes de la empresa actual
-  const companyPlans = plans.filter(plan => plan.company === companyProfile?.id);
+  const companyPlans = plans.filter(plan => plan.company === companyProfile?.userId);
   const activePlans = companyPlans.filter(plan => plan.is_active);
   
   // Solicitudes recibidas para los planes de esta empresa

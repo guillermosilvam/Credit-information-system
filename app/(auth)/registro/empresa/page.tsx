@@ -56,6 +56,14 @@ export default function RegistroEmpresaPage() {
       toast.error('El nombre de empresa y RIF son obligatorios');
       return false;
     }
+    if (!/^[A-Za-z]-\d{8}-\d{1}$/.test(formData.rif)) {
+      toast.error('El RIF debe tener el formato: J-12345678-9');
+      return false;
+    }
+    if (formData.corporatePhone && !/^\d{3}-\d{7}$/.test(formData.corporatePhone)) {
+      toast.error('El teléfono debe tener el formato: 212-1234567');
+      return false;
+    }
     return true;
   };
 
@@ -199,6 +207,8 @@ export default function RegistroEmpresaPage() {
                 <Input
                   id="rif"
                   placeholder="J-12345678-9"
+                  pattern="[A-Za-z]-\d{8}-\d{1}"
+                  title="Formato: J-12345678-9"
                   maxLength={12}
                   value={formData.rif}
                   onChange={(e) => updateFormData('rif', e.target.value)}
@@ -241,6 +251,8 @@ export default function RegistroEmpresaPage() {
                   id="corporatePhone"
                   placeholder="212-1234567"
                   inputMode="tel"
+                  pattern="\d{3}-\d{7}"
+                  title="Formato: 212-1234567"
                   maxLength={12}
                   value={formData.corporatePhone}
                   onChange={(e) => updateFormData('corporatePhone', e.target.value)}

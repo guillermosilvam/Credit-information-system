@@ -45,7 +45,7 @@ export default function MisPlanesPage() {
   const { data: allPlans = [], isLoading } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
   
   // Filtrar solo los planes de esta empresa
-  const plans = allPlans.filter(p => p.company === companyProfile?.id);
+  const plans = allPlans.filter(p => p.company === companyProfile?.userId);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
