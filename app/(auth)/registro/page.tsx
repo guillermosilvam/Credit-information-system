@@ -11,25 +11,9 @@ export default function RegistroPage() {
       <div className="lg:hidden flex justify-center">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-5 h-5 text-primary-foreground"
-            >
-              <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
-              <path d="M8.5 8.5v.01" />
-              <path d="M16 15.5v.01" />
-              <path d="M12 12v.01" />
-              <path d="M11 17v.01" />
-              <path d="M7 14v.01" />
-            </svg>
+            <Tractor className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-foreground">AgriFinance</span>
+          <span className="text-xl font-bold text-foreground">SIGEFA</span>
         </div>
       </div>
 
