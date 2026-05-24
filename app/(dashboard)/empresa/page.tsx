@@ -15,13 +15,13 @@ import { useAuth } from '@/lib/auth-context';
 export default function EmpresaDashboard() {
   const { user, companyProfile } = useAuth();
 
-  const { data: plans = [], isLoading: loadingPlans } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
+  const { data: plans = [], isLoading: loadingPlans } = useSWR<CreditPlanResponse[]>('/credits/plans/?mine=true', fetcher);
   const { data: applications = [], isLoading: loadingApps } = useSWR<CreditApplicationResponse[]>('/credits/applications/', fetcher);
 
   const isLoading = loadingPlans || loadingApps;
 
   // Filtrar planes de la empresa actual
-  const companyPlans = plans.filter(plan => plan.company === companyProfile?.userId);
+  const companyPlans = plans.filter(plan => plan.company === companyProfile?.id);
   const activePlans = companyPlans.filter(plan => plan.is_active);
   
   // Solicitudes recibidas para los planes de esta empresa

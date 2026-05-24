@@ -42,10 +42,10 @@ import { toast } from 'sonner';
 export default function MisPlanesPage() {
   const { companyProfile } = useAuth();
   const router = useRouter();
-  const { data: allPlans = [], isLoading } = useSWR<CreditPlanResponse[]>('/credits/plans/', fetcher);
+  const { data: allPlans = [], isLoading } = useSWR<CreditPlanResponse[]>('/credits/plans/?mine=true', fetcher);
   
   // Filtrar solo los planes de esta empresa
-  const plans = allPlans.filter(p => p.company === companyProfile?.userId);
+  const plans = allPlans.filter(p => p.company === companyProfile?.id);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);

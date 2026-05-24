@@ -211,7 +211,7 @@ export default function RegistroEmpresaPage() {
                   title="Formato: J-12345678-9"
                   maxLength={12}
                   value={formData.rif}
-                  onChange={(e) => updateFormData('rif', e.target.value)}
+                  onChange={(e) => updateFormData('rif', e.target.value.slice(0, 12))}
                 />
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function RegistroEmpresaPage() {
                   title="Formato: 212-1234567"
                   maxLength={12}
                   value={formData.corporatePhone}
-                  onChange={(e) => updateFormData('corporatePhone', e.target.value)}
+                  onChange={(e) => updateFormData('corporatePhone', e.target.value.slice(0, 12))}
                 />
               </div>
               <div className="space-y-2">

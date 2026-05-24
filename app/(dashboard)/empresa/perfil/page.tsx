@@ -180,7 +180,7 @@ export default function PerfilEmpresaPage() {
                     <Label htmlFor="rif">RIF</Label>
                     <Input id="rif" maxLength={12} pattern="[A-Za-z]-\d{8}-\d{1}"
                       title="Formato: J-12345678-9" value={formData.rif}
-                      onChange={(e) => handleChange('rif', e.target.value)}
+                      onChange={(e) => handleChange('rif', e.target.value.slice(0, 12))}
                       placeholder="J-12345678-9" />
                   </div>
                 </div>
@@ -234,7 +234,7 @@ export default function PerfilEmpresaPage() {
                     <Input id="corporatePhone" inputMode="tel" maxLength={12}
                       pattern="\d{3}-\d{7}" title="Formato: 212-1234567"
                       value={formData.corporatePhone}
-                      onChange={(e) => handleChange('corporatePhone', e.target.value)}
+                      onChange={(e) => handleChange('corporatePhone', e.target.value.slice(0, 12))}
                       placeholder="212-1234567" />
                   </div>
                   <div className="space-y-2">
