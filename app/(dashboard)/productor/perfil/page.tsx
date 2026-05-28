@@ -271,10 +271,10 @@ export default function PerfilProductorPage() {
                     <Label htmlFor="mainActivity">Actividad Principal</Label>
                     <Input id="mainActivity" maxLength={100} value={formData.mainActivity}
                       onChange={(e) => handleChange('mainActivity', e.target.value)}
-                      placeholder="Cultivo de Maiz, Ganaderia, etc." />
+                      placeholder="Cultivo de Maíz, Ganadería, etc." />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="roadCondition">Condicion de Vias</Label>
+                    <Label htmlFor="roadCondition">Condición de Vías</Label>
                     <Select value={formData.roadCondition}
                       onValueChange={(value) => handleChange('roadCondition', value)}>
                       <SelectTrigger><SelectValue placeholder="Seleccione..." /></SelectTrigger>

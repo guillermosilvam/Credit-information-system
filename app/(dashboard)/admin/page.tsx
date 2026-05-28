@@ -55,7 +55,7 @@ export default function AdminDashboard() {
               </div>
               <div className="flex-1">
                 <p className="font-medium text-amber-800 dark:text-amber-200">
-                  {pendingCompanies.length} {pendingCompanies.length === 1 ? 'empresa requiere' : 'empresas requieren'} aprobacion
+                  {pendingCompanies.length} {pendingCompanies.length === 1 ? 'empresa requiere' : 'empresas requieren'} aprobación
                 </p>
                 <p className="text-sm text-amber-700 dark:text-amber-300">
                   Revise las solicitudes de registro pendientes
@@ -95,7 +95,7 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{totalCompanies}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-amber-600 font-medium">{pendingCompanies.length}</span> pendientes de aprobacion
+              <span className="text-amber-600 font-medium">{pendingCompanies.length}</span> pendientes de aprobación
             </p>
           </CardContent>
         </Card>
@@ -130,7 +130,7 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>Acciones Rapidas</CardTitle>
+          <CardTitle>Acciones Rápidas</CardTitle>
           <CardDescription>
             Acceda a las funciones de administracion principales
           </CardDescription>
@@ -166,9 +166,9 @@ export default function AdminDashboard() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Empresas Pendientes de Aprobacion</CardTitle>
+            <CardTitle>Empresas Pendientes de Aprobación</CardTitle>
             <CardDescription>
-              Solicitudes de registro que requieren revision
+              Solicitudes de registro que requieren revisión
             </CardDescription>
           </div>
           <Link href="/admin/empresas">
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
           {pendingCompanies.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No hay empresas pendientes de aprobacion</p>
+              <p>No hay empresas pendientes de aprobación</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -211,7 +211,7 @@ export default function AdminDashboard() {
           <div>
             <CardTitle>Actividad Reciente</CardTitle>
             <CardDescription>
-              Ultimas solicitudes de credito en la plataforma
+              Últimas solicitudes de crédito en la plataforma
             </CardDescription>
           </div>
         </CardHeader>

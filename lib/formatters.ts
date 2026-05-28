@@ -27,7 +27,7 @@ export const statusLabels: Record<string, string> = {
   pending: 'Pendiente',
   approved: 'Aprobado',
   rejected: 'Rechazado',
-  under_review: 'En Revision',
+  under_review: 'En Revisión',
   verified: 'Verificado'
 };
 
@@ -38,9 +38,9 @@ export const landTenureLabels: Record<string, string> = {
 };
 
 export const roadConditionLabels: Record<string, string> = {
-  OPTIMAL: 'Optimo',
+  OPTIMAL: 'Óptimo',
   REGULAR: 'Regular',
-  DIFFICULT: 'Dificil'
+  DIFFICULT: 'Difícil'
 };
 
 export const companyTypeLabels: Record<string, string> = {

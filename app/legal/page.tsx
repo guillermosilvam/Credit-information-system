@@ -62,11 +62,11 @@ export default function LegalPage() {
             <h2 className="text-2xl font-bold">Descargos de Responsabilidad</h2>
           </div>
           <div className="space-y-4 text-foreground/80 leading-relaxed font-medium">
-            <p>SIGEFA actúa estrictamente bajo la figura jurídica y práctica de <strong>Servicio Tecnológico para la Intermediación y Enlace de Partes</strong>. Al registrarse, enviar solicitudes o realizar contactos cruzados a traves del portal web, toda la comunidad de usuarios declara y asume conocer lo siguiente:</p>
+            <p>SIGEFA actúa estrictamente bajo la figura jurídica y práctica de <strong>Servicio Tecnológico para la Intermediación y Enlace de Partes</strong>. Al registrarse, enviar solicitudes o realizar contactos cruzados a través del portal web, toda la comunidad de usuarios declara y asume conocer lo siguiente:</p>
             <ul className="list-disc list-inside space-y-2 mt-4 ml-2">
               <li>SIGEFA <strong>NO CAPTA FONDOS PUBLICOS</strong> ni otorga financiamientos, adelantos, prestamos o garantias pecuniarias directamente.</li>
-              <li>La organizacion desarrolladora del sistema <strong>no influye, no tiene potestad ni garantiza</strong> el otorgamiento, montos, tasas de interes ni aprobacion final de ningun credito o herramienta financiera.</li>
-              <li>La responsabilidad de pago de creditos frente a Entidades Financieras, es de naturaleza exclusiva entre el Productor solicitante y el organo crediticio que libere los fondos. Cualquier eventual incumplimiento es ajeno a SIGEFA.</li>
+              <li>La organización desarrolladora del sistema <strong>no influye, no tiene potestad ni garantiza</strong> el otorgamiento, montos, tasas de interés ni aprobación final de ningún crédito o herramienta financiera.</li>
+              <li>La responsabilidad de pago de créditos frente a Entidades Financieras, es de naturaleza exclusiva entre el Productor solicitante y el órgano crediticio que libere los fondos. Cualquier eventual incumplimiento es ajeno a SIGEFA.</li>
             </ul>
           </div>
         </section>

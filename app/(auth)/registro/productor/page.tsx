@@ -208,7 +208,7 @@ export default function RegistroProductorPage() {
                 <Input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Minimo 6 caracteres"
+                  placeholder="Mínimo 6 caracteres"
                   value={formData.password}
                   onChange={(e) => updateFormData('password', e.target.value)}
                 />
@@ -342,7 +342,7 @@ export default function RegistroProductorPage() {
               <Label htmlFor="mainActivity">Actividad Principal</Label>
               <Input
                 id="mainActivity"
-                placeholder="Ej: Cultivo de Maiz, Ganaderia"
+                placeholder="Ej: Cultivo de Maíz, Ganadería"
                 value={formData.mainActivity}
                 onChange={(e) => updateFormData('mainActivity', e.target.value)}
               />
@@ -357,7 +357,7 @@ export default function RegistroProductorPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="roadCondition">Condicion de Vias de Acceso</Label>
+                  <Label htmlFor="roadCondition">Condición de Vías de Acceso</Label>
               <Select
                 value={formData.roadCondition}
                 onValueChange={(value) => updateFormData('roadCondition', value as RoadCondition)}
@@ -366,9 +366,9 @@ export default function RegistroProductorPage() {
                   <SelectValue placeholder="Seleccione..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="OPTIMAL">Optimo</SelectItem>
+                  <SelectItem value="OPTIMAL">Óptimo</SelectItem>
                   <SelectItem value="REGULAR">Regular</SelectItem>
-                  <SelectItem value="DIFFICULT">Dificil</SelectItem>
+                  <SelectItem value="DIFFICULT">Difícil</SelectItem>
                 </SelectContent>
               </Select>
             </div>

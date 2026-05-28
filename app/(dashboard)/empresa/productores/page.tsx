@@ -25,7 +25,7 @@ export default function ProductoresPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Directorio de Productores</h1>
-          <p className="text-muted-foreground mt-1">Explora los perfiles agricolas disponibles para financiamiento.</p>
+          <p className="text-muted-foreground mt-1">Explora los perfiles agrícolas disponibles para financiamiento.</p>
         </div>
       </div>
 
@@ -70,7 +70,7 @@ export default function ProductoresPage() {
                     <span className="text-foreground">{producer.main_activity || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-medium">Area Total:</span>
+                    <span className="font-medium">Área Total:</span>
                     <span className="text-foreground">{producer.total_area || 0} Has</span>
                   </div>
                   <div className="flex justify-between items-center pt-2 border-t border-border/50">

@@ -113,13 +113,13 @@ export default function EmpresaDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Tasa de Aprobacion</CardTitle>
+            <CardTitle className="text-sm font-medium">Tasa de Aprobación</CardTitle>
             <TrendingUp className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">75%</div>
             <p className="text-xs text-muted-foreground">
-              Ultimos 30 dias
+              Últimos 30 días
             </p>
           </CardContent>
         </Card>
@@ -128,16 +128,16 @@ export default function EmpresaDashboard() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>Acciones Rapidas</CardTitle>
+          <CardTitle>Acciones Rápidas</CardTitle>
           <CardDescription>
-            Gestione sus planes de credito y solicitudes
+            Gestione sus planes de crédito y solicitudes
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4">
           <Link href="/empresa/planes/nuevo">
             <Button className="gap-2">
               <Plus className="w-4 h-4" />
-              Crear Plan de Credito
+              Crear Plan de Crédito
             </Button>
           </Link>
           <Link href="/empresa/solicitudes">
@@ -160,7 +160,7 @@ export default function EmpresaDashboard() {
           <div>
             <CardTitle>Solicitudes Recientes</CardTitle>
             <CardDescription>
-              Productores que han aplicado a sus planes de credito
+              Productores que han aplicado a sus planes de crédito
             </CardDescription>
           </div>
           <Link href="/empresa/solicitudes">
@@ -207,7 +207,7 @@ export default function EmpresaDashboard() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Mis Planes de Credito</CardTitle>
+            <CardTitle>Mis Planes de Crédito</CardTitle>
             <CardDescription>
               Planes publicados por su empresa
             </CardDescription>

@@ -42,7 +42,7 @@ export function CalculadoraCredito() {
               <span className="text-sm font-bold tracking-wide">Simulador de Financiamiento</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4">
-              Planifica tu inversion agricola
+              Planifica tu inversión agrícola
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               Utiliza nuestra herramienta referencial para estimar el costo de capital de los planes ofrecidos por las principales entidades bancarias.
@@ -80,7 +80,7 @@ export function CalculadoraCredito() {
               {/* Botones de Plazo */}
               <div className="space-y-4">
                 <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-primary" /> Plazo del Credito (Meses)
+                  <Calendar className="w-4 h-4 text-primary" /> Plazo del Crédito (Meses)
                 </label>
                 <div className="grid grid-cols-4 gap-2">
                   {[6, 12, 24, 36].map((meses) => (
@@ -106,7 +106,7 @@ export function CalculadoraCredito() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-800">Tasa de Referencia Asumida: {tasaAnual}%</p>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">Este valor es un promedio referencial de banca agricola nacional. Las entidades impondrán su propia política final.</p>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">Este valor es un promedio referencial de banca agrícola nacional. Las entidades impondrán su propia política final.</p>
                 </div>
               </div>
             </div>
@@ -133,7 +133,7 @@ export function CalculadoraCredito() {
                     <span className="font-semibold text-slate-200">{formatoMoneda(resultados.totalIntereses)}</span>
                   </div>
                   <div className="flex justify-between items-center text-sm border-t border-slate-700/50 pt-4">
-                    <span className="text-slate-300 font-medium">Costo Total del Credito:</span>
+                    <span className="text-slate-300 font-medium">Costo Total del Crédito:</span>
                     <span className="font-bold text-white text-lg">{formatoMoneda(resultados.totalPagar)}</span>
                   </div>
                 </div>
@@ -147,7 +147,7 @@ export function CalculadoraCredito() {
                   </Link>
                 </Button>
                 <p className="text-center text-xs text-slate-500 mt-4 font-light">
-                  Resultados matematicos referenciales. No aplicables para obligaciones contractuales automáticas.
+                  Resultados matemáticos referenciales. No aplicables para obligaciones contractuales automáticas.
                 </p>
               </div>
             </div>

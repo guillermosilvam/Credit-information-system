@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Filter, CheckCircle, XCircle, Clock, Eye, Building2, Loader2 } from 'lucide-react';
+import { Search, Filter, CheckCircle, XCircle, Clock, Eye, Building2, Loader2, Trash2 } from 'lucide-react';
 import { companyTypeLabels, statusLabels } from '@/lib/formatters';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/lib/fetcher';
-import { accountService, CompanyProfileResponse } from '@/services/accountService';
+import { accountService, type CompanyProfileResponse } from '@/services/accountService';
 import {
   Table,
   TableBody,
@@ -27,16 +27,27 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import type { CompanyProfile } from '@/lib/types';
 
 export default function AdminEmpresasPage() {
   const { data: companies = [], isLoading } = useSWR<CompanyProfileResponse[]>('/accounts/company/', fetcher);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedCompany, setSelectedCompany] = useState<CompanyProfileResponse | null>(null);
+  const [companyToDelete, setCompanyToDelete] = useState<CompanyProfileResponse | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const filteredCompanies = companies.filter(company => {
     const searchLower = searchTerm.toLowerCase();
@@ -92,6 +103,25 @@ export default function AdminEmpresasPage() {
       toast.error(e.response?.data?.detail || 'Error al rechazar la empresa');
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!companyToDelete) return;
+    setIsDeleting(true);
+    try {
+      await accountService.deleteCompany(companyToDelete.id);
+      toast.success('Empresa eliminada exitosamente');
+      mutate('/accounts/company/');
+      if (selectedCompany?.id === companyToDelete.id) {
+        setShowDetailDialog(false);
+        setSelectedCompany(null);
+      }
+      setCompanyToDelete(null);
+    } catch (e: any) {
+      toast.error(e.response?.data?.detail || 'Error al eliminar la empresa');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -224,7 +254,7 @@ export default function AdminEmpresasPage() {
                     <TableHead>RIF</TableHead>
                     <TableHead>Tipo</TableHead>
                     <TableHead>Estado</TableHead>
-                    <TableHead className="w-12"></TableHead>
+                    <TableHead className="w-24"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -257,13 +287,25 @@ export default function AdminEmpresasPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          onClick={() => viewDetails(company)}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-1">
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={() => viewDetails(company)}
+                            aria-label="Ver detalle"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setCompanyToDelete(company)}
+                            aria-label="Eliminar empresa"
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -349,7 +391,7 @@ export default function AdminEmpresasPage() {
 
               {selectedCompany.description && (
                 <div className="p-4 rounded-lg bg-muted/50">
-                  <h4 className="font-semibold mb-2">Descripcion</h4>
+                  <h4 className="font-semibold mb-2">Descripción</h4>
                   <p className="text-sm">{selectedCompany.description}</p>
                 </div>
               )}
@@ -383,6 +425,30 @@ export default function AdminEmpresasPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <AlertDialog open={!!companyToDelete} onOpenChange={(open) => !open && setCompanyToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Eliminar empresa</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta accion eliminara la cuenta de {companyToDelete?.company_name} y sus datos asociados. No se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isDeleting}
+              onClick={(event) => {
+                event.preventDefault();
+                handleDelete();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       </>
       )}
     </div>

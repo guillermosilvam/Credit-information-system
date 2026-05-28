@@ -115,7 +115,7 @@ export default function SolicitudesEmpresaPage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Solicitudes Recibidas</h1>
         <p className="text-muted-foreground">
-          Revise y gestione las solicitudes de credito de los productores
+          Revise y gestione las solicitudes de crédito de los productores
         </p>
       </div>
 
@@ -150,7 +150,7 @@ export default function SolicitudesEmpresaPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-amber-500" />
-              En Revision
+              En Revisión
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -202,7 +202,7 @@ export default function SolicitudesEmpresaPage() {
               <SelectContent>
                 <SelectItem value="all">Todos los estados</SelectItem>
                 <SelectItem value="pending">Pendientes</SelectItem>
-                <SelectItem value="under_review">En Revision</SelectItem>
+                <SelectItem value="under_review">En Revisión</SelectItem>
                 <SelectItem value="approved">Aprobados</SelectItem>
                 <SelectItem value="rejected">Rechazados</SelectItem>
               </SelectContent>
@@ -226,8 +226,8 @@ export default function SolicitudesEmpresaPage() {
               <h3 className="font-semibold mb-2">No se encontraron solicitudes</h3>
               <p className="text-muted-foreground">
                 {initialApplications.length === 0 
-                  ? 'Aun no ha recibido solicitudes de credito'
-                  : 'Intente ajustar los filtros de busqueda'}
+                  ? 'Aún no ha recibido solicitudes de crédito'
+                  : 'Intente ajustar los filtros de búsqueda'}
               </p>
             </div>
           ) : (
@@ -237,7 +237,7 @@ export default function SolicitudesEmpresaPage() {
                   <TableRow>
                     <TableHead>Productor</TableHead>
                     <TableHead>Finca</TableHead>
-                    <TableHead>Plan de Credito</TableHead>
+                    <TableHead>Plan de Crédito</TableHead>
                     <TableHead>Fecha</TableHead>
                     <TableHead>Estado</TableHead>
                     <TableHead className="w-12"></TableHead>
@@ -327,7 +327,7 @@ export default function SolicitudesEmpresaPage() {
                 </div>
 
                 <div className="p-4 rounded-lg bg-muted/50">
-                  <h4 className="font-semibold mb-3">Plan de Credito Solicitado</h4>
+                  <h4 className="font-semibold mb-3">Plan de Crédito Solicitado</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Plan:</span>
@@ -345,7 +345,7 @@ export default function SolicitudesEmpresaPage() {
                     </div>
                     {selectedApplication.updated_at && (
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Fecha Revision:</span>
+                        <span className="text-muted-foreground">Fecha Revisión:</span>
                         <span>{formatDate(selectedApplication.updated_at)}</span>
                       </div>
                     )}
@@ -364,7 +364,7 @@ export default function SolicitudesEmpresaPage() {
                   disabled={selectedApplication.status === 'under_review' || isUpdating}
                 >
                   <AlertCircle className="w-4 h-4 mr-2" />
-                  Marcar en Revision
+                  Marcar en Revisión
                 </Button>
                 <Button 
                   variant="destructive"

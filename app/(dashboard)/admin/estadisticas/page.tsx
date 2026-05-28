@@ -43,9 +43,9 @@ export default function AdminEstadisticasPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Estadisticas de la Plataforma</h1>
+        <h1 className="text-2xl font-bold text-foreground">Estadísticas de la Plataforma</h1>
         <p className="text-muted-foreground">
-          Resumen general y metricas del sistema AgriFinance
+          Resumen general y métricas del sistema AgriFinance
         </p>
       </div>
 
@@ -119,10 +119,10 @@ export default function AdminEstadisticasPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5" />
-              Tasa de Aprobacion
+              Tasa de Aprobación
             </CardTitle>
             <CardDescription>
-              Estadisticas de solicitudes de credito
+              Estadísticas de solicitudes de crédito
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -141,7 +141,7 @@ export default function AdminEstadisticasPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span>Pendientes / En Revision</span>
+                  <span>Pendientes / En Revisión</span>
                   <span className="font-medium text-amber-600">{pendingApplications}</span>
                 </div>
                 <Progress value={(pendingApplications / totalApplications) * 100} className="h-2 [&>div]:bg-amber-500" />
@@ -162,7 +162,7 @@ export default function AdminEstadisticasPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="w-5 h-5" />
-              Cobertura Agricola
+              Cobertura Agrícola
             </CardTitle>
             <CardDescription>
               Área registrada por productores
@@ -187,7 +187,7 @@ export default function AdminEstadisticasPage() {
               </div>
               <Progress value={cultivationRate} className="h-3" />
               <p className="text-xs text-muted-foreground text-center">
-                Del area total registrada esta siendo cultivada
+                Del área total registrada está siendo cultivada
               </p>
             </div>
           </CardContent>
@@ -197,9 +197,9 @@ export default function AdminEstadisticasPage() {
       {/* Sectors Distribution */}
       <Card>
         <CardHeader>
-          <CardTitle>Distribucion por Sector Agricola</CardTitle>
+          <CardTitle>Distribución por Sector Agrícola</CardTitle>
           <CardDescription>
-            Planes de credito por sector
+            Planes de crédito por sector
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -212,7 +212,7 @@ export default function ExplorarCreditosPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground">Tasa de Interes</p>
+                    <p className="text-xs text-muted-foreground">Tasa de Interés</p>
                     <p className="font-medium">{selectedPlan.interest_rate}% anual</p>
                   </div>
                   <div>

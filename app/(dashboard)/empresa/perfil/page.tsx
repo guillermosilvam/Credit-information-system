@@ -211,10 +211,10 @@ export default function PerfilEmpresaPage() {
                     placeholder="Dirección completa de la sede principal" rows={3} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Descripcion de la Empresa</Label>
+                  <Label htmlFor="description">Descripción de la Empresa</Label>
                   <Textarea id="description" maxLength={255} value={formData.description}
                     onChange={(e) => handleChange('description', e.target.value)}
-                    placeholder="Breve descripcion de su empresa y servicios" rows={4} />
+                    placeholder="Breve descripción de su empresa y servicios" rows={4} />
                 </div>
               </CardContent>
             </Card>
@@ -248,8 +248,8 @@ export default function PerfilEmpresaPage() {
                   <Label htmlFor="responseTime">Tiempo de Respuesta</Label>
                   <Input id="responseTime" maxLength={40} value={formData.responseTime}
                     onChange={(e) => handleChange('responseTime', e.target.value)}
-                    placeholder="Ej: 3 a 5 dias habiles" />
-                  <p className="text-xs text-muted-foreground">Tiempo estimado para responder solicitudes de credito</p>
+                    placeholder="Ej: 3 a 5 días hábiles" />
+                  <p className="text-xs text-muted-foreground">Tiempo estimado para responder solicitudes de crédito</p>
                 </div>
               </CardContent>
             </Card>

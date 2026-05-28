@@ -91,7 +91,7 @@ export default function RegistroEmpresaPage() {
     setIsLoading(false);
     
     if (response.success) {
-      toast.success('Solicitud enviada. Un administrador revisara su cuenta.');
+      toast.success('Solicitud enviada. Un administrador revisará su cuenta.');
       router.push('/login');
     } else {
       toast.error(response.error || 'Error al enviar solicitud de registro');
@@ -122,8 +122,8 @@ export default function RegistroEmpresaPage() {
         <CardContent className="space-y-6">
           <Alert className="bg-secondary/10 border-secondary/20">
             <AlertDescription className="text-sm">
-              Las cuentas empresariales requieren aprobacion por un administrador. 
-              Recibira una notificacion cuando su cuenta sea verificada.
+               Las cuentas empresariales requieren aprobación por un administrador. 
+              Recibirá una notificación cuando su cuenta sea verificada.
             </AlertDescription>
           </Alert>
 
@@ -160,7 +160,7 @@ export default function RegistroEmpresaPage() {
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Minimo 6 caracteres"
+                    placeholder="Mínimo 6 caracteres"
                     value={formData.password}
                     onChange={(e) => updateFormData('password', e.target.value)}
                   />
@@ -281,10 +281,10 @@ export default function RegistroEmpresaPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">Descripcion de la Empresa</Label>
+              <Label htmlFor="description">Descripción de la Empresa</Label>
               <Textarea
                 id="description"
-                placeholder="Breve descripcion de la empresa y sus servicios"
+                placeholder="Breve descripción de la empresa y sus servicios"
                 maxLength={255}
                 rows={3}
                 value={formData.description}
@@ -295,7 +295,7 @@ export default function RegistroEmpresaPage() {
               <Label htmlFor="responseTime">Tiempo de Respuesta</Label>
               <Input
                 id="responseTime"
-                placeholder="Ej: 3 a 5 dias habiles"
+                placeholder="Ej: 3 a 5 días hábiles"
                 maxLength={40}
                 value={formData.responseTime}
                 onChange={(e) => updateFormData('responseTime', e.target.value)}

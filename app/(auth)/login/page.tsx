@@ -111,7 +111,7 @@ export default function LoginPage() {
                   <AlertDialogHeader>
                     <AlertDialogTitle className="flex items-center gap-2">
                       <ShieldAlert className="w-5 h-5 text-primary" />
-                      Recuperacion de Credenciales
+                      Recuperación de Credenciales
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-sm md:text-base text-muted-foreground pt-3 space-y-3">
                       <span>
@@ -126,7 +126,7 @@ export default function LoginPage() {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter className="sm:justify-center">
-                    <AlertDialogAction className="w-full sm:w-auto">Entendido, contactare a soporte</AlertDialogAction>
+                    <AlertDialogAction className="w-full sm:w-auto">Entendido, contactaré a soporte</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>

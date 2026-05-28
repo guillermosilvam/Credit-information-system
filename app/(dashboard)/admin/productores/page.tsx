@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Eye, Tractor, MapPin, Loader2 } from 'lucide-react';
+import { Search, Eye, Tractor, MapPin, Loader2, Trash2 } from 'lucide-react';
 import { landTenureLabels, roadConditionLabels } from '@/lib/formatters';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,15 +22,28 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import useSWR from 'swr';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/lib/fetcher';
-import type { ProducerProfileResponse } from '@/services/accountService';
+import { accountService, type ProducerProfileResponse } from '@/services/accountService';
+import { toast } from 'sonner';
 
 export default function AdminProductoresPage() {
   const { data: producers = [], isLoading } = useSWR<ProducerProfileResponse[]>('/accounts/producer/', fetcher);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProducer, setSelectedProducer] = useState<ProducerProfileResponse | null>(null);
+  const [producerToDelete, setProducerToDelete] = useState<ProducerProfileResponse | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const filteredProducers = producers.filter(producer => {
     const searchLower = searchTerm.toLowerCase();
@@ -47,13 +60,32 @@ export default function AdminProductoresPage() {
     setShowDetailDialog(true);
   };
 
+  const handleDelete = async () => {
+    if (!producerToDelete) return;
+    setIsDeleting(true);
+    try {
+      await accountService.deleteProducer(producerToDelete.id);
+      toast.success('Productor eliminado exitosamente');
+      mutate('/accounts/producer/');
+      if (selectedProducer?.id === producerToDelete.id) {
+        setShowDetailDialog(false);
+        setSelectedProducer(null);
+      }
+      setProducerToDelete(null);
+    } catch (e: any) {
+      toast.error(e.response?.data?.detail || 'Error al eliminar el productor');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-foreground">Productores Registrados</h1>
         <p className="text-muted-foreground">
-          Listado de todos los productores agricolas en la plataforma
+          Listado de todos los productores agrícolas en la plataforma
         </p>
       </div>
 
@@ -124,7 +156,7 @@ export default function AdminProductoresPage() {
               <Tractor className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="font-semibold mb-2">No se encontraron productores</h3>
               <p className="text-muted-foreground">
-                Intente ajustar el termino de busqueda
+                Intente ajustar el término de búsqueda
               </p>
             </div>
           ) : (
@@ -137,7 +169,7 @@ export default function AdminProductoresPage() {
                     <TableHead>Ubicacion</TableHead>
                     <TableHead>Área</TableHead>
                     <TableHead>Actividad</TableHead>
-                    <TableHead className="w-12"></TableHead>
+                    <TableHead className="w-24"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -171,13 +203,25 @@ export default function AdminProductoresPage() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <Button 
-                            variant="ghost" 
-                            size="icon"
-                            onClick={() => viewDetails(producer)}
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Button>
+                          <div className="flex items-center justify-end gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              onClick={() => viewDetails(producer)}
+                              aria-label="Ver detalle"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setProducerToDelete(producer)}
+                              aria-label="Eliminar productor"
+                              className="text-destructive hover:text-destructive"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     );
@@ -274,7 +318,7 @@ export default function AdminProductoresPage() {
                             ? (roadConditionLabels[selectedProducer.road_condition] || selectedProducer.road_condition)
                             : 'No especificado'}
                         </p>
-                        <p className="text-sm text-muted-foreground">Condicion de Vias</p>
+                        <p className="text-sm text-muted-foreground">Condición de Vías</p>
                       </div>
                     </div>
 
@@ -298,6 +342,30 @@ export default function AdminProductoresPage() {
           )}
         </DialogContent>
       </Dialog>
+      <AlertDialog open={!!producerToDelete} onOpenChange={(open) => !open && setProducerToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Eliminar productor</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta accion eliminara la cuenta de {producerToDelete?.user?.username || producerToDelete?.farm_name} y sus datos asociados. No se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isDeleting}
+              onClick={(event) => {
+                event.preventDefault();
+                handleDelete();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Trash2 className="w-4 h-4 mr-2" />}
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       </>
       )}
     </div>

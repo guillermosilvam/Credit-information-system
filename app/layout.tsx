@@ -18,11 +18,11 @@ const sourceSans = Source_Sans_3({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Agrofinanciamiento - Credito Agricola',
+    default: 'Agrofinanciamiento - Crédito Agrícola',
     template: '%s | Agrofinanciamiento'
   },
-  description: 'Queremos fomentar la produccion agricola del pais para apoyar el crecimiento en el sector, facilitando el acceso a creditos.',
-  keywords: ['financiamiento', 'agricola', 'credito', 'productores', 'venezuela', 'agro'],
+  description: 'Queremos fomentar la producción agrícola del país para apoyar el crecimiento en el sector, facilitando el acceso a créditos.',
+  keywords: ['financiamiento', 'agrícola', 'crédito', 'productores', 'venezuela', 'agro'],
 }
 
 export const viewport: Viewport = {

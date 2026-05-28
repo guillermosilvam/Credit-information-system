@@ -57,7 +57,7 @@ export default function HomePage() {
         <div className="absolute inset-0 z-0 bg-black">
           <Image
             src="/images/jakub-brabec-y876c3rYoUg-unsplash.jpg"
-            alt="Paisaje Agricola"
+            alt="Paisaje Agrícola"
             fill
             className="object-cover object-center scale-105 animate-in zoom-in duration-1000 opacity-60" 
             priority
@@ -69,7 +69,7 @@ export default function HomePage() {
         <div className="container relative z-10 mx-auto px-4 text-center max-w-5xl animate-in slide-in-from-bottom-8 fade-in duration-1000 mt-4 mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white border border-white/20 mb-6 backdrop-blur-md shadow-sm">
             <Wheat className="w-4 h-4" />
-            <span className="text-sm font-bold tracking-wide">Sistema de Gestion y Enlace Financiero Agricola</span>
+            <span className="text-sm font-bold tracking-wide">Sistema de Gestión y Enlace Financiero Agrícola</span>
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-white mb-4 text-balance leading-tight tracking-tight drop-shadow-xl">
@@ -80,7 +80,7 @@ export default function HomePage() {
           </h1>
           
           <p className="text-xl md:text-2xl text-slate-100 mb-8 text-balance max-w-3xl mx-auto font-medium drop-shadow-md">
-            Nuestra finalidad es impulsar el crecimiento agricola. Conectamos directamente a productores con entidades financieras a traves de una plataforma tecnologica segura y eficiente.
+            Nuestra finalidad es impulsar el crecimiento agrícola. Conectamos directamente a productores con entidades financieras a través de una plataforma tecnológica segura y eficiente.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full px-4 sm:px-0">
@@ -130,19 +130,19 @@ export default function HomePage() {
                 <Leaf className="w-4 h-4 text-primary" /> Sobre Nosotros
               </div>
               <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-slate-900">
-                ¿Cual es el proposito de <span className="text-primary">SIGEFA?</span>
+                ¿Cuál es el propósito de <span className="text-primary">SIGEFA?</span>
               </h2>
               <div className="space-y-4 text-lg text-slate-600 leading-relaxed">
                 <p>
-                  El Sistema de Gestion y Enlace Financiero Agricola nace para derribar las principales barreras que limitan a las unidades de produccion en el pais. Evaluamos rigurosamente perfiles agricolas para facilitar herramientas de presentacion solidas.
+                  El Sistema de Gestión y Enlace Financiero Agrícola nace para derribar las principales barreras que limitan a las unidades de producción en el país. Evaluamos rigurosamente perfiles agrícolas para facilitar herramientas de presentación sólidas.
                 </p>
                 <p>
-                  A traves de nuestra interfaz, el productor puede documentar todo su soporte tecnico y legal para ser visualizado globalmente por empresas y fondos deseosos de invertir en el agro.
+                  A través de nuestra interfaz, el productor puede documentar todo su soporte técnico y legal para ser visualizado globalmente por empresas y fondos deseosos de invertir en el agro.
                 </p>
                 <div className="bg-orange-50 border border-orange-200 p-5 rounded-2xl mt-6 text-orange-900 font-medium flex gap-4 shadow-inner">
                   <Shield className="w-8 h-8 text-orange-600 shrink-0 mt-1" />
                   <p className="text-sm">
-                    <strong>Importante:</strong> Nuestra plataforma actua unicamente como <em>intermediario tecnologico e informativo</em> entre las partes. <strong>SIGEFA no influye, no garantiza, ni determina el otorgamiento de creditos.</strong> La evaluacion final de riesgo y aprobacion corre de manera autonoma y privativa por parte de cada entidad financiera.
+                    <strong>Importante:</strong> Nuestra plataforma actúa únicamente como <em>intermediario tecnológico e informativo</em> entre las partes. <strong>SIGEFA no influye, no garantiza, ni determina el otorgamiento de créditos.</strong> La evaluación final de riesgo y aprobación corre de manera autónoma y privativa por parte de cada entidad financiera.
                   </p>
                 </div>
               </div>
@@ -168,9 +168,9 @@ export default function HomePage() {
 
         <div className="container relative z-10 mx-auto">
           <div className="max-w-3xl mx-auto mb-16 px-4">
-            <h2 className="text-4xl font-bold mb-6 tracking-tight text-white drop-shadow-md">Como Enlazar tu Finca</h2>
+            <h2 className="text-4xl font-bold mb-6 tracking-tight text-white drop-shadow-md">Cómo Enlazar tu Finca</h2>
             <p className="text-lg text-slate-300">
-              Simplificamos el puente entre el arado y la inversion privada, creando relaciones mutualmente beneficiosas y de rapido acceso.
+              Simplificamos el puente entre el arado y la inversión privada, creando relaciones mutualmente beneficiosas y de rápido acceso.
             </p>
           </div>
           
@@ -180,14 +180,14 @@ export default function HomePage() {
                 <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-6 mx-auto border border-white/20 shadow-inner">
                   <Users className="w-8 h-8 text-white drop-shadow-md" />
                 </div>
-                <CardTitle className="text-2xl text-white">1. Validacion de Perfil</CardTitle>
+                <CardTitle className="text-2xl text-white">1. Validación de Perfil</CardTitle>
                 <CardDescription className="text-base font-medium text-slate-300">
                   Registra datos reales y demostrables
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-8">
                 <p className="text-slate-200 leading-relaxed text-sm px-2">
-                  Crea tu usuario y rellena el formato con tu base titular y extension cultivable. SIGEFA se asegurara que tus recaudos cumplan los minimos requisitos de presentacion.
+                  Crea tu usuario y rellena el formato con tu base titular y extensión cultivable. SIGEFA se asegurará que tus recaudos cumplan los mínimos requisitos de presentación.
                 </p>
               </CardContent>
             </Card>
@@ -197,14 +197,14 @@ export default function HomePage() {
                 <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-6 mx-auto border border-white/20 shadow-inner">
                   <Wallet className="w-8 h-8 text-white drop-shadow-md" />
                 </div>
-                <CardTitle className="text-2xl text-white">2. Busqueda de Opciones</CardTitle>
+                <CardTitle className="text-2xl text-white">2. Búsqueda de Opciones</CardTitle>
                 <CardDescription className="text-base font-medium text-slate-300">
-                  Elige los planes publicos
+                  Elige los planes públicos
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-8">
                 <p className="text-slate-200 leading-relaxed text-sm px-2">
-                  Revisa el listado de planes cargados por Bancos y Entes Privados, comparando cuales tasas o lineas de maquinaria se ajustan a las necesidades precisas de tu rubro.
+                  Revisa el listado de planes cargados por Bancos y Entes Privados, comparando cuáles tasas o líneas de maquinaria se ajustan a las necesidades precisas de tu rubro.
                 </p>
               </CardContent>
             </Card>
@@ -216,12 +216,12 @@ export default function HomePage() {
                 </div>
                 <CardTitle className="text-2xl text-white">3. Contacto Directo</CardTitle>
                 <CardDescription className="text-base font-medium text-slate-300">
-                  Acuerdos y ejecucion
+                  Acuerdos y ejecución
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-8">
                 <p className="text-slate-200 leading-relaxed text-sm px-2">
-                  Postulate desde la pagina. Las empresas observaran tu ficha tecnico-legal para analizarte, y la aprobacion/rechazo transcurrira enteramente en sus manos y lineamientos.
+                  Postúlate desde la página. Las empresas observarán tu ficha técnico-legal para analizarte, y la aprobación/rechazo transcurrirá enteramente en sus manos y lineamientos.
                 </p>
               </CardContent>
             </Card>
@@ -281,16 +281,16 @@ export default function HomePage() {
                 <span className="text-2xl font-bold tracking-tight text-slate-800">SIGEFA</span>
               </div>
               <p className="text-sm text-slate-500 max-w-md leading-relaxed font-medium">
-                Punto de enlace y gestion integral para robustecer las lineas de inversion agroproductiva en Venezuela. Evaluando, uniendo y agilizando tramites documentales.
+                Punto de enlace y gestión integral para robustecer las líneas de inversión agroproductiva en Venezuela. Evaluando, uniendo y agilizando trámites documentales.
               </p>
             </div>
             
             <div className="space-y-5">
-              <h4 className="font-bold text-slate-800">Soporte Tecnico</h4>
+              <h4 className="font-bold text-slate-800">Soporte Técnico</h4>
               <ul className="space-y-3 text-sm text-slate-500 font-medium">
                 <li><Link href="/ayuda" className="hover:text-primary transition-colors inline-flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 hover:border-primary/30"><BookOpen className="w-3.5 h-3.5"/> Guia de Usuario</Link></li>
                 <li><Link href="/ayuda#faq" className="hover:text-primary transition-colors inline-flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 hover:border-primary/30"><ExternalLink className="w-3.5 h-3.5"/> Preguntas Frecuentes</Link></li>
-                <li><Link href="/ayuda#glosario" className="hover:text-primary transition-colors inline-flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 hover:border-primary/30"><ExternalLink className="w-3.5 h-3.5"/> Glosario Tecnico</Link></li>
+                <li><Link href="/ayuda#glosario" className="hover:text-primary transition-colors inline-flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100 hover:border-primary/30"><ExternalLink className="w-3.5 h-3.5"/> Glosario Técnico</Link></li>
               </ul>
             </div>
 
@@ -305,7 +305,7 @@ export default function HomePage() {
           </div>
           
           <div className="text-center md:text-left flex flex-col md:flex-row justify-between items-center text-sm font-medium text-slate-400 px-6">
-            <p>&copy; {new Date().getFullYear()} SIGEFA. Proyecto Academico de Tesis.</p>
+            <p>&copy; {new Date().getFullYear()} SIGEFA. Proyecto Académico de Tesis.</p>
             <p className="mt-3 md:mt-0 bg-slate-200/50 px-3 py-1 rounded-full text-xs">Propuesta visual y funcional de grados.</p>
           </div>
         </div>

@@ -60,11 +60,11 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
   if (!plan) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <p className="text-muted-foreground mb-4">Plan de credito no encontrado</p>
+        <p className="text-muted-foreground mb-4">Plan de crédito no encontrado</p>
         <Link href="/productor/creditos">
           <Button variant="outline">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Volver a creditos
+            Volver a créditos
           </Button>
         </Link>
       </div>
@@ -98,7 +98,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
         </Link>
         <div>
           <h1 className="text-2xl font-bold">{plan.title}</h1>
-          <p className="text-muted-foreground">Detalle del plan de credito</p>
+          <p className="text-muted-foreground">Detalle del plan de crédito</p>
         </div>
       </div>
 
@@ -120,7 +120,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <h3 className="font-semibold mb-2">Descripcion</h3>
+                <h3 className="font-semibold mb-2">Descripción</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   {plan.description}
                 </p>
@@ -146,7 +146,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
                     <Percent className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Tasa de Interes</p>
+                    <p className="text-sm text-muted-foreground">                  Tasa de Interés</p>
                     <p className="font-semibold">{plan.interest_rate}% anual</p>
                   </div>
                 </div>
@@ -167,7 +167,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Tiempo de Respuesta</p>
-                    <p className="font-semibold">3 a 5 dias habiles</p>
+                    <p className="font-semibold">3 a 5 días hábiles</p>
                   </div>
                 </div>
               </div>
@@ -182,7 +182,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
             <CardContent>
               <ul className="space-y-3">
                 {[
-                  'Ser productor agricola registrado en la plataforma',
+                  '                  Ser productor agrícola registrado en la plataforma',
                   'Tener perfil completo con datos de la finca',
                   'Cédula de identidad vigente',
                   'RIF actualizado',
@@ -203,16 +203,16 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Aplicar al Credito</CardTitle>
+              <CardTitle>              Aplicar al Crédito</CardTitle>
               <CardDescription>
-                Envia tu solicitud para este plan de financiamiento
+                Envía tu solicitud para este plan de financiamiento
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {alreadyApplied ? (
                 <div className="text-center py-4">
                   <CheckCircle2 className="w-12 h-12 text-primary mx-auto mb-3" />
-                  <p className="font-medium">Ya has aplicado a este credito</p>
+                  <p className="font-medium">              Ya has aplicado a este crédito</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     Revisa el estado en tus solicitudes
                   </p>
@@ -262,7 +262,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                Institucion financiera con amplia experiencia en el sector agricola venezolano.
+                Institución financiera con amplia experiencia en el sector agrícola venezolano.
               </p>
             </CardContent>
           </Card>
@@ -275,7 +275,7 @@ export default function CreditDetailPage({ params }: { params: Promise<{ id: str
           <DialogHeader>
             <DialogTitle>Confirmar Solicitud</DialogTitle>
             <DialogDescription>
-              Estas a punto de enviar una solicitud para el siguiente plan de credito:
+              Estás a punto de enviar una solicitud para el siguiente plan de crédito:
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">

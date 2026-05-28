@@ -67,7 +67,7 @@ export default function MisSolicitudesPage() {
       <div>
         <h1 className="text-2xl font-bold text-foreground">Mis Solicitudes</h1>
         <p className="text-muted-foreground">
-          Historial y estado de sus solicitudes de credito
+          Historial y estado de sus solicitudes de crédito
         </p>
       </div>
 
@@ -122,7 +122,7 @@ export default function MisSolicitudesPage() {
         <CardHeader>
           <CardTitle>Historial de Solicitudes</CardTitle>
           <CardDescription>
-            Todas las solicitudes de credito que ha realizado
+            Todas las solicitudes de crédito que ha realizado
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -131,12 +131,12 @@ export default function MisSolicitudesPage() {
               <FileText className="w-12 h-12 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="font-semibold mb-2">No tiene solicitudes</h3>
               <p className="text-muted-foreground mb-4">
-                Explore los planes de credito disponibles y aplique al que mejor se adapte a sus necesidades
+                Explore los planes de crédito disponibles y aplique al que mejor se adapte a sus necesidades
               </p>
               <Link href="/productor/creditos">
                 <Button>
                   <CreditCard className="w-4 h-4 mr-2" />
-                  Explorar Creditos
+                  Explorar Créditos
                 </Button>
               </Link>
             </div>
@@ -145,11 +145,11 @@ export default function MisSolicitudesPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Plan de Credito</TableHead>
+                    <TableHead>Plan de Crédito</TableHead>
                     <TableHead>Monto</TableHead>
                     <TableHead>Fecha de Solicitud</TableHead>
                     <TableHead>Estado</TableHead>
-                    <TableHead>Fecha de Revision</TableHead>
+                    <TableHead>Fecha de Revisión</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -209,8 +209,8 @@ export default function MisSolicitudesPage() {
               <h3 className="font-semibold mb-1">Sobre el proceso de solicitud</h3>
               <p className="text-sm text-muted-foreground">
                 Una vez enviada su solicitud, la entidad financiera revisará su perfil y la información 
-                de su finca. El tiempo de respuesta varia segun la entidad. Mantendra su perfil actualizado 
-                para agilizar el proceso de aprobacion.
+                de su finca. El tiempo de respuesta varía según la entidad. Mantendrá su perfil actualizado 
+                para agilizar el proceso de aprobación.
               </p>
             </div>
           </div>

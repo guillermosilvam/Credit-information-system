@@ -46,7 +46,7 @@ export default function ProductorDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Creditos Disponibles</CardTitle>
+                  <CardTitle className="text-sm font-medium">Créditos Disponibles</CardTitle>
             <CreditCard className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -91,7 +91,7 @@ export default function ProductorDashboard() {
           <CardContent>
             <div className="text-2xl font-bold text-primary">{approvedApplications.length}</div>
             <p className="text-xs text-muted-foreground">
-              Creditos aprobados
+              Créditos aprobados
             </p>
           </CardContent>
         </Card>
@@ -100,16 +100,16 @@ export default function ProductorDashboard() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>Acciones Rapidas</CardTitle>
+          <CardTitle>Acciones Rápidas</CardTitle>
           <CardDescription>
-            Acceda rapidamente a las funciones principales
+              Acceda rápidamente a las funciones principales
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-4">
           <Link href="/productor/creditos">
             <Button className="gap-2">
               <CreditCard className="w-4 h-4" />
-              Explorar Creditos
+              Explorar Créditos
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
@@ -128,7 +128,7 @@ export default function ProductorDashboard() {
           <div>
             <CardTitle>Solicitudes Recientes</CardTitle>
             <CardDescription>
-              Estado de sus ultimas solicitudes de credito
+                Estado de sus últimas solicitudes de crédito
             </CardDescription>
           </div>
           <Link href="/productor/solicitudes">
@@ -142,9 +142,9 @@ export default function ProductorDashboard() {
           {userApplications.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No tiene solicitudes de credito</p>
+              <p>No tiene solicitudes de crédito</p>
               <Link href="/productor/creditos">
-                <Button className="mt-4">Explorar Creditos Disponibles</Button>
+                <Button className="mt-4">Explorar Créditos Disponibles</Button>
               </Link>
             </div>
           ) : (
@@ -174,9 +174,9 @@ export default function ProductorDashboard() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Creditos Destacados</CardTitle>
+            <CardTitle>Créditos Destacados</CardTitle>
             <CardDescription>
-              Planes de credito recomendados para usted
+              Planes de crédito recomendados para usted
             </CardDescription>
           </div>
           <Link href="/productor/creditos">

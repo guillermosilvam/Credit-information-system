@@ -93,7 +93,7 @@ export default function MisPlanesPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Mis Planes de Crédito</h1>
           <p className="text-muted-foreground">
-            Gestione los planes de credito que ofrece a los productores
+            Gestione los planes de crédito que ofrece a los productores
           </p>
         </div>
         <Link href="/empresa/planes/nuevo">
@@ -147,7 +147,7 @@ export default function MisPlanesPage() {
         <CardHeader>
           <CardTitle>Listado de Planes</CardTitle>
           <CardDescription>
-            Todos los planes de credito creados por su empresa
+            Todos los planes de crédito creados por su empresa
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -156,9 +156,9 @@ export default function MisPlanesPage() {
               <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                 <Plus className="w-6 h-6 text-muted-foreground" />
               </div>
-              <h3 className="font-semibold mb-2">No tiene planes de credito</h3>
+              <h3 className="font-semibold mb-2">No tiene planes de crédito</h3>
               <p className="text-muted-foreground mb-4">
-                Cree su primer plan de credito para que los productores puedan aplicar
+                Cree su primer plan de crédito para que los productores puedan aplicar
               </p>
               <Link href="/empresa/planes/nuevo">
                 <Button>Crear Primer Plan</Button>
@@ -253,10 +253,10 @@ export default function MisPlanesPage() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Eliminar Plan de Credito</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar Plan de Crédito</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta accion no se puede deshacer. El plan sera eliminado permanentemente
-              y los productores no podran aplicar a el.
+              Esta acción no se puede deshacer. El plan será eliminado permanentemente
+              y los productores no podrán aplicar a él.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

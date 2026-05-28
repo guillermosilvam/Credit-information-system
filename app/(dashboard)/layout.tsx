@@ -47,7 +47,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const producerNavItems = [
   { title: 'Inicio', href: '/productor', icon: Home },
-  { title: 'Explorar Creditos', href: '/productor/creditos', icon: CreditCard },
+  { title: 'Explorar Créditos', href: '/productor/creditos', icon: CreditCard },
   { title: 'Mis Solicitudes', href: '/productor/solicitudes', icon: FileText },
   { title: 'Mi Perfil', href: '/productor/perfil', icon: User },
 ];
@@ -63,7 +63,7 @@ const adminNavItems = [
   { title: 'Inicio', href: '/admin', icon: Home },
   { title: 'Empresas', href: '/admin/empresas', icon: Building2 },
   { title: 'Productores', href: '/admin/productores', icon: Tractor },
-  { title: 'Estadisticas', href: '/admin/estadisticas', icon: BarChart3 },
+  { title: 'Estadísticas', href: '/admin/estadisticas', icon: BarChart3 },
 ];
 
 function DashboardContent({ children }: { children: React.ReactNode }) {

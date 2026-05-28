@@ -17,7 +17,7 @@ export default function AuthLayout({
           <div className="absolute inset-0 z-0">
             <Image 
               src="/images/daniel-sessler-fZBVmG_uD5c-unsplash.jpg"
-              alt="Sector Agricola"
+              alt="Sector Agrícola"
               fill
               className="object-cover"
               priority
@@ -33,14 +33,14 @@ export default function AuthLayout({
                 </div>
                 <div className="flex flex-col">
                   <span className="text-3xl font-bold tracking-tight">SIGEFA</span>
-                  <span className="text-sm font-medium opacity-80 uppercase tracking-widest">Sistema de Gestion</span>
+                  <span className="text-sm font-medium opacity-80 uppercase tracking-widest">Sistema de Gestión</span>
                 </div>
               </div>
             </div>
             
             <div className="space-y-8">
               <blockquote className="text-2xl font-medium leading-relaxed italic">
-                &ldquo;Conectamos de forma transparente al productor venezolano con verdaderas oportunidades de desarrollo agroproductivo, sirviendo como un puente solido hacia el financiamiento.&rdquo;
+                &ldquo;Conectamos de forma transparente al productor venezolano con verdaderas oportunidades de desarrollo agroproductivo, sirviendo como un puente sólido hacia el financiamiento.&rdquo;
               </blockquote>
               
               <div className="bg-primary-foreground/10 rounded-xl p-6 border border-primary-foreground/20 backdrop-blur-sm">
@@ -49,9 +49,9 @@ export default function AuthLayout({
                     <Info className="w-6 h-6 opacity-80" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-1">Transparencia y Evaluacion</h3>
+                    <h3 className="font-semibold text-lg mb-1">Transparencia y Evaluación</h3>
                     <p className="text-sm opacity-90 leading-relaxed">
-                      Proveemos el espacio tecnologico para construir tu perfil agricola. Recuerda que la decision, montos y tasas para el otorgamiento del credito dependen exclusivamente de los criterios internos de cada entidad financiera.
+                      Proveemos el espacio tecnológico para construir tu perfil agrícola. Recuerda que la decisión, montos y tasas para el otorgamiento del crédito dependen exclusivamente de los criterios internos de cada entidad financiera.
                     </p>
                   </div>
                 </div>

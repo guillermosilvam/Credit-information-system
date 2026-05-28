@@ -83,15 +83,15 @@ export default function NuevoPlanPage() {
       return false;
     }
     if (!formData.minAmount || !formData.maxAmount || !formData.interestRate || !formData.termMonths) {
-      toast.error('Complete todos los campos numericos');
+      toast.error('Complete todos los campos numéricos');
       return false;
     }
     if (Number(formData.minAmount) >= Number(formData.maxAmount)) {
-      toast.error('El monto minimo debe ser menor al monto maximo');
+      toast.error('El monto mínimo debe ser menor al monto máximo');
       return false;
     }
     if (Number(formData.minAmount) <= 0) {
-      toast.error('El monto minimo debe ser mayor a 0');
+      toast.error('El monto mínimo debe ser mayor a 0');
       return false;
     }
     return true;
@@ -116,15 +116,15 @@ export default function NuevoPlanPage() {
 
       if (isEditing && editingPlanId) {
         await creditService.updatePlan(editingPlanId, payload);
-        toast.success('Plan de credito actualizado');
+        toast.success('Plan de crédito actualizado');
       } else {
         await creditService.createPlan(payload);
-        toast.success('Plan de credito creado exitosamente');
+        toast.success('Plan de crédito creado exitosamente');
       }
 
       router.push('/empresa/planes');
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Error al guardar el plan de credito');
+      toast.error(error.response?.data?.detail || 'Error al guardar el plan de crédito');
     } finally {
       setIsLoading(false);
     }
@@ -140,7 +140,7 @@ export default function NuevoPlanPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Crear Plan de Credito</h1>
+          <h1 className="text-2xl font-bold text-foreground">Crear Plan de Crédito</h1>
           <p className="text-muted-foreground">
             Defina los términos y condiciones de su nuevo plan de financiamiento
           </p>
@@ -163,13 +163,13 @@ export default function NuevoPlanPage() {
                   <Label htmlFor="title">Titulo del Plan *</Label>
                   <Input
                     id="title"
-                    placeholder="Ej: Microcredito Semillas Maiz 2026"
+                    placeholder="Ej: Microcrédito Semillas Maíz 2026"
                     value={formData.title}
                     onChange={(e) => handleChange('title', e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Descripcion *</Label>
+                  <Label htmlFor="description">Descripción *</Label>
                   <Textarea
                     id="description"
                     placeholder="Describa las condiciones, beneficios y requisitos del plan"
@@ -179,7 +179,7 @@ export default function NuevoPlanPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="sector">Sector Agricola *</Label>
+                  <Label htmlFor="sector">Sector Agrícola *</Label>
                   <Select
                     value={formData.agriculturalSector}
                     onValueChange={(value) => handleChange('agriculturalSector', value)}
@@ -201,13 +201,13 @@ export default function NuevoPlanPage() {
               <CardHeader>
                 <CardTitle>Condiciones Financieras</CardTitle>
                 <CardDescription>
-                  Montos, tasas y plazos del credito
+                  Montos, tasas y plazos del crédito
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="minAmount">Monto Minimo (USD) *</Label>
+                    <Label htmlFor="minAmount">Monto Mínimo (USD) *</Label>
                     <Input
                       id="minAmount"
                       type="number"
@@ -218,7 +218,7 @@ export default function NuevoPlanPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="maxAmount">Monto Maximo (USD) *</Label>
+                    <Label htmlFor="maxAmount">Monto Máximo (USD) *</Label>
                     <Input
                       id="maxAmount"
                       type="number"
@@ -231,7 +231,7 @@ export default function NuevoPlanPage() {
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="interestRate">Tasa de Interes Anual (%) *</Label>
+                    <Label htmlFor="interestRate">Tasa de Interés Anual (%) *</Label>
                     <Input
                       id="interestRate"
                       type="number"
@@ -262,7 +262,7 @@ export default function NuevoPlanPage() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Publicacion</CardTitle>
+                <CardTitle>Publicación</CardTitle>
                 <CardDescription>
                   Controle la visibilidad del plan
                 </CardDescription>
@@ -272,7 +272,7 @@ export default function NuevoPlanPage() {
                   <div className="space-y-0.5">
                     <Label>Plan Activo</Label>
                     <p className="text-sm text-muted-foreground">
-                      Los productores podran aplicar
+                      Los productores podrán aplicar
                     </p>
                   </div>
                   <Switch

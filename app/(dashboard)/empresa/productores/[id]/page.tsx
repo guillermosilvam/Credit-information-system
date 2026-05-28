@@ -84,7 +84,7 @@ export default function ProductorDetailPage() {
                   <dd className="text-lg font-medium">{profile.main_activity || 'N/A'}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-muted-foreground mb-1">Condicion de Vias</dt>
+                  <dt className="text-sm font-medium text-muted-foreground mb-1">Condición de Vías</dt>
                   <dd className="text-lg font-medium">
                     {profile.road_condition ? roadConditionLabels[profile.road_condition] || profile.road_condition : 'N/A'}
                   </dd>
@@ -93,11 +93,11 @@ export default function ProductorDetailPage() {
                   <Separator className="my-2" />
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-muted-foreground mb-1">Area Total (Has)</dt>
+                  <dt className="text-sm font-medium text-muted-foreground mb-1">Área Total (Has)</dt>
                   <dd className="text-lg font-medium">{profile.total_area || 0}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-muted-foreground mb-1">Area Cultivada (Has)</dt>
+                  <dt className="text-sm font-medium text-muted-foreground mb-1">Área Cultivada (Has)</dt>
                   <dd className="text-lg font-medium text-primary">{profile.cultivated_area || 0}</dd>
                 </div>
               </div>
@@ -123,7 +123,7 @@ export default function ProductorDetailPage() {
           <Card className="border-border/50 shadow-sm">
             <CardHeader className="bg-muted/30 border-b border-border/50 pb-4">
               <CardTitle className="flex items-center gap-2 text-lg">
-                <Anchor className="w-5 h-5 text-primary" /> Situacion Legal
+                <Anchor className="w-5 h-5 text-primary" /> Situación Legal
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-6 space-y-4">

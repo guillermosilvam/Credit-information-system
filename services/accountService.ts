@@ -58,6 +58,14 @@ export const accountService = {
     return response.data;
   },
 
+  deleteCompany: async (id: number) => {
+    await api.delete(`/accounts/company/${id}/`);
+  },
+
+  deleteProducer: async (id: number) => {
+    await api.delete(`/accounts/producer/${id}/`);
+  },
+
   exportProducer: async (id: number) => {
     const response = await api.get(`/accounts/producer/${id}/export/`, {
       responseType: 'blob'

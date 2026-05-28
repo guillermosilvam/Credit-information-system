@@ -33,7 +33,7 @@ export default function RegistroPage() {
                   <Tractor className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="text-lg">Productor Agricola</CardTitle>
+                  <CardTitle className="text-lg">Productor Agrícola</CardTitle>
                   <CardDescription>
                     Acceda a financiamiento para su finca
                   </CardDescription>
@@ -42,7 +42,7 @@ export default function RegistroPage() {
             </CardHeader>
             <CardContent>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>Explore planes de credito disponibles</li>
+                <li>Explore planes de crédito disponibles</li>
                 <li>Aplique directamente desde la plataforma</li>
                 <li>Seguimiento de sus solicitudes</li>
               </ul>
@@ -60,14 +60,14 @@ export default function RegistroPage() {
                 <div>
                   <CardTitle className="text-lg">Empresa / Entidad Financiera</CardTitle>
                   <CardDescription>
-                    Publique planes de credito agricola
+                    Publique planes de crédito agrícola
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>Cree y gestione planes de credito</li>
+                <li>Cree y gestione planes de crédito</li>
                 <li>Conecte con productores verificados</li>
                 <li>Administre solicitudes recibidas</li>
               </ul>

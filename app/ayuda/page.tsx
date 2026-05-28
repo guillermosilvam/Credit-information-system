@@ -112,7 +112,7 @@ export default function AyudaPage() {
             </AccordionItem>
 
             <AccordionItem value="item-3" className="border-b-border/50">
-              <AccordionTrigger className="text-base font-semibold hover:no-underline hover:text-primary">¿Que ocurre si un Fondo rechaza mi propuesta?</AccordionTrigger>
+              <AccordionTrigger className="text-base font-semibold hover:no-underline hover:text-primary">¿Qué ocurre si un Fondo rechaza mi propuesta?</AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
                 No hay mayores inconvenientes. La flexibilidad de SIGEFA permite que tu perfil de productor continúe existiendo. Si una solicitud fracasa ante la Entidad A, eres totalmente libre de aplicar simultáneamente por el Plan Crediticio de la Entidad B.
               </AccordionContent>
