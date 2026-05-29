@@ -1,5 +1,5 @@
 // Tipos de usuario
-export type UserRole = 'producer' | 'company' | 'admin';
+export type UserRole = 'producer' | 'company' | 'admin' | 'staff';
 export type CompanyType = 'BANK' | 'PRIVATE_FUND' | 'COOPERATIVE' | 'INVESTOR';
 export type CompanyStatus = 'pending' | 'verified' | 'rejected';
 export type LandTenure = 'OWNED' | 'RENTED' | 'AWARDED';

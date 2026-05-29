@@ -28,6 +28,13 @@ function parseJwt(token: string) {
   }
 }
 
+function getRoleFromUserData(userData: any): User['role'] {
+  if (userData?.is_company) return 'company';
+  if (userData?.is_producer) return 'producer';
+  if (userData?.is_page_admin) return 'admin';
+  return 'staff';
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [producerProfile, setProducerProfile] = useState<ProducerProfile | null>(null);
@@ -113,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               id: Number(fullUser.id || fullUser.user?.id || Date.now()),
               username: fullUser.username || fullUser.user?.username || 'user',
               email: fullUser.email || fullUser.user?.email || '',
-              role: fullUser.is_company ? 'company' : (fullUser.is_producer ? 'producer' : 'producer'),
+              role: getRoleFromUserData(fullUser),
               createdAt: new Date().toISOString(),
             };
 
@@ -161,6 +168,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email: username.includes('@') ? username : `${username}@sigefa.com`,
           role: autoRole,
           createdAt: new Date().toISOString()
+        };
+      }
+
+      if (parsedUser.role === 'staff') {
+        authService.logout();
+        setUser(null);
+        setProducerProfile(null);
+        setCompanyProfile(null);
+        setIsLoading(false);
+        return {
+          success: false,
+          error: 'Este usuario es superadmin de Django. Use el administrador de pagina para entrar al panel web.',
         };
       }
 
