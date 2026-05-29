@@ -37,6 +37,11 @@ import { fetcher } from '@/lib/fetcher';
 import { accountService, type ProducerProfileResponse } from '@/services/accountService';
 import { toast } from 'sonner';
 
+const toNumber = (value: number | string | null | undefined) => Number(value || 0);
+const formatHectares = (value: number) => value.toLocaleString('es-VE', {
+  maximumFractionDigits: 2,
+});
+
 export default function AdminProductoresPage() {
   const { data: producers = [], isLoading } = useSWR<ProducerProfileResponse[]>('/accounts/producer/', fetcher);
   const [searchTerm, setSearchTerm] = useState('');
@@ -111,7 +116,7 @@ export default function AdminProductoresPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {producers.reduce((acc, p) => acc + (p.total_area || 0), 0)} ha
+              {formatHectares(producers.reduce((acc, p) => acc + toNumber(p.total_area), 0))} ha
             </div>
           </CardContent>
         </Card>
@@ -121,7 +126,7 @@ export default function AdminProductoresPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">
-              {producers.reduce((acc, p) => acc + (p.cultivated_area || 0), 0)} ha
+              {formatHectares(producers.reduce((acc, p) => acc + toNumber(p.cultivated_area), 0))} ha
             </div>
           </CardContent>
         </Card>

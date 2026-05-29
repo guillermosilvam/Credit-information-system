@@ -13,8 +13,8 @@ export interface ProducerProfileResponse {
   rif?: string;
   national_id?: string;
   phone_number?: string;
-  total_area?: number;
-  cultivated_area?: number;
+  total_area?: number | string;
+  cultivated_area?: number | string;
   land_tenure?: string;
   machinery_inventory?: string;
   road_condition?: string;

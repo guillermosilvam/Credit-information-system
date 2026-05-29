@@ -8,6 +8,11 @@ import { fetcher } from '@/lib/fetcher';
 import type { CreditPlanResponse, CreditApplicationResponse } from '@/services/creditService';
 import type { CompanyProfileResponse, ProducerProfileResponse } from '@/services/accountService';
 
+const toNumber = (value: number | string | null | undefined) => Number(value || 0);
+const formatHectares = (value: number) => value.toLocaleString('es-VE', {
+  maximumFractionDigits: 2,
+});
+
 export default function AdminEstadisticasPage() {
   const { data: applications = [], isLoading: isLoadingApps } = useSWR<CreditApplicationResponse[]>('/credits/applications/', fetcher);
   const { data: companies = [], isLoading: isLoadingComps } = useSWR<CompanyProfileResponse[]>('/accounts/company/', fetcher);
@@ -29,8 +34,15 @@ export default function AdminEstadisticasPage() {
 
   const activePlans = plans.filter(p => p.is_active).length;
 
-  const totalArea = producers.reduce((acc, p) => acc + Number(p.total_area || 0), 0);
-  const cultivatedArea = producers.reduce((acc, p) => acc + Number(p.cultivated_area || 0), 0);
+  const approvedProducerIds = new Set(
+    applications
+      .filter(application => application.status === 'approved')
+      .map(application => application.producer)
+  );
+  const totalArea = producers.reduce((acc, p) => acc + toNumber(p.total_area), 0);
+  const cultivatedArea = producers
+    .filter(producer => approvedProducerIds.has(producer.id))
+    .reduce((acc, p) => acc + toNumber(p.cultivated_area), 0);
   const cultivationRate = totalArea > 0 ? Math.round((cultivatedArea / totalArea) * 100) : 0;
 
   // Datos por sector
@@ -137,21 +149,21 @@ export default function AdminEstadisticasPage() {
                   <span>Aprobadas</span>
                   <span className="font-medium text-green-600">{approvedApplications}</span>
                 </div>
-                <Progress value={(approvedApplications / totalApplications) * 100} className="h-2" />
+                <Progress value={totalApplications > 0 ? (approvedApplications / totalApplications) * 100 : 0} className="h-2" />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span>Pendientes / En Revisión</span>
                   <span className="font-medium text-amber-600">{pendingApplications}</span>
                 </div>
-                <Progress value={(pendingApplications / totalApplications) * 100} className="h-2 [&>div]:bg-amber-500" />
+                <Progress value={totalApplications > 0 ? (pendingApplications / totalApplications) * 100 : 0} className="h-2 [&>div]:bg-amber-500" />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span>Rechazadas</span>
                   <span className="font-medium text-red-600">{rejectedApplications}</span>
                 </div>
-                <Progress value={(rejectedApplications / totalApplications) * 100} className="h-2 [&>div]:bg-red-500" />
+                <Progress value={totalApplications > 0 ? (rejectedApplications / totalApplications) * 100 : 0} className="h-2 [&>div]:bg-red-500" />
               </div>
             </div>
           </CardContent>
@@ -171,12 +183,12 @@ export default function AdminEstadisticasPage() {
           <CardContent className="space-y-6">
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="p-4 rounded-lg bg-muted/50">
-                <div className="text-2xl font-bold">{totalArea}</div>
+                <div className="text-2xl font-bold">{formatHectares(totalArea)}</div>
                 <p className="text-sm text-muted-foreground">Hectareas Totales</p>
               </div>
               <div className="p-4 rounded-lg bg-primary/10">
-                <div className="text-2xl font-bold text-primary">{cultivatedArea}</div>
-                <p className="text-sm text-muted-foreground">Hectareas Cultivadas</p>
+                <div className="text-2xl font-bold text-primary">{formatHectares(cultivatedArea)}</div>
+                <p className="text-sm text-muted-foreground">Hectareas Cultivadas Aprobadas</p>
               </div>
             </div>
             
@@ -187,7 +199,7 @@ export default function AdminEstadisticasPage() {
               </div>
               <Progress value={cultivationRate} className="h-3" />
               <p className="text-xs text-muted-foreground text-center">
-                Del área total registrada está siendo cultivada
+                Del area total registrada tiene credito aprobado
               </p>
             </div>
           </CardContent>
