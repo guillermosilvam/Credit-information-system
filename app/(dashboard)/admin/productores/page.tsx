@@ -35,6 +35,7 @@ import {
 import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/lib/fetcher';
 import { accountService, type ProducerProfileResponse } from '@/services/accountService';
+import type { CreditApplicationResponse } from '@/services/creditService';
 import { toast } from 'sonner';
 
 const toNumber = (value: number | string | null | undefined) => Number(value || 0);
@@ -44,6 +45,7 @@ const formatHectares = (value: number) => value.toLocaleString('es-VE', {
 
 export default function AdminProductoresPage() {
   const { data: producers = [], isLoading } = useSWR<ProducerProfileResponse[]>('/accounts/producer/', fetcher);
+  const { data: applications = [], isLoading: isLoadingApplications } = useSWR<CreditApplicationResponse[]>('/credits/applications/', fetcher);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProducer, setSelectedProducer] = useState<ProducerProfileResponse | null>(null);
   const [producerToDelete, setProducerToDelete] = useState<ProducerProfileResponse | null>(null);
@@ -59,6 +61,16 @@ export default function AdminProductoresPage() {
       (producer.user?.email && producer.user.email.toLowerCase().includes(searchLower))
     );
   });
+
+  const approvedProducerIds = new Set(
+    applications
+      .filter(application => application.status === 'approved')
+      .map(application => application.producer)
+  );
+  const totalArea = producers.reduce((acc, p) => acc + toNumber(p.total_area), 0);
+  const approvedCultivatedArea = producers
+    .filter(producer => approvedProducerIds.has(producer.id))
+    .reduce((acc, p) => acc + toNumber(p.cultivated_area), 0);
 
   const viewDetails = (producer: ProducerProfileResponse) => {
     setSelectedProducer(producer);
@@ -94,7 +106,7 @@ export default function AdminProductoresPage() {
         </p>
       </div>
 
-      {isLoading ? (
+      {isLoading || isLoadingApplications ? (
         <div className="flex h-40 items-center justify-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
@@ -116,17 +128,17 @@ export default function AdminProductoresPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formatHectares(producers.reduce((acc, p) => acc + toNumber(p.total_area), 0))} ha
+              {formatHectares(totalArea)} ha
             </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Área Cultivada</CardTitle>
+            <CardTitle className="text-sm font-medium">Área Cultivada Aprobada</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-primary">
-              {formatHectares(producers.reduce((acc, p) => acc + toNumber(p.cultivated_area), 0))} ha
+              {formatHectares(approvedCultivatedArea)} ha
             </div>
           </CardContent>
         </Card>
